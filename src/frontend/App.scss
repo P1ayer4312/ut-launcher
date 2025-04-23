@@ -1,0 +1,11 @@
+html {
+  background-image: url(/imgs/smoke-bg.webp);
+  background-position: top;
+  background-size: auto 150vmax;
+  background-repeat: repeat;
+}
+
+.temp-wrapper {
+  display: flex;
+  flex-direction: row;
+}
