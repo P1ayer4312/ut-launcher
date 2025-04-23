@@ -1,0 +1,49 @@
+{
+  "name": "ut-launcher",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": ".\\src\\backend\\main.cjs",
+  "author": {
+    "name": "P1ayer"
+  },
+  "description": "ut-app",
+  "scripts": {
+    "start": "concurrently --kill-others --names vite,electron -c green,cyan \"npm run vite:dev\" \"npm run electron:dev\"",
+    "build": "npm run vite:build && npm run electron:package",
+    "lint": "eslint .",
+    "vite:dev": "vite",
+    "vite:build": "vite build",
+    "vite:preview": "vite preview",
+    "electron:start": "electron-forge start",
+    "electron:dev": "electron-forge start -- --dev",
+    "electron:package": "electron-forge package",
+    "electron:make": "electron-forge make"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.8.0",
+    "@electron-forge/maker-deb": "^7.8.0",
+    "@electron-forge/maker-rpm": "^7.8.0",
+    "@electron-forge/maker-squirrel": "^7.8.0",
+    "@electron-forge/maker-zip": "^7.8.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.8.0",
+    "@electron-forge/plugin-fuses": "^7.8.0",
+    "@electron/fuses": "^1.8.0",
+    "@eslint/js": "^9.22.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "electron": "^35.2.0",
+    "eslint": "^9.22.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "vite": "^6.3.1"
+  }
+}
