@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": ".\\src\\backend\\main.cjs",
+  "main": "./src/backend/main.cjs",
   "author": {
     "name": "P1ayer"
   },

@@ -1,27 +1,36 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
+const { registerEvents } = require("./events/registerEvents.cjs");
 const IS_DEV = process?.argv?.includes("--dev");
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    minWidth: 1300,
+    minHeight: 700,
+
+    autoHideMenuBar: true,
+    titleBarStyle: "hidden",
+    // ...(process.platform !== "darwin" ? { titleBarOverlay: true } : {}),
+
     webPreferences: {
       preload: path.resolve(__dirname, "preload.cjs"),
     },
   });
 
-  win.loadFile("index.html");
   if (IS_DEV) {
     win.loadURL("http://localhost:5173");
+    win.webContents.openDevTools();
   } else {
-    const siteLocation = path.resolve("resources", "dist", "index.html");
+    const siteLocation = path.resolve(process.resourcesPath, "dist", "index.html");
     win.loadFile(siteLocation);
   }
+
+  return win;
 }
 
 app.whenReady().then(() => {
-  createWindow();
+  const win = createWindow();
+  registerEvents(win);
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {

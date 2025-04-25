@@ -1,15 +1,17 @@
 import "./App.scss";
 import BannerImgAndLogo from "./components/banner-img-and-logo/BannerImgAndLogo";
+import MainGrid from "./components/main-grid/MainGrid";
 import MenuItemGameList from "./components/menu-item-game-list/MenuItemGameList";
-import MenuItemGame from "./components/menu-item-game/MenuItemGame";
+import TitleBar from "./components/title-bar/TitleBar";
 
 function App() {
   return (
     <>
-      <div className="temp-wrapper">
+      <MainGrid>
+        <TitleBar />
         <MenuItemGameList />
         <BannerImgAndLogo />
-      </div>
+      </MainGrid>
     </>
   );
 }

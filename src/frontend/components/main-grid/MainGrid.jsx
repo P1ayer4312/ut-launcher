@@ -1,9 +1,9 @@
-import React from "react";
+import "./MainGrid.scss";
 
 /**
  * @param {React.PropsWithChildren} props
  * @returns
  */
 export default function MainGrid(props) {
-  return <div>MainGrid</div>;
+  return <div className="main-grid">{props.children}</div>;
 }
