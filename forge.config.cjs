@@ -3,9 +3,10 @@ const { FuseV1Options, FuseVersion } = require("@electron/fuses");
 
 /** @type {import('@electron-forge/shared-types').ForgeConfig} */
 module.exports = {
+  outDir: "./build/out",
   packagerConfig: {
     asar: true,
-    extraResource: ["dist"],
+    extraResource: ["./build/dist"],
   },
   rebuildConfig: {},
   makers: [

@@ -1,13 +1,23 @@
 html {
-  background-image: url(/imgs/smoke-bg.webp);
+  background-image: url("/imgs/smoke-bg.webp");
   background-position: top;
   background-size: auto 150vmax;
   background-repeat: repeat;
   background-color: black;
+  font-family: HeadingNowVariable Arial, Helvetica, sans-serif;
 }
 
 body {
   padding: 0 0;
   margin: 0 0;
   position: relative;
+  height: calc(100vh - 2px);
+  border-image: linear-gradient(to left, #1d2031 0%, #1b0b02 100%) 1;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.game-page-view {
+  display: flex;
+  flex-direction: column;
 }

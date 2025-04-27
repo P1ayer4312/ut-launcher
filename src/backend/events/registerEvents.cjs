@@ -24,7 +24,3 @@ function registerEvents(window) {
 }
 
 module.exports = { registerEvents };
-
-// close: () => ipcRenderer.invoke("titlebar-close"),
-// minimize: () => ipcRenderer.invoke("titlebar-minimize"),
-// maximize: () => ipcRenderer.invoke("titlebar-maximize"),
