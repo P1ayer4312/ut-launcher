@@ -3,10 +3,18 @@ const path = require("node:path");
 const { registerEvents } = require("./events/registerEvents.cjs");
 const IS_DEV = process?.argv?.includes("--dev");
 
+if (require("electron-squirrel-startup")) {
+  app.quit();
+}
+
 function createWindow() {
   const win = new BrowserWindow({
     minWidth: 1300,
     minHeight: 700,
+    width: 1300,
+    height: 700,
+    backgroundColor: "black",
+    icon: path.resolve(__dirname, "../../public/icon/icon.ico"),
 
     autoHideMenuBar: true,
     titleBarStyle: "hidden",

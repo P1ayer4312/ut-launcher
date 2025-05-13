@@ -3,8 +3,10 @@ html {
   background-position: top;
   background-size: auto 150vmax;
   background-repeat: repeat;
-  background-color: black;
-  font-family: HeadingNowVariable Arial, Helvetica, sans-serif;
+  background-color: #191919;
+  font-family: HeadingNowVariable, Arial, Helvetica, sans-serif;
+  font-variation-settings: "wdth" 650, "wght" 450;
+  height: calc(100vh - 2px);
 }
 
 body {
