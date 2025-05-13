@@ -5,27 +5,9 @@ import MenuItemGameList from "./components/menu-item/menu-item-game-list/MenuIte
 import TitleBar from "./components/title-bar/TitleBar";
 import GamePageNavbar from "./components/game-page/game-page-navbar/GamePageNavbar";
 import GamePageLoadingBar from "./components/game-page/game-page-loading-bar/GamePageLoadingBar";
-import { useEffect, useRef, useState } from "react";
 import DiscordWidget from "./components/discord-widget/DiscordWidget";
 
 function App() {
-  // const [progress, setProgress] = useState(0);
-  // const [intervalRef, setIntervalRef] = useState(0);
-
-  // useEffect(() => {
-  //   setIntervalRef(
-  //     setInterval(() => {
-  //       if (progress >= 100) {
-  //         clearInterval(intervalRef);
-  //       } else {
-  //         setProgress((value) => value + 10);
-  //       }
-  //     }, 1000)
-  //   );
-
-  //   return () => clearInterval(intervalRef);
-  // }, []);
-
   return (
     <>
       <MainGrid>
@@ -35,7 +17,7 @@ function App() {
           <BannerImgAndLogo />
           <GamePageNavbar />
           <GamePageLoadingBar valuePercent={30} />
-          <DiscordWidget />
+          <DiscordWidget inviteLink="https://discord.gg/unrealtournament" />
         </div>
       </MainGrid>
     </>

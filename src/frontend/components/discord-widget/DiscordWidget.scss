@@ -7,6 +7,7 @@
     gap: 5px;
 
     color: white;
+    text-decoration: none;
     margin-top: 20px;
     border: 1px solid #27282b;
     border-radius: 4px;
@@ -15,14 +16,12 @@
     height: 80px;
 
     background-color: #121214;
-    background-image: url("./temp/banner.png");
     background-repeat: no-repeat;
     background-position: 100%;
     background-position-y: center;
   }
 
   &_left-side {
-    // border: 1px solid red;
     color: gray;
     display: flex;
     flex-direction: column;
@@ -55,22 +54,20 @@
 
   &_right-side {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
     overflow: hidden;
 
-    &_banner {
-      &_name {
-        z-index: 20;
-        font-size: 15px;
-        font-variation-settings: "wdth" 650, "wght" 550;
-        text-shadow: 5px 5px 5px black;
-      }
+    &_name {
+      z-index: 20;
+      font-size: 15px;
+      font-variation-settings: "wdth" 650, "wght" 550;
+      text-shadow: 5px 5px 5px black;
+    }
 
-      &_desc {
-        font-size: 10px;
-        text-shadow: 5px 5px 5px black;
-      }
+    &_desc {
+      font-size: 10px;
+      text-shadow: 5px 5px 5px black;
     }
   }
 }
