@@ -1,7 +1,12 @@
 import { useState } from "react";
 import "./GamePageNavbar.scss";
+import { useGlobalState } from "../../../state/useGlobalState";
 
-export default function GamePageNavbar() {
+/**
+ * @param {React.PropsWithChildren} props
+ */
+export default function GamePageNavbar(props) {
+  const { selectedGame, setDownloadingGame } = useGlobalState();
   const [toggle, setToggle] = useState(true);
 
   return (
@@ -11,13 +16,17 @@ export default function GamePageNavbar() {
           PLAY
         </div>
       ) : (
-        <div className="game-page-navbar_install-button" onClick={() => setToggle((value) => !value)}>
+        <div
+          className="game-page-navbar_install-button"
+          onClick={() => {
+            setDownloadingGame(selectedGame);
+            setToggle((value) => !value);
+          }}
+        >
           INSTALL
         </div>
       )}
-      <div className="game-page-navbar_button">Community</div>
-      <div className="game-page-navbar_button">Guides</div>
-      <div className="game-page-navbar_button">Servers</div>
+      {props.children}
     </div>
   );
 }

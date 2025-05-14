@@ -8,10 +8,16 @@ import { create } from "zustand";
  * @typedef {object} TGlobalState
  * @prop {TSelectedGame} selectedGame
  * @prop {(value: TSelectedGame) => void} setSelectedGame
+ *
+ * @prop {TSelectedGame | null} downloadingGame
+ * @prop {(value: TSelectedGame) => void} setDownloadingGame
  */
 
 /** @type {import("zustand").UseBoundStore<import("zustand").StoreApi<TGlobalState>>} */
 export const useGlobalState = create((set) => ({
   selectedGame: "ut-alpha",
   setSelectedGame: (value) => set({ selectedGame: value }),
+
+  downloadingGame: null,
+  setDownloadingGame: (value) => set({ downloadingGame: value }),
 }));

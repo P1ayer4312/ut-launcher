@@ -6,6 +6,7 @@ import TitleBar from "./components/title-bar/TitleBar";
 import GamePageNavbar from "./components/game-page/game-page-navbar/GamePageNavbar";
 import GamePageLoadingBar from "./components/game-page/game-page-loading-bar/GamePageLoadingBar";
 import DiscordWidget from "./components/discord-widget/DiscordWidget";
+import GamePageHandler from "./components/game-page/game-page-handler/GamePageHandler";
 
 function App() {
   return (
@@ -15,9 +16,7 @@ function App() {
         <MenuItemGameList />
         <div className="game-page-view" name="./">
           <BannerImgAndLogo />
-          <GamePageNavbar />
-          <GamePageLoadingBar valuePercent={30} />
-          <DiscordWidget inviteLink="https://discord.gg/unrealtournament" />
+          <GamePageHandler />
         </div>
       </MainGrid>
     </>
