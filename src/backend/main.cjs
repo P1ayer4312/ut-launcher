@@ -1,6 +1,7 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow } = require("electron");
 const path = require("node:path");
 const { registerEvents } = require("./events/registerEvents.cjs");
+const { registerGameDataEvents } = require("./events/registerGameDataEvents.cjs");
 const IS_DEV = process?.argv?.includes("--dev");
 
 if (require("electron-squirrel-startup")) {
@@ -39,6 +40,7 @@ function createWindow() {
 app.whenReady().then(() => {
   const win = createWindow();
   registerEvents(win);
+  registerGameDataEvents(win);
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {

@@ -26,6 +26,7 @@ export default function DiscordWidget({ inviteLink }) {
   return (
     <a
       href={inviteLink}
+      target="_blank"
       style={{
         backgroundImage: guild?.banner
           ? `url("https://cdn.discordapp.com/banners/${guild.id}/${guild.banner}.png?size=256")`

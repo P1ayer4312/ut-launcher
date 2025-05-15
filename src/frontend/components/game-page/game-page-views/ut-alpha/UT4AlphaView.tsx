@@ -1,16 +1,19 @@
 import { useState } from "react";
+import { useGlobalState } from "../../../../state/useGlobalState";
 import GamePageNavbar from "../../game-page-navbar/GamePageNavbar";
+import GamePageLoadingBar from "../../game-page-loading-bar/GamePageLoadingBar";
+import Home from "./tab-views/home/Home";
 import Community from "./tab-views/community/Community";
 import Guides from "./tab-views/guides/Guides";
-import { useGlobalState } from "../../../../state/useGlobalState";
-import GamePageLoadingBar from "../../game-page-loading-bar/GamePageLoadingBar";
 
 export default function UT4AlphaView() {
   const { downloadingGame, selectedGame } = useGlobalState();
-  const [activeTab, setActiveTab] = useState("");
+  const [activeTab, setActiveTab] = useState("home");
 
   function getTabView(activeTab) {
     switch (activeTab) {
+      case "home":
+        return <Home />;
       case "community":
         return <Community />;
       case "guides":
@@ -23,6 +26,9 @@ export default function UT4AlphaView() {
   return (
     <>
       <GamePageNavbar>
+        <div className="game-page-navbar_button" onClick={() => setActiveTab("home")}>
+          Home
+        </div>
         <div className="game-page-navbar_button" onClick={() => setActiveTab("community")}>
           Community
         </div>
