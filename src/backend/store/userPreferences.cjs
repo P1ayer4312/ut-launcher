@@ -1,6 +1,7 @@
 const os = require("node:os");
 const path = require("node:path");
 const Store = require("electron-store");
+/** @import { TGameData, TGameId } from "../types/gameConfigData.cjs" */
 
 const store = new Store();
 
@@ -19,6 +20,7 @@ function setGameUserData(key, value) {
       directory: defaultDirectoryPath(),
       patchVersion: "",
       installed: false,
+      available: true,
     };
 
     store.set(key, defaultConfig);
@@ -38,8 +40,40 @@ function getGameUserData(key) {
   return store.get(key);
 }
 
+// ========================================================================================
+
+const lastSelectedGameStoreKey = "lastSelectedGame";
+
+/**
+ * Store the last selected game in memory
+ * @param {TGameId} value
+ */
+function setLastSelectedGame(value) {
+  store.set(lastSelectedGameStoreKey, value);
+}
+
+/**
+ * Return last selected game stored in memory
+ * @returns {TGameId}
+ */
+function getLastSelectedGame() {
+  if (!store.has(lastSelectedGameStoreKey)) {
+    setLastSelectedGame("unreal");
+  }
+
+  return store.get(lastSelectedGameStoreKey);
+}
+
+// ========================================================================================
+
 function defaultDirectoryPath() {
   return path.resolve(os.homedir(), "Documents", "ut-games");
 }
 
-module.exports = { setGameUserData, getGameUserData };
+module.exports = {
+  setGameUserData,
+  getGameUserData,
+  // ==
+  setLastSelectedGame,
+  getLastSelectedGame,
+};

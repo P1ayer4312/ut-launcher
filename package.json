@@ -21,6 +21,9 @@
     "electron:package": "electron-forge package",
     "electron:make": "electron-forge make"
   },
+  "//": [
+    "Do not bump 'electron-store@7.0.0' to latest version, it doesn't work because it's ESM converted"
+  ],
   "dependencies": {
     "@tanstack/react-query": "^5.76.0",
     "axios": "^1.9.0",

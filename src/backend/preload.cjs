@@ -10,4 +10,6 @@ contextBridge.exposeInMainWorld("titleBarControls", {
 // Events for managing local game data and state
 contextBridge.exposeInMainWorld("gameData", {
   get: (value) => ipcRenderer.invoke("gameData-get", value),
+  getLastSelectedGame: () => ipcRenderer.invoke("gameData-getLastSelectedGame"),
+  setLastSelectedGame: (value) => ipcRenderer.invoke("gameData-setLastSelectedGame", value),
 });

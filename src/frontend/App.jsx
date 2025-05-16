@@ -3,12 +3,18 @@ import BannerImgAndLogo from "./components/banner-img-and-logo/BannerImgAndLogo"
 import MainGrid from "./components/main-grid/MainGrid";
 import MenuItemGameList from "./components/menu-item/menu-item-game-list/MenuItemGameList";
 import TitleBar from "./components/title-bar/TitleBar";
-import GamePageNavbar from "./components/game-page/game-page-navbar/GamePageNavbar";
-import GamePageLoadingBar from "./components/game-page/game-page-loading-bar/GamePageLoadingBar";
-import DiscordWidget from "./components/discord-widget/DiscordWidget";
 import GamePageHandler from "./components/game-page/game-page-handler/GamePageHandler";
+import { useGlobalState } from "./state/useGlobalState";
+import contextBridge from "./contextBridge/contextBridge";
+import { useEffect } from "react";
 
 function App() {
+  const { setSelectedGame } = useGlobalState();
+  useEffect(() => {
+    // Pass the last selected game from memory to the global state
+    contextBridge.gameData.getLastSelectedGame().then(setSelectedGame);
+  }, [setSelectedGame]);
+
   return (
     <>
       <MainGrid>

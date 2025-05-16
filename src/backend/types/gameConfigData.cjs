@@ -10,5 +10,7 @@
  *
  * @typedef {object} TContextBridgeGameData
  * @prop {(value: TGameId) => Promise<TGameData>} get
- * @prop {(key: TGameId, value: TGameData) => void} set
+ * @prop {(key: TGameId, value: TGameData) => Promise<void>} set
+ * @prop {() => Promise<TGameId>} getLastSelectedGame
+ * @prop {(value: TGameId) => Promise<void>} setLastSelectedGame
  */

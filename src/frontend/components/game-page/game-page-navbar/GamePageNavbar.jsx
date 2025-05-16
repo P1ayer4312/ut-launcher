@@ -1,14 +1,12 @@
 import { useState } from "react";
 import "./GamePageNavbar.scss";
 import { useGlobalState } from "../../../state/useGlobalState";
+import contextBridge from "../../../contextBridge/contextBridge";
 
 /** @param {React.PropsWithChildren} props */
 export default function GamePageNavbar(props) {
   const { selectedGame, setDownloadingGame } = useGlobalState();
   const [toggle, setToggle] = useState(true);
-
-  /** @type {TContextBridgeGameData} */
-  const gameData = window.gameData ?? {};
 
   return (
     <div className="game-page-navbar">
@@ -16,7 +14,7 @@ export default function GamePageNavbar(props) {
         <div
           className="game-page-navbar_play-button"
           onClick={() => {
-            gameData.get(selectedGame).then(console.log);
+            contextBridge.gameData.get(selectedGame).then(console.log);
             setToggle((value) => !value);
           }}
         >
