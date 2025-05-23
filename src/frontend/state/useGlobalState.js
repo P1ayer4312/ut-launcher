@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 /**
  * @typedef {("unreal"|"ut-1999"|"ut-2004"|"ut-alpha"|
- * "ut-champs-2"|"unreal-2"|"ut-2003"|"ut-3"|"ut-champs"
+ * "ut-champs-2"|"unreal-2"|"ut-2003"|"ut-3"|"ut-champs"|"blank"
  * )} TSelectedGame
  *
  * @typedef {object} TGlobalState
@@ -15,7 +15,7 @@ import { create } from "zustand";
 
 /** @type {import("zustand").UseBoundStore<import("zustand").StoreApi<TGlobalState>>} */
 export const useGlobalState = create((set) => ({
-  selectedGame: "ut-alpha",
+  selectedGame: "blank",
   setSelectedGame: (value) => set({ selectedGame: value }),
 
   downloadingGame: null,
