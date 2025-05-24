@@ -13,3 +13,13 @@ contextBridge.exposeInMainWorld("gameData", {
   getLastSelectedGame: () => ipcRenderer.invoke("gameData-getLastSelectedGame"),
   setLastSelectedGame: (value) => ipcRenderer.invoke("gameData-setLastSelectedGame", value),
 });
+
+// Events for custom actions
+contextBridge.exposeInMainWorld("actionsHandler", {
+  onMessageEvent: (callback) => {
+    ipcRenderer.on("actionsHandler-message", (event, message) => {
+      callback(message);
+    });
+  },
+  test: () => ipcRenderer.invoke("actionsHandler-test"),
+});

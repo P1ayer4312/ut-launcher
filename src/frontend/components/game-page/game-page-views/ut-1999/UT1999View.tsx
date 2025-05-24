@@ -19,7 +19,7 @@ export default function UT1999View() {
 
   return (
     <>
-      <GamePageNavbar>
+      <GamePageNavbar unavailable={false} stop={true}>
         <div className="game-page-navbar_button" onClick={() => setActiveTab("home")}>
           Home
         </div>

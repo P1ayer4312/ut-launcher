@@ -14,6 +14,12 @@ const path = require("node:path");
  * }>}
  */
 class DownloadManager extends EventEmitter {
+  /**
+   * Create download instance, use the `start()` function to begin downloading,
+   * `stop()` for terminating the download
+   * @param {string} url
+   * @param {string} destination
+   */
   constructor(url, destination) {
     super();
     this.url = url;
@@ -23,6 +29,7 @@ class DownloadManager extends EventEmitter {
     this.abortController = null;
   }
 
+  /** Start the download process */
   start() {
     this.abortController = new AbortController();
     this.emit("start", true);
@@ -42,6 +49,7 @@ class DownloadManager extends EventEmitter {
       .catch((err) => this.emit("error", err));
   }
 
+  /** Stop the download process */
   stop() {
     this.emit("stop", true);
     this.abortController.abort();

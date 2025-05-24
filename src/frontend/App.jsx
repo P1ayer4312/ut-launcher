@@ -13,6 +13,9 @@ function App() {
   useEffect(() => {
     // Pass the last selected game from memory to the global state
     contextBridge.gameData.getLastSelectedGame().then(setSelectedGame);
+    window.actionsHandler.onMessageEvent((value) => {
+      console.log(value, "from react");
+    });
   }, [setSelectedGame]);
 
   return (
