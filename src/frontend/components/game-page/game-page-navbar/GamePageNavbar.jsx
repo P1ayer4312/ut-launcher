@@ -11,12 +11,12 @@ import contextBridge from "../../../contextBridge/contextBridge";
  * @param {NavbarProps & React.PropsWithChildren} props
  */
 export default function GamePageNavbar(props) {
-  const { selectedGame, setDownloadingGame } = useGlobalState();
-  const [toggle, setToggle] = useState(true);
+  const { selectedGame, downloadingGame, setDownloadingGame } = useGlobalState();
+  const [toggle, setToggle] = useState(false);
 
   return (
     <div className="game-page-navbar">
-      {props.stop ? (
+      {selectedGame === downloadingGame ? (
         <div
           className="game-page-navbar_action-button game-page-navbar_stop"
           onClick={() => {
@@ -52,6 +52,7 @@ export default function GamePageNavbar(props) {
           onClick={() => {
             setDownloadingGame(selectedGame);
             setToggle((value) => !value);
+            contextBridge.actionsHandler.test();
           }}
         >
           INSTALL

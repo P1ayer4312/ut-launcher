@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useGlobalState } from "../../../state/useGlobalState";
 import "./GamePageLoadingBar.scss";
 
 export default function GamePageLoadingBar({ valuePercent = 0 }) {
+  const { progressBar } = useGlobalState();
+  console.log(progressBar);
   return (
     <div className="game-page_loading-bar">
-      <span>Downloading: 751.4MB/1.7GB 419.6MB/s estimate: 2 sec</span>
-      <div style={{ width: `${valuePercent}%` }} className="game-page_loading-bar-progress"></div>
+      <span>{progressBar.text}</span>
+      <div style={{ width: `${progressBar.percentage}%` }} className="game-page_loading-bar-progress"></div>
     </div>
   );
 }

@@ -22,4 +22,5 @@ contextBridge.exposeInMainWorld("actionsHandler", {
     });
   },
   test: () => ipcRenderer.invoke("actionsHandler-test"),
+  screenshot: () => ipcRenderer.invoke("actionsHandler-screenshot"),
 });

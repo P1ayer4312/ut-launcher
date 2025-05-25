@@ -19,12 +19,12 @@ export default function UT1999View() {
 
   return (
     <>
-      <GamePageNavbar unavailable={false} stop={true}>
+      <GamePageNavbar unavailable={false} stop={false}>
         <div className="game-page-navbar_button" onClick={() => setActiveTab("home")}>
           Home
         </div>
       </GamePageNavbar>
-      {selectedGame == downloadingGame && <GamePageLoadingBar valuePercent={22} />}
+      {selectedGame == downloadingGame && <GamePageLoadingBar />}
       {getTabView(activeTab)}
     </>
   );

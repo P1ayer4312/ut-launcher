@@ -9,14 +9,33 @@ import contextBridge from "./contextBridge/contextBridge";
 import { useEffect } from "react";
 
 function App() {
-  const { setSelectedGame } = useGlobalState();
+  const { setSelectedGame, setProgressBar } = useGlobalState();
   useEffect(() => {
+    const screenshotAudio = new Audio("./sounds/steam-screenshot.mp3");
+
     // Pass the last selected game from memory to the global state
     contextBridge.gameData.getLastSelectedGame().then(setSelectedGame);
-    window.actionsHandler.onMessageEvent((value) => {
-      console.log(value, "from react");
+
+    // Assign a callback function for handling messages received from Electron
+    contextBridge.actionsHandler.onMessageEvent((data) => {
+      switch (data.key) {
+        case "progressFormatted":
+          console.log("progressFormatted", data.value);
+          setProgressBar({ text: data.value });
+          break;
+        case "progress":
+          console.log("progress", data.value);
+          setProgressBar({ percentage: Math.floor(data.value.progress * 100) });
+          break;
+        case "screenshot":
+          screenshotAudio.play();
+          break;
+        default:
+          console.error("Unhandled message:", data);
+          break;
+      }
     });
-  }, [setSelectedGame]);
+  }, [setProgressBar, setSelectedGame]);
 
   return (
     <>

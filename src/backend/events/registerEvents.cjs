@@ -1,6 +1,10 @@
 const { ipcMain, BrowserWindow, app, shell } = require("electron");
 const ActionsHandler = require("../classes/ActionsHandler.cjs");
-const { setTimeout } = require("node:timers/promises");
+const DownloadManager = require("../classes/DownloadManger.cjs");
+const ArchiveManager = require("../classes/ArchiveManager.cjs");
+const { Window } = require("node-screenshots");
+const fs = require("node:fs");
+const path = require("node:path");
 
 /** @param {BrowserWindow} window */
 function registerEvents(window) {
@@ -31,14 +35,61 @@ function registerEvents(window) {
 
   ipcMain.handle("actionsHandler-test", () => {
     actionsHandler.runActions(async (sendMessage) => {
-      sendMessage("Download sim");
-      await setTimeout(2000);
-      sendMessage("Download sim 2");
-      await setTimeout(5000);
-      sendMessage("Installing...");
-      await setTimeout(5000);
-      sendMessage("Done");
+      // TODO: REMOVE EVERYTHING AND REFACTOR IT
+      fs.mkdirSync(path.resolve("D://GitHub//ut-launcher//downloads//extract"));
+
+      await new Promise((resolve) => {
+        const dl = new DownloadManager(
+          "http://localhost:3000/UT_GOTY_CD1.iso",
+          "D://GitHub//ut-launcher//downloads"
+        );
+
+        dl.on("progressFormatted", (data) => {
+          sendMessage("progressFormatted", data);
+        });
+        dl.on("progress", (data) => {
+          sendMessage("progress", data);
+        });
+        dl.on("finish", () => {
+          sendMessage("finish", "Done");
+          resolve();
+        });
+
+        dl.start();
+      });
+
+      await new Promise((resolve) => {
+        const dl = new DownloadManager(
+          "http://localhost:3000/OldUnreal-UTPatch469e-Windows.exe",
+          "D://GitHub//ut-launcher//downloads"
+        );
+
+        dl.on("progressFormatted", (data) => {
+          sendMessage("progressFormatted", data);
+        });
+        dl.on("progress", (data) => {
+          sendMessage("progress", data);
+        });
+        dl.on("finish", () => {
+          sendMessage("finish", "Done");
+          resolve();
+        });
+
+        dl.start();
+      });
+
+      await ArchiveManager.extractFile(
+        "D://GitHub//ut-launcher//downloads//UT_GOTY_CD1.iso",
+        "D://GitHub//ut-launcher//downloads//extract"
+      );
     });
+  });
+
+  ipcMain.handle("actionsHandler-screenshot", () => {
+    const allWindows = Window.all();
+    const mc = allWindows.find((item) => item.title.startsWith("Minecraft"));
+    fs.writeFileSync("./mc.png", mc.captureImageSync().toPngSync());
+    actionsHandler.sendMessage("screenshot", true);
   });
 }
 

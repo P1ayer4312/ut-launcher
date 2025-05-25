@@ -27,22 +27,17 @@ class ActionsHandler {
     }
   }
 
-  /**
-   * Store a reference to the BrowserWindow
-   * @param {BrowserWindow} win
-   */
-  setWindow(win) {
-    this.win = win;
-  }
-
   stop() {
     this.abortController.abort();
   }
 
-  sendMessage(message) {
+  sendMessage(keyString, message) {
     // TODO: Check if there is better way to target the main window
     const mainWindow = BrowserWindow.getAllWindows().find((win) => win.title === "MAIN");
-    mainWindow.webContents.send("actionsHandler-message", message);
+    mainWindow.webContents.send("actionsHandler-message", {
+      key: keyString,
+      value: message,
+    });
   }
 
   incrementActionCounter() {
