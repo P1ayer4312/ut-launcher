@@ -5,8 +5,9 @@
  *
  * @typedef {object} TGameData
  * @prop {string} directory
- * @prop {string} patchVersion
+ * @prop {string | null} patchVersion
  * @prop {boolean} installed
+ * @prop {boolean} available
  *
  * @typedef {object} TContextBridgeGameData
  * @prop {(value: TGameId) => Promise<TGameData>} get

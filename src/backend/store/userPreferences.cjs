@@ -1,7 +1,7 @@
+/** @import { TGameData, TGameId } from "../types/gameConfigData.cjs" */
 const os = require("node:os");
 const path = require("node:path");
 const Store = require("electron-store");
-/** @import { TGameData, TGameId } from "../types/gameConfigData.cjs" */
 
 const store = new Store();
 
@@ -18,10 +18,15 @@ function setGameUserData(key, value) {
     /** @type {TGameData} */
     const defaultConfig = {
       directory: defaultDirectoryPath(),
-      patchVersion: "",
+      patchVersion: null,
       installed: false,
       available: true,
     };
+
+    if (key === "ut-champs" || key === "ut-champs-2") {
+      // Disable download for now, we'll see for the future
+      defaultConfig.available = false;
+    }
 
     store.set(key, defaultConfig);
   }
@@ -70,10 +75,18 @@ function defaultDirectoryPath() {
   return path.resolve(os.homedir(), "Documents", "ut-games");
 }
 
+// ========================================================================================
+
+function clearStore() {
+  store.clear();
+}
+
 module.exports = {
   setGameUserData,
   getGameUserData,
   // ==
   setLastSelectedGame,
   getLastSelectedGame,
+  // ==
+  clearStore,
 };

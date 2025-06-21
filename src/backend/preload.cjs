@@ -23,4 +23,7 @@ contextBridge.exposeInMainWorld("actionsHandler", {
   },
   test: () => ipcRenderer.invoke("actionsHandler-test"),
   screenshot: () => ipcRenderer.invoke("actionsHandler-screenshot"),
+  fetchScreenshotsFromPath: (value) => ipcRenderer.invoke("actionsHandler-fetchScreenshotsFromPath", value),
+  open: (value) => ipcRenderer.invoke("actionsHandler-open", value),
+  copyImgToClipboard: (value) => ipcRenderer.invoke("actionsHandler-copyImgToClipboard", value),
 });

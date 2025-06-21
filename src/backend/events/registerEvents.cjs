@@ -1,4 +1,4 @@
-const { ipcMain, BrowserWindow, app, shell } = require("electron");
+const { ipcMain, BrowserWindow, app, shell, clipboard, nativeImage } = require("electron");
 const ActionsHandler = require("../classes/ActionsHandler.cjs");
 const DownloadManager = require("../classes/DownloadManger.cjs");
 const ArchiveManager = require("../classes/ArchiveManager.cjs");
@@ -29,6 +29,20 @@ function registerEvents(window) {
   });
 
   window.webContents.setWindowOpenHandler((details) => {
+    console.log(details);
+
+    if (details.frameName === "popup-window") {
+      return {
+        action: "allow",
+        overrideBrowserWindowOptions: {
+          fullscreenable: false,
+          backgroundColor: "black",
+          autoHideMenuBar: true,
+          modal: true,
+        },
+      };
+    }
+
     shell.openExternal(details.url);
     return { action: "deny" };
   });
@@ -87,9 +101,31 @@ function registerEvents(window) {
 
   ipcMain.handle("actionsHandler-screenshot", () => {
     const allWindows = Window.all();
-    const mc = allWindows.find((item) => item.title.startsWith("Minecraft"));
+    const mc = allWindows.find((item) => item.title.startsWith("Unreal"));
     fs.writeFileSync("./mc.png", mc.captureImageSync().toPngSync());
     actionsHandler.sendMessage("screenshot", true);
+  });
+
+  ipcMain.handle("actionsHandler-fetchScreenshotsFromPath", (event, value) => {
+    const parsed = [];
+    fs.readdirSync(value).forEach((item) => {
+      const fullPath = path.resolve(value, item);
+      if (fs.statSync(fullPath).isFile()) {
+        parsed.push(btoa(fullPath));
+      }
+    });
+
+    parsed.reverse();
+    return parsed;
+  });
+
+  ipcMain.handle("actionsHandler-open", (event, value) => {
+    shell.openPath(path.resolve(value));
+  });
+
+  ipcMain.handle("actionsHandler-copyImgToClipboard", (event, value) => {
+    const img = nativeImage.createFromPath(value);
+    clipboard.writeImage(img);
   });
 }
 

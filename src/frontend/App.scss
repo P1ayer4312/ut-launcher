@@ -17,9 +17,11 @@ body {
   border-image: linear-gradient(to left, #1d2031 0%, #1b0b02 100%) 1;
   border-width: 1px;
   border-style: solid;
+  height: calc(100vh - 2px);
 }
 
 .game-page-view {
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 2px);
 }
