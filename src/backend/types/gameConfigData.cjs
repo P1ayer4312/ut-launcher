@@ -14,4 +14,11 @@
  * @prop {(key: TGameId, value: TGameData) => Promise<void>} set
  * @prop {() => Promise<TGameId>} getLastSelectedGame
  * @prop {(value: TGameId) => Promise<void>} setLastSelectedGame
+ * @prop {() => Promise<{ canceled: boolean, filePaths: string[]}>} selectInstallDir
+ * @prop {(gameId: TGameId, installDirectory: string) => Promise<void>} startGameDownload
+ * @prop {() => Promise<void>} stopGameDownload
+ *
+ * @typedef {object} TWorkerData
+ * @prop {string} installDirectory
+ * @prop {TGameId} gameId
  */

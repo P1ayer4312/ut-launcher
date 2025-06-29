@@ -1,9 +1,8 @@
 import { useGlobalState } from "../../../state/useGlobalState";
 import "./GamePageLoadingBar.scss";
 
-export default function GamePageLoadingBar({ valuePercent = 0 }) {
+export default function GamePageLoadingBar() {
   const { progressBar } = useGlobalState();
-  console.log(progressBar);
   return (
     <div className="game-page_loading-bar">
       <span>{progressBar.text}</span>

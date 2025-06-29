@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, dialog } = require("electron");
 const path = require("node:path");
 const { registerEvents } = require("./events/registerEvents.cjs");
 const { registerGameDataEvents } = require("./events/registerGameDataEvents.cjs");
@@ -6,65 +6,64 @@ const { registerGlobalShortcuts } = require("./events/registerGlobalShortcuts.cj
 const { registerSessionProtocol } = require("./events/registerSessionProtocol.cjs");
 const { clearStore } = require("./store/userPreferences.cjs");
 
-const IS_DEV = process?.argv?.includes("--dev");
-
+process.env.DEV = process?.argv?.includes("--dev");
 // clearStore();
 
 if (require("electron-squirrel-startup")) {
-  app.quit();
+	app.quit();
 }
 
 function createWindow() {
-  // Setup protocol for local file access
-  const partition = "persist:ut-launcher";
-  registerSessionProtocol(partition);
+	// Setup protocol for local file access
+	const partition = "persist:ut-launcher";
+	registerSessionProtocol(partition);
 
-  const win = new BrowserWindow({
-    minWidth: 1300,
-    minHeight: 700,
-    width: 1300,
-    height: 700,
-    backgroundColor: "black",
-    icon: path.resolve(__dirname, "../../public/icon/icon.ico"),
+	const win = new BrowserWindow({
+		minWidth: 1300,
+		minHeight: 700,
+		width: 1300,
+		height: 700,
+		backgroundColor: "black",
+		icon: path.resolve(__dirname, "../../public/icon/icon.ico"),
 
-    autoHideMenuBar: true,
-    titleBarStyle: "hidden",
-    // ...(process.platform !== "darwin" ? { titleBarOverlay: true } : {}),
+		autoHideMenuBar: true,
+		titleBarStyle: "hidden",
+		// ...(process.platform !== "darwin" ? { titleBarOverlay: true } : {}),
 
-    webPreferences: {
-      preload: path.resolve(__dirname, "preload.cjs"),
-      partition: partition,
-    },
-  });
+		webPreferences: {
+			preload: path.resolve(__dirname, "preload.cjs"),
+			partition: partition,
+		},
+	});
 
-  if (IS_DEV) {
-    win.loadURL("http://localhost:5173");
-    win.webContents.openDevTools();
-  } else {
-    const siteLocation = path.resolve(process.resourcesPath, "dist", "index.html");
-    win.loadFile(siteLocation);
-  }
+	if (Boolean(process.env.DEV)) {
+		win.loadURL("http://localhost:5173");
+		win.webContents.openDevTools();
+	} else {
+		const siteLocation = path.resolve(process.resourcesPath, "dist", "index.html");
+		win.loadFile(siteLocation);
+	}
 
-  return win;
+	return win;
 }
 
 app.commandLine.appendSwitch("enable-features", "GlobalShortcutsPortal");
 
 app.whenReady().then(() => {
-  const win = createWindow();
-  registerEvents(win);
-  registerGameDataEvents(win);
-  registerGlobalShortcuts();
+	const win = createWindow();
+	registerEvents(win);
+	registerGameDataEvents(win);
+	registerGlobalShortcuts();
 
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  });
+	app.on("activate", () => {
+		if (BrowserWindow.getAllWindows().length === 0) {
+			createWindow();
+		}
+	});
 });
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+	if (process.platform !== "darwin") {
+		app.quit();
+	}
 });

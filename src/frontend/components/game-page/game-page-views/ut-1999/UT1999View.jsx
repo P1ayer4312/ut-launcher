@@ -1,19 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useGlobalState } from "../../../../state/useGlobalState";
 import GamePageNavbar from "../../game-page-navbar/GamePageNavbar";
 import GamePageLoadingBar from "../../game-page-loading-bar/GamePageLoadingBar";
 import Home from "./tab-views/home/Home";
 import Screenshots from "../../../screenshots/Screenshots";
 import Community from "./tab-views/community/Community";
-import contextBridge from "../../../../contextBridge/contextBridge";
 
 export default function UT1999View() {
   const { downloadingGame, selectedGame } = useGlobalState();
   const [activeTab, setActiveTab] = useState("home");
-
-  useEffect(() => {
-    contextBridge.gameData.get("ut-1999");
-  }, []);
 
   function getTabView(activeTab) {
     switch (activeTab) {
@@ -30,7 +25,7 @@ export default function UT1999View() {
 
   return (
     <>
-      <GamePageNavbar unavailable={false} stop={false}>
+      <GamePageNavbar>
         <div className="game-page-navbar_button" onClick={() => setActiveTab("home")}>
           Home
         </div>

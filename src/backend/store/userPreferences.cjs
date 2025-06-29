@@ -23,11 +23,6 @@ function setGameUserData(key, value) {
       available: true,
     };
 
-    if (key === "ut-champs" || key === "ut-champs-2") {
-      // Disable download for now, we'll see for the future
-      defaultConfig.available = false;
-    }
-
     store.set(key, defaultConfig);
   }
 }

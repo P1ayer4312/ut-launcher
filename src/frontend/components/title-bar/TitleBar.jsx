@@ -1,8 +1,9 @@
+import contextBridge from "../../contextBridge/contextBridge";
 import "./TitleBar.scss";
-/* global titleBarControls */
 
 export default function TitleBar() {
-  const titleBarControls = window.titleBarControls ?? {};
+  const titleBarControls = contextBridge.titleBarControls;
+
   return (
     <div className="title-bar_wrapper">
       <div className="title-bar_draggable" onDoubleClick={titleBarControls.maximize}></div>
