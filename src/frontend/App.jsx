@@ -9,7 +9,9 @@ import contextBridge from "./contextBridge/contextBridge";
 import { useEffect } from "react";
 
 function App() {
-	const { setSelectedGame, setProgressBar } = useGlobalState();
+	const { setSelectedGame, setProgressBar, setLocalDataStoreForGameId, setDownloadingGame } =
+		useGlobalState();
+
 	useEffect(() => {
 		const screenshotAudio = new Audio("./sounds/steam-screenshot.mp3");
 
@@ -20,30 +22,36 @@ function App() {
 		contextBridge.actionsHandler.onMessageEvent((data) => {
 			switch (data.key) {
 				case "progressFormatted":
-					console.log("progressFormatted", data.value);
 					setProgressBar({ text: data.value });
 					break;
+
 				case "progress":
-					console.log("progress", data.value);
 					setProgressBar({ percentage: Math.floor(data.value.progress * 100) });
 					break;
+
 				case "screenshot":
 					screenshotAudio.play();
 					break;
+
+				case "updateLocalGameStore":
+					setLocalDataStoreForGameId(data.value.gameId, { installed: data.value.installed });
+					setDownloadingGame(null);
+					break;
+
 				default:
 					// eslint-disable-next-line no-console
 					console.error("Unhandled message:", data);
 					break;
 			}
 		});
-	}, [setProgressBar, setSelectedGame]);
+	}, [setDownloadingGame, setLocalDataStoreForGameId, setProgressBar, setSelectedGame]);
 
 	return (
 		<>
 			<MainGrid>
 				<TitleBar />
 				<MenuItemGameList />
-				<div className="game-page-view" name="./">
+				<div className="game-page-view" style={{ color: "orange" }}>
 					<BannerImgAndLogo />
 					<GamePageHandler />
 				</div>

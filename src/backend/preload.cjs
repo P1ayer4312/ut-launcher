@@ -17,7 +17,7 @@ contextBridge.exposeInMainWorld("gameData", {
 	startGameDownload: (gameId, installDirectory) => {
 		ipcRenderer.invoke("gameData-startGameDownload", gameId, installDirectory);
 	},
-	stopGameDownload: () => ipcRenderer.invoke("gameData-stopGameDownload"),
+	stopGameDownload: (gameId) => ipcRenderer.invoke("gameData-stopGameDownload", gameId),
 });
 
 // Events for custom actions
@@ -25,7 +25,6 @@ contextBridge.exposeInMainWorld("actionsHandler", {
 	onMessageEvent: (callback) => {
 		ipcRenderer.on("actionsHandler-message", (event, message) => callback(message));
 	},
-	test: () => ipcRenderer.invoke("actionsHandler-test"),
 	screenshot: () => ipcRenderer.invoke("actionsHandler-screenshot"),
 	fetchScreenshotsFromPath: (value) => ipcRenderer.invoke("actionsHandler-fetchScreenshotsFromPath", value),
 	open: (value) => ipcRenderer.invoke("actionsHandler-open", value),

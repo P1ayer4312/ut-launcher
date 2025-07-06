@@ -1,6 +1,4 @@
 /** @import { TGameData, TGameId } from "../types/gameConfigData.cjs" */
-const os = require("node:os");
-const path = require("node:path");
 const Store = require("electron-store");
 
 const store = new Store();
@@ -11,33 +9,24 @@ const store = new Store();
  * @param {TGameData} value
  */
 function setGameUserData(key, value) {
-  if (store.has(key)) {
-    const current = store.get(key);
-    store.set(key, { ...current, ...value });
-  } else {
-    /** @type {TGameData} */
-    const defaultConfig = {
-      directory: defaultDirectoryPath(),
-      patchVersion: null,
-      installed: false,
-      available: true,
-    };
-
-    store.set(key, defaultConfig);
-  }
+	if (store.has(key)) {
+		const current = store.get(key);
+		store.set(key, { ...current, ...value });
+	} else {
+		resetStoreForGame(key);
+	}
 }
-
 /**
  * Get config data for a game
  * @param {TGameId} key
  * @returns {TGameData}
  */
 function getGameUserData(key) {
-  if (!store.has(key)) {
-    setGameUserData(key, {});
-  }
+	if (!store.has(key)) {
+		setGameUserData(key, {});
+	}
 
-  return store.get(key);
+	return store.get(key);
 }
 
 // ========================================================================================
@@ -49,7 +38,7 @@ const lastSelectedGameStoreKey = "lastSelectedGame";
  * @param {TGameId} value
  */
 function setLastSelectedGame(value) {
-  store.set(lastSelectedGameStoreKey, value);
+	store.set(lastSelectedGameStoreKey, value);
 }
 
 /**
@@ -57,31 +46,44 @@ function setLastSelectedGame(value) {
  * @returns {TGameId}
  */
 function getLastSelectedGame() {
-  if (!store.has(lastSelectedGameStoreKey)) {
-    setLastSelectedGame("unreal");
-  }
+	if (!store.has(lastSelectedGameStoreKey)) {
+		setLastSelectedGame("unreal");
+	}
 
-  return store.get(lastSelectedGameStoreKey);
-}
-
-// ========================================================================================
-
-function defaultDirectoryPath() {
-  return path.resolve(os.homedir(), "Documents", "ut-games");
+	return store.get(lastSelectedGameStoreKey);
 }
 
 // ========================================================================================
 
 function clearStore() {
-  store.clear();
+	store.clear();
+}
+
+// ========================================================================================
+
+/**
+ * Reset the local store config for a game
+ * @param {TGameId} key
+ */
+function resetStoreForGame(key) {
+	/** @type {TGameData} */
+	const defaultConfig = {
+		directory: "",
+		patchVersion: null,
+		installed: false,
+		available: true,
+	};
+
+	store.set(key, defaultConfig);
 }
 
 module.exports = {
-  setGameUserData,
-  getGameUserData,
-  // ==
-  setLastSelectedGame,
-  getLastSelectedGame,
-  // ==
-  clearStore,
+	setGameUserData,
+	getGameUserData,
+	// ==
+	setLastSelectedGame,
+	getLastSelectedGame,
+	// ==
+	clearStore,
+	resetStoreForGame,
 };

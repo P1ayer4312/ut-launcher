@@ -1,9 +1,12 @@
 /** @import DownloadManager from '../../classes/DownloadManger.cjs*/
 /** @import { TWorkerData } from '../../types/gameConfigData.cjs' */
 const { parentPort, workerData: _workerData } = require("node:worker_threads");
+const path = require("node:path");
+const fs = require("node:fs");
 const ArchiveManager = require("../../classes/ArchiveManager.cjs");
 const linksProvider = require("../../providers/linksProvider.cjs");
-const fs = require("node:fs/promises");
+const Helper = require("../../classes/Helper.cjs");
+const axios = require("axios");
 
 /** @type {TWorkerData} */
 const workerData = _workerData;
@@ -14,22 +17,22 @@ const workerData = _workerData;
  * @param {(value: string) => void} sevenZipLogsCallback
  */
 async function downloadUT1999(dl, sevenZipLogsCallback) {
-	const isDev = Boolean(process.env.DEV);
-	const links = isDev ? linksProvider["ut-1999"].dev : linksProvider["ut-1999"].prod;
-
+	let latestPatchUrl;
+	const links = process.env.DEV ? linksProvider["ut-1999"].dev : linksProvider["ut-1999"].prod;
 	dl.setDownloadDestination(workerData.installDirectory, workerData.gameId);
 
 	// Download all necessary files
 	await new Promise(async (resolve, reject) => {
-		if (isDev) {
+		if (process.env.DEV) {
 			// Use local download for testing
-			dl.setUrls(Object.values(links));
+			dl.setUrls([links.gameFiles, links.patch]);
+			latestPatchUrl = links.patch;
 		} else {
 			// Fetch Github releases from OldUnreal's repo
 			const githubReleases = await axios.get(links.patch).then((res) => res.data);
 
 			// Find the patch for Windows x86
-			const latestPatchUrl = githubReleases[0].assets.find((item) => {
+			latestPatchUrl = githubReleases[0].assets.find((item) => {
 				const name = item.name.toLowerCase();
 				return name.includes("windows") && name.endsWith("zip") && !name.includes("windowsxp");
 			})?.browser_download_url;
@@ -39,7 +42,7 @@ async function downloadUT1999(dl, sevenZipLogsCallback) {
 				console.error("Unable to find patch");
 			}
 
-			dl.setUrls([links.gameFiles, links.installer, latestPatchUrl]);
+			dl.setUrls([links.gameFiles, latestPatchUrl]);
 		}
 
 		dl.on("error", (err) => reject(err));
@@ -53,26 +56,8 @@ async function downloadUT1999(dl, sevenZipLogsCallback) {
 	parentPort.postMessage({ key: "progressFormatted", value: "Extracting files..." });
 	parentPort.postMessage({ key: "progress", value: { progress: 1 } });
 
-	// Unpack the installer provided from OldUnreal, unpack the zip, then the exe
-	await ArchiveManager.extractFiles(
-		dl.getFileLocationFromUrl(links.installer),
-		dl.installFilesFolder,
-		sevenZipLogsCallback
-	);
-
-	// Find the executable name (it should be the same but just in case)
-	// Then extract it in the install_folder
-	const exeName = await fs
-		.readdir(dl.installFilesFolder)
-		.then((res) => res.find((item) => item.endsWith("exe")));
-
-	const exeInstallerPath = dl.getFileLocationForFile(exeName);
-	await ArchiveManager.extractFiles(exeInstallerPath, dl.installFilesFolder, sevenZipLogsCallback);
-
-	// Patch the skip.txt file
-	let skipList = await fs.readFile(dl.getFileLocationForFile("Installer/skip.txt"), { encoding: "utf-8" });
-	skipList += `\nSetup.exe`;
-	await fs.writeFile(dl.getFileLocationForFile("skip.txt"), skipList, { encoding: "utf-8" });
+	// Copy the skip files list next to the game archive
+	await Helper.copyFile(Helper.configFilePath(process.env.DEV, "ut-1999/skip.txt"), dl.installFilesFolder);
 
 	// Extract game files and exclude the ones on the list
 	await ArchiveManager.extractFilesWithIgnore(
@@ -81,6 +66,36 @@ async function downloadUT1999(dl, sevenZipLogsCallback) {
 		"skip.txt",
 		sevenZipLogsCallback
 	);
+
+	// Extract the patch in the game folder
+	await ArchiveManager.extractFiles(
+		dl.getFileLocationFromUrl(latestPatchUrl),
+		dl.destination,
+		sevenZipLogsCallback
+	);
+
+	// Copy config files in the game folder
+	parentPort.postMessage({ key: "progressFormatted", value: "Alter game configuration..." });
+	const gameSystemFolder = path.resolve(dl.destination, "System");
+	await Promise.all([
+		Helper.copyFile(Helper.configFilePath(process.env.DEV, "ut-1999/UnrealTournament.ini"), gameSystemFolder),
+		Helper.copyFile(Helper.configFilePath(process.env.DEV, "ut-1999/User.ini"), gameSystemFolder),
+	]);
+
+	// Create screenshots folder
+	const screenshotsFolder = path.resolve(dl.destination, "launcher_screenshots");
+	if (!fs.existsSync(screenshotsFolder)) {
+		fs.mkdirSync(screenshotsFolder);
+	}
+
+	// Update the local store for the installed game
+	parentPort.postMessage({
+		key: "updateLocalGameStore",
+		value: { gameId: "ut-1999", installed: true },
+	});
+
+	// Stop the worker
+	process.exit(0);
 }
 
 module.exports = downloadUT1999;

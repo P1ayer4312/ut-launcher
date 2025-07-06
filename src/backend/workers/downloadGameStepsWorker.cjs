@@ -14,7 +14,6 @@ const workerData = _workerData;
 	dl.on("progress", (data) => parentPort.postMessage({ key: "progress", value: data }));
 	dl.on("error", (err) => parentPort.postMessage({ key: "error", value: err }));
 
-	parentPort.postMessage({ key: "start", value: workerData.gameId });
 	parentPort.on("message", (data) => {
 		if (data.key === "terminate") {
 			dl.stop();
@@ -34,7 +33,12 @@ const workerData = _workerData;
 	}
 
 	// Run download steps function for selected game
-	if (workerData.gameId === "ut-1999") {
-		downloadUT1999(dl, sevenZipLogsCallback);
+	switch (workerData.gameId) {
+		case "ut-1999":
+			downloadUT1999(dl, sevenZipLogsCallback);
+			break;
+
+		default:
+			throw new Error("Invalid gameId provided");
 	}
 })();

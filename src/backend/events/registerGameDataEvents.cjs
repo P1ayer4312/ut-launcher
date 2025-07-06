@@ -1,17 +1,17 @@
-const { ipcMain, BrowserWindow, dialog } = require("electron");
+const { ipcMain, dialog } = require("electron");
 const {
 	getGameUserData,
 	setGameUserData,
 	getLastSelectedGame,
 	setLastSelectedGame,
+	resetStoreForGame,
 } = require("../store/userPreferences.cjs");
 const actionsHandler = require("../handlers/actionsHandler.cjs");
 
 /**
  * Events used for fetching and storing local data for each game
- * @param {BrowserWindow} window
  */
-function registerGameDataEvents(window) {
+function registerGameDataEvents() {
 	ipcMain.handle("gameData-get", (event, value) => {
 		return getGameUserData(value);
 	});
@@ -44,8 +44,9 @@ function registerGameDataEvents(window) {
 		});
 	});
 
-	ipcMain.handle("gameData-stopGameDownload", (event) => {
+	ipcMain.handle("gameData-stopGameDownload", (event, gameId) => {
 		actionsHandler.terminateWorker();
+		resetStoreForGame(gameId);
 	});
 }
 

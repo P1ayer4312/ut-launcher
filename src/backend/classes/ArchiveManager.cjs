@@ -9,6 +9,7 @@ class ArchiveManager {
 	 * @param {((value: string) => void) | undefined} printCallback
 	 */
 	static async extractFiles(filePath, destinationDirectory, printCallback = undefined) {
+		// eslint-disable-next-line no-async-promise-executor
 		return new Promise(async (resolve, reject) => {
 			try {
 				const wasm7z = await js7z({ onExit: resolve, onAbort: reject, print: printCallback });
@@ -42,6 +43,7 @@ class ArchiveManager {
 		ignoreFileName,
 		printCallback = undefined
 	) {
+		// eslint-disable-next-line no-async-promise-executor
 		return new Promise(async (resolve, reject) => {
 			try {
 				const wasm7z = await js7z({ onExit: resolve, onAbort: reject, print: printCallback });
@@ -62,6 +64,7 @@ class ArchiveManager {
 					`/in/${path.basename(filePath)}`,
 				]);
 			} catch (error) {
+				// eslint-disable-next-line no-console
 				console.error(error);
 				reject(error);
 			}

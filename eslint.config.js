@@ -5,12 +5,12 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import pluginQuery from "@tanstack/eslint-plugin-query";
 
 export default [
-	{ ignores: ["dist"] },
+	{ ignores: ["dist", "node_modules", "public", "build"] },
 	{
-		files: ["**/*.{js,jsx}"],
+		files: ["**/*.{js,jsx,cjs}"],
 		languageOptions: {
 			ecmaVersion: 2020,
-			globals: globals.browser,
+			globals: { ...globals.browser, process: "readonly", __dirname: "readonly" },
 			parserOptions: {
 				ecmaVersion: "latest",
 				ecmaFeatures: { jsx: true },

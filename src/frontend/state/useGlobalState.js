@@ -27,6 +27,7 @@ import { create } from "zustand";
  *
  * @prop {TLocalDataStore} localDataStore Store games' configs in the global state
  * @prop {(value: TLocalDataStore) => void} setLocalDataStore
+ * @prop {(key: TGameId, value: TGameData) => void} setLocalDataStoreForGameId
  */
 
 /** @type {UseBoundStore<StoreApi<TGlobalState>>} */
@@ -36,12 +37,18 @@ export const useGlobalState = create((set) => ({
 
 	downloadingGame: null,
 	setDownloadingGame: (value) => set({ downloadingGame: value }),
-
-	progressBar: { percentage: 0, text: "" },
+	progressBar: { percentage: 0, text: "..." },
 	setProgressBar: (value) => set((current) => ({ progressBar: { ...current.progressBar, ...value } })),
 
 	localDataStore: {},
 	setLocalDataStore: (value) => {
 		set((current) => ({ localDataStore: { ...current.localDataStore, ...value } }));
+	},
+	setLocalDataStoreForGameId: (key, value) => {
+		set((current) => ({
+			localDataStore: {
+				[key]: { ...current.localDataStore[key], ...value },
+			},
+		}));
 	},
 }));

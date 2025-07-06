@@ -18,7 +18,7 @@
 		"vite:build": "vite build",
 		"vite:preview": "vite preview",
 		"electron:start": "electron-forge start",
-		"electron:dev": "electron-forge start -- --dev",
+		"electron:dev": "cross-env DEV=true electron-forge start",
 		"electron:package": "electron-forge package",
 		"electron:make": "electron-forge make"
 	},
@@ -26,7 +26,6 @@
 		"Do not bump 'electron-store@7.0.0' to latest version, it doesn't work because it's ESM converted"
 	],
 	"dependencies": {
-		"@dotenvx/dotenvx": "^1.45.1",
 		"axios": "^1.10.0",
 		"electron-squirrel-startup": "^1.0.1",
 		"electron-store": "^7.0.0",
@@ -43,7 +42,7 @@
 		"@electron-forge/plugin-auto-unpack-natives": "^7.8.1",
 		"@electron-forge/plugin-fuses": "^7.8.1",
 		"@electron/fuses": "^1.8.0",
-		"@eslint/js": "^9.29.0",
+		"@eslint/js": "^9.30.1",
 		"@firefox-devtools/react-contextmenu": "^5.2.2",
 		"@tanstack/eslint-plugin-query": "^5.81.2",
 		"@tanstack/react-query": "^5.81.5",
@@ -51,16 +50,17 @@
 		"@types/react-dom": "^19.1.6",
 		"@vitejs/plugin-react": "^4.6.0",
 		"concurrently": "^9.2.0",
-		"electron": "^37.1.0",
-		"eslint": "^9.29.0",
+		"cross-env": "^7.0.3",
+		"electron": "^37.2.0",
+		"eslint": "^9.30.1",
 		"eslint-plugin-react-hooks": "^5.2.0",
 		"eslint-plugin-react-refresh": "^0.4.20",
-		"globals": "^16.2.0",
+		"globals": "^16.3.0",
 		"npm-check-updates": "^18.0.1",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"sass-embedded": "^1.89.2",
-		"vite": "^7.0.0",
+		"vite": "^7.0.2",
 		"zustand": "^5.0.6"
 	}
 }

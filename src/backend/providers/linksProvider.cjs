@@ -15,14 +15,18 @@
 
 /** @type {TLinksProvider} */
 const linksProvider = {
+	unreal: {
+		dev: {},
+		prod: {},
+	},
 	"ut-1999": {
 		dev: {
-			gameFiles: "http://localhost:3000/UT_GOTY_CD1.iso",
+			gameFiles: "http://localhost:3000/UT_CD1_436_Final.iso",
 			patch: "http://localhost:3000/OldUnreal-UTPatch469e-Windows-x86.zip",
 			installer: "http://localhost:3000/ut_goty.zip",
 		},
 		prod: {
-			gameFiles: "https://archive.org/download/ut-goty/UT_GOTY_CD1.iso",
+			gameFiles: "https://archive.org/download/ut-cd-1-436/UT_CD1_436_Final.iso",
 			installer: "https://www.oldunreal.com/site/assets/files/1107/ut_goty.zip",
 			patch: "https://api.github.com/repos/OldUnreal/UnrealTournamentPatches/releases",
 		},

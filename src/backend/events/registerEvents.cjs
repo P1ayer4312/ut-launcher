@@ -1,6 +1,4 @@
 const { ipcMain, BrowserWindow, app, shell, clipboard, nativeImage } = require("electron");
-const DownloadManager = require("../classes/DownloadManger.cjs");
-const ArchiveManager = require("../classes/ArchiveManager.cjs");
 const { Window } = require("node-screenshots");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -43,58 +41,6 @@ function registerEvents(window) {
 
 		shell.openExternal(details.url);
 		return { action: "deny" };
-	});
-
-	ipcMain.handle("actionsHandler-test", () => {
-		actionsHandler.runActions(async (sendMessage) => {
-			// TODO: REMOVE EVERYTHING AND REFACTOR IT
-			fs.mkdirSync(path.resolve("D://GitHub//ut-launcher//downloads//extract"));
-
-			await new Promise((resolve) => {
-				const dl = new DownloadManager(
-					"http://localhost:3000/UT_GOTY_CD1.iso",
-					"D://GitHub//ut-launcher//downloads"
-				);
-
-				dl.on("progressFormatted", (data) => {
-					sendMessage("progressFormatted", data);
-				});
-				dl.on("progress", (data) => {
-					sendMessage("progress", data);
-				});
-				dl.on("finish", () => {
-					sendMessage("finish", "Done");
-					resolve();
-				});
-
-				dl.start();
-			});
-
-			await new Promise((resolve) => {
-				const dl = new DownloadManager(
-					"http://localhost:3000/OldUnreal-UTPatch469e-Windows.exe",
-					"D://GitHub//ut-launcher//downloads"
-				);
-
-				dl.on("progressFormatted", (data) => {
-					sendMessage("progressFormatted", data);
-				});
-				dl.on("progress", (data) => {
-					sendMessage("progress", data);
-				});
-				dl.on("finish", () => {
-					sendMessage("finish", "Done");
-					resolve();
-				});
-
-				dl.start();
-			});
-
-			await ArchiveManager.extractFile(
-				"D://GitHub//ut-launcher//downloads//UT_GOTY_CD1.iso",
-				"D://GitHub//ut-launcher//downloads//extract"
-			);
-		});
 	});
 
 	ipcMain.handle("actionsHandler-screenshot", () => {

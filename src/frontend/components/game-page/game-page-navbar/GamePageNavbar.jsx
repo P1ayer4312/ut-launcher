@@ -11,8 +11,14 @@ import contextBridge from "../../../contextBridge/contextBridge";
  * @param {NavbarProps & React.PropsWithChildren} props
  */
 export default function GamePageNavbar(props) {
-	const { selectedGame, downloadingGame, setDownloadingGame, localDataStore, setLocalDataStore } =
-		useGlobalState();
+	const {
+		selectedGame,
+		downloadingGame,
+		setDownloadingGame,
+		localDataStore,
+		setLocalDataStore,
+		setLocalDataStoreForGameId,
+	} = useGlobalState();
 
 	const [gameData, setGameData] = useState(localDataStore[selectedGame]);
 
@@ -25,7 +31,10 @@ export default function GamePageNavbar(props) {
 				setLocalDataStore({ [selectedGame]: data });
 			});
 		}
-	}, [gameData, selectedGame, setLocalDataStore]);
+
+		// Without this the PLAY button is not shown right after the install is completed
+		setGameData(localDataStore[selectedGame]);
+	}, [gameData, localDataStore, selectedGame, setLocalDataStore]);
 
 	function GameButton() {
 		// Show the stop button if the game is downloading
@@ -34,8 +43,7 @@ export default function GamePageNavbar(props) {
 				<div
 					className="game-page-navbar_action-button game-page-navbar_stop"
 					onClick={() => {
-						console.log("stop clicked");
-						contextBridge.gameData.stopGameDownload().then(() => setDownloadingGame(null));
+						contextBridge.gameData.stopGameDownload(downloadingGame).then(() => setDownloadingGame(null));
 					}}
 				>
 					STOP
@@ -71,14 +79,13 @@ export default function GamePageNavbar(props) {
 						if (data.canceled) {
 							return;
 						}
-						// TODO: Refactor this part
-						const temp = { ...gameData, directory: data.filePaths[0] };
-						setLocalDataStore({ [selectedGame]: temp });
-						setGameData(temp);
+
+						const directoryPath = data.filePaths[0];
+						setLocalDataStoreForGameId(selectedGame, { directory: directoryPath });
 
 						Promise.all([
-							contextBridge.gameData.set(selectedGame, temp),
-							contextBridge.gameData.startGameDownload(selectedGame, data.filePaths[0]),
+							contextBridge.gameData.set(selectedGame, { directory: directoryPath }),
+							contextBridge.gameData.startGameDownload(selectedGame, directoryPath),
 						]).then(() => {
 							setDownloadingGame(selectedGame);
 						});

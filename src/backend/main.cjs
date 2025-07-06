@@ -1,12 +1,11 @@
-const { app, BrowserWindow, dialog } = require("electron");
+const { app, BrowserWindow } = require("electron");
 const path = require("node:path");
 const { registerEvents } = require("./events/registerEvents.cjs");
 const { registerGameDataEvents } = require("./events/registerGameDataEvents.cjs");
 const { registerGlobalShortcuts } = require("./events/registerGlobalShortcuts.cjs");
 const { registerSessionProtocol } = require("./events/registerSessionProtocol.cjs");
-const { clearStore } = require("./store/userPreferences.cjs");
+// const { clearStore } = require("./store/userPreferences.cjs");
 
-process.env.DEV = process?.argv?.includes("--dev");
 // clearStore();
 
 if (require("electron-squirrel-startup")) {
@@ -36,7 +35,7 @@ function createWindow() {
 		},
 	});
 
-	if (Boolean(process.env.DEV)) {
+	if (process.env.DEV) {
 		win.loadURL("http://localhost:5173");
 		win.webContents.openDevTools();
 	} else {
@@ -52,7 +51,7 @@ app.commandLine.appendSwitch("enable-features", "GlobalShortcutsPortal");
 app.whenReady().then(() => {
 	const win = createWindow();
 	registerEvents(win);
-	registerGameDataEvents(win);
+	registerGameDataEvents();
 	registerGlobalShortcuts();
 
 	app.on("activate", () => {
