@@ -43,13 +43,6 @@ function registerEvents(window) {
 		return { action: "deny" };
 	});
 
-	ipcMain.handle("actionsHandler-screenshot", () => {
-		const allWindows = Window.all();
-		const mc = allWindows.find((item) => item.title.startsWith("Unreal"));
-		fs.writeFileSync("./mc.png", mc.captureImageSync().toPngSync());
-		actionsHandler.sendMessage("screenshot", true);
-	});
-
 	ipcMain.handle("actionsHandler-fetchScreenshotsFromPath", (event, value) => {
 		const parsed = [];
 		fs.readdirSync(value).forEach((item) => {

@@ -9,7 +9,7 @@ import contextBridge from "./contextBridge/contextBridge";
 import { useEffect } from "react";
 
 function App() {
-	const { setSelectedGame, setProgressBar, setLocalDataStoreForGameId, setDownloadingGame } =
+	const { setSelectedGame, setProgressBar, setLocalDataStoreForGameId, setDownloadingGame, setRunningGame } =
 		useGlobalState();
 
 	useEffect(() => {
@@ -38,13 +38,21 @@ function App() {
 					setDownloadingGame(null);
 					break;
 
+				case "setRunningGame":
+					setRunningGame(data.value);
+					break;
+
+				case "resetRunningGame":
+					setRunningGame(null);
+					break;
+
 				default:
 					// eslint-disable-next-line no-console
 					console.error("Unhandled message:", data);
 					break;
 			}
 		});
-	}, [setDownloadingGame, setLocalDataStoreForGameId, setProgressBar, setSelectedGame]);
+	}, [setDownloadingGame, setLocalDataStoreForGameId, setProgressBar, setRunningGame, setSelectedGame]);
 
 	return (
 		<>

@@ -13,11 +13,16 @@ contextBridge.exposeInMainWorld("gameData", {
 	set: (key, value) => ipcRenderer.invoke("gameData-set", key, value),
 	getLastSelectedGame: () => ipcRenderer.invoke("gameData-getLastSelectedGame"),
 	setLastSelectedGame: (value) => ipcRenderer.invoke("gameData-setLastSelectedGame", value),
+	// ==================================================================================================
 	selectInstallDir: () => ipcRenderer.invoke("gameData-selectInstallDir"),
+	// ==================================================================================================
 	startGameDownload: (gameId, installDirectory) => {
 		ipcRenderer.invoke("gameData-startGameDownload", gameId, installDirectory);
 	},
 	stopGameDownload: (gameId) => ipcRenderer.invoke("gameData-stopGameDownload", gameId),
+	// ==================================================================================================
+	startInstalledGame: (gameId) => ipcRenderer.invoke("gameData-startInstalledGame", gameId),
+	stopInstalledGame: () => ipcRenderer.invoke("gameData-stopInstalledGame"),
 });
 
 // Events for custom actions
@@ -25,7 +30,6 @@ contextBridge.exposeInMainWorld("actionsHandler", {
 	onMessageEvent: (callback) => {
 		ipcRenderer.on("actionsHandler-message", (event, message) => callback(message));
 	},
-	screenshot: () => ipcRenderer.invoke("actionsHandler-screenshot"),
 	fetchScreenshotsFromPath: (value) => ipcRenderer.invoke("actionsHandler-fetchScreenshotsFromPath", value),
 	open: (value) => ipcRenderer.invoke("actionsHandler-open", value),
 	copyImgToClipboard: (value) => ipcRenderer.invoke("actionsHandler-copyImgToClipboard", value),

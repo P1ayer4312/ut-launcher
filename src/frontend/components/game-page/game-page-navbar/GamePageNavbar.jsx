@@ -11,8 +11,11 @@ import contextBridge from "../../../contextBridge/contextBridge";
  * @param {NavbarProps & React.PropsWithChildren} props
  */
 export default function GamePageNavbar(props) {
+	// ================================================================================================
+
 	const {
 		selectedGame,
+		runningGame,
 		downloadingGame,
 		setDownloadingGame,
 		localDataStore,
@@ -36,16 +39,47 @@ export default function GamePageNavbar(props) {
 		setGameData(localDataStore[selectedGame]);
 	}, [gameData, localDataStore, selectedGame, setLocalDataStore]);
 
+	// ================================================================================================
+
+	function stopButtonClicked() {
+		if (selectedGame === runningGame) {
+			// Stop running game
+			contextBridge.gameData.stopInstalledGame();
+		} else {
+			// Stop the game download/install process
+			contextBridge.gameData.stopGameDownload(downloadingGame).then(() => setDownloadingGame(null));
+		}
+	}
+
+	function playButtonClicked() {
+		contextBridge.gameData.startInstalledGame(selectedGame);
+	}
+
+	function installButtonClicked() {
+		contextBridge.gameData.selectInstallDir().then((data) => {
+			if (data.canceled) {
+				return;
+			}
+
+			const directoryPath = data.filePaths[0];
+			setLocalDataStoreForGameId(selectedGame, { directory: directoryPath });
+
+			Promise.all([
+				contextBridge.gameData.set(selectedGame, { directory: directoryPath }),
+				contextBridge.gameData.startGameDownload(selectedGame, directoryPath),
+			]).then(() => {
+				setDownloadingGame(selectedGame);
+			});
+		});
+	}
+
+	// ================================================================================================
+
 	function GameButton() {
 		// Show the stop button if the game is downloading
-		if (selectedGame === downloadingGame) {
+		if (selectedGame === downloadingGame || selectedGame === runningGame) {
 			return (
-				<div
-					className="game-page-navbar_action-button game-page-navbar_stop"
-					onClick={() => {
-						contextBridge.gameData.stopGameDownload(downloadingGame).then(() => setDownloadingGame(null));
-					}}
-				>
+				<div className="game-page-navbar_action-button game-page-navbar_stop" onClick={stopButtonClicked}>
 					STOP
 				</div>
 			);
@@ -54,12 +88,7 @@ export default function GamePageNavbar(props) {
 		// Show the play button if the game is installed
 		if (gameData?.installed) {
 			return (
-				<div
-					className="game-page-navbar_action-button game-page-navbar_play"
-					onClick={() => {
-						contextBridge.gameData.get(selectedGame).then(console.log);
-					}}
-				>
+				<div className="game-page-navbar_action-button game-page-navbar_play" onClick={playButtonClicked}>
 					PLAY
 				</div>
 			);
@@ -72,30 +101,13 @@ export default function GamePageNavbar(props) {
 
 		// Show the install button if none of the check above pass
 		return (
-			<div
-				className="game-page-navbar_action-button game-page-navbar_install"
-				onClick={() => {
-					contextBridge.gameData.selectInstallDir().then((data) => {
-						if (data.canceled) {
-							return;
-						}
-
-						const directoryPath = data.filePaths[0];
-						setLocalDataStoreForGameId(selectedGame, { directory: directoryPath });
-
-						Promise.all([
-							contextBridge.gameData.set(selectedGame, { directory: directoryPath }),
-							contextBridge.gameData.startGameDownload(selectedGame, directoryPath),
-						]).then(() => {
-							setDownloadingGame(selectedGame);
-						});
-					});
-				}}
-			>
+			<div className="game-page-navbar_action-button game-page-navbar_install" onClick={installButtonClicked}>
 				INSTALL
 			</div>
 		);
 	}
+
+	// ================================================================================================
 
 	return (
 		<div className="game-page-navbar">
@@ -103,4 +115,6 @@ export default function GamePageNavbar(props) {
 			{props.children}
 		</div>
 	);
+
+	// ================================================================================================
 }

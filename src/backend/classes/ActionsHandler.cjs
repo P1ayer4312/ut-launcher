@@ -1,19 +1,26 @@
 /** @import { WorkerOptions } from "node:worker_threads" */
+/** @import { ChildProcessWithoutNullStreams } from "node:child_process" */
+/** @import { TGameId } from "../types/gameConfigData.cjs" */
 const { BrowserWindow } = require("electron");
 const { Worker } = require("node:worker_threads");
 const path = require("node:path");
-const { setGameUserData } = require("../store/userPreferences.cjs");
+const { setGameUserData, getGameUserData } = require("../store/userPreferences.cjs");
 
 /**
  * Class used for handling and displaying actions between Electron and the main world
  */
 class ActionsHandler {
 	constructor() {
-		this.abortController = null;
-		this.running = false;
 		/** @type {Worker | null} */
 		this.worker = null;
 		this.workerFolderPath = path.resolve(__dirname, "../workers");
+
+		/** @type {TGameId | null} */
+		this.runningGame = null;
+		/** @type {string | null} */
+		this.runningGameDirectory = null;
+		/** @type {ChildProcessWithoutNullStreams | null} */
+		this.runningProcess = null;
 	}
 
 	/**
@@ -54,6 +61,7 @@ class ActionsHandler {
 	}
 
 	terminateWorker() {
+		// eslint-disable-next-line no-console
 		console.log("Terminating worker");
 		if (this.worker && this.worker?.threadId !== -1) {
 			this.worker.postMessage({
@@ -61,10 +69,6 @@ class ActionsHandler {
 				value: true,
 			});
 		}
-	}
-
-	stop() {
-		this.abortController.abort();
 	}
 
 	/**
@@ -79,6 +83,40 @@ class ActionsHandler {
 			key: keyString,
 			value: message,
 		});
+	}
+
+	/**
+	 * Set current running game and store its directory for later user
+	 * @param {TGameId} gameId
+	 */
+	setRunningGame(gameId) {
+		const gameData = getGameUserData(gameId);
+		this.runningGame = gameId;
+		this.runningGameDirectory = gameData.directory;
+	}
+
+	/** Reset active game */
+	resetRunningGame() {
+		this.runningGame = null;
+		this.runningGameDirectory = null;
+	}
+
+	/** Stop any running game if present */
+	stopRunningGame() {
+		if (this.runningProcess?.kill()) {
+			this.runningProcess = null;
+		} else {
+			// eslint-disable-next-line no-console
+			console.error("Unable to terminate executable");
+		}
+	}
+
+	/**
+	 * Store a reference to the running game
+	 * @param {ChildProcessWithoutNullStreams} proc
+	 */
+	setRunningProcess(proc) {
+		this.runningProcess = proc;
 	}
 }
 

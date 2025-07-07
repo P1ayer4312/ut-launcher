@@ -7,6 +7,7 @@ const {
 	resetStoreForGame,
 } = require("../store/userPreferences.cjs");
 const actionsHandler = require("../handlers/actionsHandler.cjs");
+const Helper = require("../classes/Helper.cjs");
 
 /**
  * Events used for fetching and storing local data for each game
@@ -47,6 +48,27 @@ function registerGameDataEvents() {
 	ipcMain.handle("gameData-stopGameDownload", (event, gameId) => {
 		actionsHandler.terminateWorker();
 		resetStoreForGame(gameId);
+	});
+
+	ipcMain.handle("gameData-startInstalledGame", (event, gameId) => {
+		// Store the active game's id and directory
+		actionsHandler.setRunningGame(gameId);
+
+		const gameProcess = Helper.runExecutable(
+			Helper.getExePathForGameId(gameId, actionsHandler.runningGameDirectory),
+			() => actionsHandler.sendMessage("setRunningGame", gameId),
+			() => {
+				actionsHandler.sendMessage("resetRunningGame", null);
+				actionsHandler.resetRunningGame();
+			}
+		);
+
+		actionsHandler.setRunningProcess(gameProcess);
+	});
+
+	ipcMain.handle("gameData-stopInstalledGame", (event) => {
+		actionsHandler.stopRunningGame();
+		actionsHandler.resetRunningGame();
 	});
 }
 

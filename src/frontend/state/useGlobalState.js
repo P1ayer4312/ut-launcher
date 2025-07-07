@@ -19,6 +19,9 @@ import { create } from "zustand";
  * @prop {TGameId} selectedGame
  * @prop {(value: TGameId) => void} setSelectedGame
  *
+ * @prop {TGameId | null} runningGame
+ * @prop {(value: TGameId) => void} setRunningGame
+ *
  * @prop {TGameId | null} downloadingGame
  * @prop {(value: TGameId | null) => void} setDownloadingGame
  *
@@ -34,6 +37,8 @@ import { create } from "zustand";
 export const useGlobalState = create((set) => ({
 	selectedGame: "blank",
 	setSelectedGame: (value) => set({ selectedGame: value }),
+	runningGame: null,
+	setRunningGame: (value) => set({ runningGame: value }),
 
 	downloadingGame: null,
 	setDownloadingGame: (value) => set({ downloadingGame: value }),

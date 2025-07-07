@@ -17,6 +17,8 @@
  * @prop {() => Promise<{ canceled: boolean, filePaths: string[]}>} selectInstallDir
  * @prop {(gameId: TGameId, installDirectory: string) => Promise<void>} startGameDownload
  * @prop {() => Promise<void>} stopGameDownload
+ * @prop {(gameId: TGameId) => Promise<void>} startInstalledGame
+ * @prop {() => Promise<void>} stopInstalledGame
  *
  * @typedef {object} TWorkerData
  * @prop {string} installDirectory

@@ -24,6 +24,7 @@ function createWindow() {
 		height: 700,
 		backgroundColor: "black",
 		icon: path.resolve(__dirname, "../../public/icon/icon.ico"),
+		fullscreenable: false,
 
 		autoHideMenuBar: true,
 		titleBarStyle: "hidden",
