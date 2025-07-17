@@ -5,5 +5,5 @@ import "./MainGrid.scss";
  * @returns
  */
 export default function MainGrid(props) {
-  return <div className="main-grid">{props.children}</div>;
+	return <div className="main-grid">{props.children}</div>;
 }

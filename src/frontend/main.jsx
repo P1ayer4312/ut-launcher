@@ -1,15 +1,19 @@
+import { scan } from "react-scan";
+import React from "react"; // Needed for React Scan
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.scss";
-import App from "./App.jsx";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import App from "./App.jsx";
+import "./index.scss";
+
+scan({ enabled: import.meta.env?.DEV ?? false });
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </StrictMode>
+	<StrictMode>
+		<QueryClientProvider client={queryClient}>
+			<App />
+		</QueryClientProvider>
+	</StrictMode>
 );

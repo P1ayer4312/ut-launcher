@@ -12,6 +12,10 @@ import { create } from "zustand";
  * @prop {number} percentage
  *
  * @typedef {Record<TGameId, TGameData>} TLocalDataStore
+ *
+ * @typedef {object} TModalData
+ * @prop {boolean} isOpened
+ * @prop {('uninstall'|'confirm')} modalType
  */
 
 /**
@@ -31,6 +35,9 @@ import { create } from "zustand";
  * @prop {TLocalDataStore} localDataStore Store games' configs in the global state
  * @prop {(value: TLocalDataStore) => void} setLocalDataStore
  * @prop {(key: TGameId, value: TGameData) => void} setLocalDataStoreForGameId
+ *
+ * @prop {TModalData} modalData
+ * @prop {(value: TModalData) => void} setModalData
  */
 
 /** @type {UseBoundStore<StoreApi<TGlobalState>>} */
@@ -51,9 +58,12 @@ export const useGlobalState = create((set) => ({
 	},
 	setLocalDataStoreForGameId: (key, value) => {
 		set((current) => ({
-			localDataStore: {
-				[key]: { ...current.localDataStore[key], ...value },
-			},
+			localDataStore: { [key]: { ...current.localDataStore[key], ...value } },
 		}));
+	},
+
+	modalData: { isOpened: false, modalType: "" },
+	setModalData: (value) => {
+		set((current) => ({ modalData: { ...current.modalData, ...value } }));
 	},
 }));

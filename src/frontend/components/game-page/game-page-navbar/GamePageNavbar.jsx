@@ -2,6 +2,7 @@ import "./GamePageNavbar.scss";
 import { useEffect, useState } from "react";
 import { useGlobalState } from "../../../state/useGlobalState";
 import contextBridge from "../../../contextBridge/contextBridge";
+import { FaPlay, FaDownload, FaTimes } from "react-icons/fa";
 
 /**
  * @typedef {object} NavbarProps
@@ -80,7 +81,8 @@ export default function GamePageNavbar(props) {
 		if (selectedGame === downloadingGame || selectedGame === runningGame) {
 			return (
 				<div className="game-page-navbar_action-button game-page-navbar_stop" onClick={stopButtonClicked}>
-					STOP
+					<FaTimes />
+					<span>STOP</span>
 				</div>
 			);
 		}
@@ -89,20 +91,26 @@ export default function GamePageNavbar(props) {
 		if (gameData?.installed) {
 			return (
 				<div className="game-page-navbar_action-button game-page-navbar_play" onClick={playButtonClicked}>
-					PLAY
+					<FaPlay />
+					<span>PLAY</span>
 				</div>
 			);
 		}
 
 		// Show unavailable button
 		if (props.unavailable) {
-			return <div className="game-page-navbar_action-button game-page-navbar_unavailable">UNAVAILABLE</div>;
+			return (
+				<div className="game-page-navbar_action-button game-page-navbar_unavailable">
+					<span>UNAVAILABLE</span>
+				</div>
+			);
 		}
 
 		// Show the install button if none of the check above pass
 		return (
 			<div className="game-page-navbar_action-button game-page-navbar_install" onClick={installButtonClicked}>
-				INSTALL
+				<FaDownload />
+				<span>INSTALL</span>
 			</div>
 		);
 	}
