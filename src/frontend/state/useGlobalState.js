@@ -15,7 +15,7 @@ import { create } from "zustand";
  *
  * @typedef {object} TModalData
  * @prop {boolean} isOpened
- * @prop {('uninstall'|'confirm')} modalType
+ * @prop {('blank'|'uninstall'|'confirm')} modalType
  */
 
 /**

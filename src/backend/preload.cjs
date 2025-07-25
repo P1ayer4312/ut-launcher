@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld("gameData", {
 		ipcRenderer.invoke("gameData-startGameDownload", gameId, installDirectory);
 	},
 	stopGameDownload: (gameId) => ipcRenderer.invoke("gameData-stopGameDownload", gameId),
+	uninstallGame: (gameId) => ipcRenderer.invoke("gameData-uninstallGame", gameId),
 	// ==================================================================================================
 	startInstalledGame: (gameId) => ipcRenderer.invoke("gameData-startInstalledGame", gameId),
 	stopInstalledGame: () => ipcRenderer.invoke("gameData-stopInstalledGame"),

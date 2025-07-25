@@ -21,6 +21,8 @@ class ActionsHandler {
 		this.runningGameDirectory = null;
 		/** @type {ChildProcessWithoutNullStreams | null} */
 		this.runningProcess = null;
+		/** @type {number | null} */
+		this.mainWindowId = null;
 	}
 
 	/**
@@ -72,13 +74,12 @@ class ActionsHandler {
 	}
 
 	/**
-	 * Emit an event to the main window
+	 * Emit an event to the main window. Message handlers are defined inside `ContextBridgeMessageHandler.jsx`
 	 * @param {string} keyString
 	 * @param {any} message
 	 */
 	sendMessage(keyString, message) {
-		// TODO: Check if there is better way to target the main window
-		const mainWindow = BrowserWindow.getAllWindows().find((win) => win.title === "MAIN");
+		const mainWindow = BrowserWindow.fromId(this.mainWindowId);
 		mainWindow.webContents.send("actionsHandler-message", {
 			key: keyString,
 			value: message,
@@ -117,6 +118,15 @@ class ActionsHandler {
 	 */
 	setRunningProcess(proc) {
 		this.runningProcess = proc;
+	}
+
+	/**
+	 * Store the main window's id for reference
+	 * @param {number} num
+	 */
+	setMainWindowId(num) {
+		console.log(num);
+		this.mainWindowId = num;
 	}
 }
 

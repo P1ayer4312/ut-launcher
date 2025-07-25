@@ -22,6 +22,7 @@ async function downloadUT1999(dl, sevenZipLogsCallback) {
 	dl.setDownloadDestination(workerData.installDirectory, workerData.gameId);
 
 	// Download all necessary files
+	// eslint-disable-next-line no-async-promise-executor
 	await new Promise(async (resolve, reject) => {
 		if (process.env.DEV) {
 			// Use local download for testing

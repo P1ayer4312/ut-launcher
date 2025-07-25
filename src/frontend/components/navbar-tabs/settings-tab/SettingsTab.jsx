@@ -25,16 +25,18 @@ export default function SettingsTab(props) {
 	return (
 		<div className="settings-tab">
 			<h3 className="settings-tab_header">Settings</h3>
-			<div className="settings-tab_local-buttons">
-				<div className="settings-tab_button settings-tab_local-files" onClick={localFilesClicked}>
-					<FaFolderOpen />
-					<span>Local files</span>
+			{localData.installed && (
+				<div className="settings-tab_local-buttons">
+					<div className="settings-tab_button settings-tab_local-files" onClick={localFilesClicked}>
+						<FaFolderOpen />
+						<span>Local files</span>
+					</div>
+					<div className="settings-tab_button settings-tab_uninstall" onClick={uninstallClicked}>
+						<FaRegTrashAlt />
+						<span>Uninstall</span>
+					</div>
 				</div>
-				<div className="settings-tab_button settings-tab_uninstall" onClick={uninstallClicked}>
-					<FaRegTrashAlt />
-					<span>Uninstall</span>
-				</div>
-			</div>
+			)}
 			{props.children}
 		</div>
 	);

@@ -6,6 +6,8 @@ const actionsHandler = require("../handlers/actionsHandler.cjs");
 
 /** @param {BrowserWindow} window */
 function registerEvents(window) {
+	actionsHandler.setMainWindowId(window.id);
+
 	ipcMain.handle("titlebar-close", () => {
 		if (process.platform !== "darwin") {
 			app.quit();

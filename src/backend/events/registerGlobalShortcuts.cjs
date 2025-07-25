@@ -1,21 +1,39 @@
-const { globalShortcut, app, ipcRenderer } = require("electron");
+const { globalShortcut, app } = require("electron");
+const { Window } = require("node-screenshots");
+const actionsHandler = require("../handlers/actionsHandler.cjs");
+const fs = require("node:fs");
 
 function registerGlobalShortcuts() {
-  globalShortcut.unregisterAll();
+	globalShortcut.unregisterAll();
 
-  const ret = globalShortcut.register("F10", () => {
-    ipcRenderer.invoke("actionsHandler-screenshot");
-    console.log("F10 is pressed");
-  });
+	globalShortcut.register("F11", () => {
+		const allWindows = Window.all();
 
-  if (!ret) {
-    console.log("registration failed");
-  }
+		// allWindows.forEach((item) => {
+		// 	console.log(
+		// 		item.appName,
+		// 		item.height,
+		// 		item.width,
+		// 		item.id,
+		// 		item.isMaximized,
+		// 		item.isMinimized,
+		// 		item.title,
+		// 		item.x,
+		// 		item.y
+		// 	);
+		// });
 
-  // Check whether a shortcut is registered.
-  console.log(globalShortcut.isRegistered("F10"));
+		const ut1999 = allWindows.find(
+			(item) => item.appName == "UnrealTournament.exe" || item.title == "Unreal Tournament"
+		);
 
-  app.on("will-quit", () => globalShortcut.unregisterAll());
+		// [electron] UnrealTournament.exe 28 160 329814 false true Unreal Tournament -32000 -32000
+
+		fs.writeFileSync("./mc.png", ut1999.captureImageSync().toPngSync());
+		actionsHandler.sendMessage("screenshot", true);
+	});
+
+	app.on("will-quit", () => globalShortcut.unregisterAll());
 }
 
 module.exports = { registerGlobalShortcuts };

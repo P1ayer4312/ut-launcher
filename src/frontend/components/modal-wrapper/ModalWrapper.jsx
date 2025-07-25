@@ -10,6 +10,8 @@ export default function ModalWrapper() {
 		switch (modalData.modalType) {
 			case "uninstall":
 				return <UninstallModal />;
+			case "blank":
+				return null;
 
 			default:
 				return <h3>UNDEFINED_MODAL_VIEW: {modalData.modalType}</h3>;

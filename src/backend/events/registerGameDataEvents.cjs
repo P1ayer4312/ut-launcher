@@ -50,6 +50,12 @@ function registerGameDataEvents() {
 		resetStoreForGame(gameId);
 	});
 
+	ipcMain.handle("gameData-uninstallGame", (event, gameId) => {
+		// TODO:
+		console.log("gameData-uninstallGame");
+		Helper.uninstallGame(gameId);
+	});
+
 	ipcMain.handle("gameData-startInstalledGame", (event, gameId) => {
 		// Store the active game's id and directory
 		actionsHandler.setRunningGame(gameId);

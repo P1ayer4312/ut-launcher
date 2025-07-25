@@ -19,6 +19,7 @@
  * @prop {() => Promise<void>} stopGameDownload
  * @prop {(gameId: TGameId) => Promise<void>} startInstalledGame
  * @prop {() => Promise<void>} stopInstalledGame
+ * @prop {(gameId: TGameId) => Promise<void>} uninstallGame
  *
  * @typedef {object} TWorkerData
  * @prop {string} installDirectory

@@ -88,7 +88,7 @@ export default function GamePageNavbar(props) {
 		}
 
 		// Show the play button if the game is installed
-		if (gameData?.installed) {
+		if (gameData?.installed && downloadingGame === null) {
 			return (
 				<div className="game-page-navbar_action-button game-page-navbar_play" onClick={playButtonClicked}>
 					<FaPlay />

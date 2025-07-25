@@ -1,9 +1,10 @@
 import { FaCheck, FaCat } from "react-icons/fa";
 import "./UninstallModal.scss";
 import { useGlobalState } from "../../../../state/useGlobalState";
+import contextBridge from "../../../../contextBridge/contextBridge";
 
 export default function UninstallModal() {
-	const { setModalData } = useGlobalState();
+	const { setModalData, selectedGame } = useGlobalState();
 
 	return (
 		<div className="uninstall-modal">
@@ -12,7 +13,10 @@ export default function UninstallModal() {
 				This action will remove all game files and screenshots from your local disk
 			</div>
 			<div className="uninstall-modal_controls">
-				<div className="uninstall-modal_button uninstall-modal_yes">
+				<div
+					className="uninstall-modal_button uninstall-modal_yes"
+					onClick={() => contextBridge.gameData.uninstallGame(selectedGame)}
+				>
 					<FaCheck />
 					<span>Yes</span>
 				</div>

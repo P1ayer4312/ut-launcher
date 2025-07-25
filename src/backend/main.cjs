@@ -12,6 +12,8 @@ if (require("electron-squirrel-startup")) {
 	app.quit();
 }
 
+app.commandLine.appendSwitch("enable-features", "GlobalShortcutsPortal");
+
 function createWindow() {
 	// Setup protocol for local file access
 	const partition = "persist:ut-launcher";
@@ -33,12 +35,13 @@ function createWindow() {
 		webPreferences: {
 			preload: path.resolve(__dirname, "preload.cjs"),
 			partition: partition,
+			devTools: false,
 		},
 	});
 
 	if (process.env.DEV) {
 		win.loadURL("http://localhost:5173");
-		win.webContents.openDevTools();
+		// win.webContents.openDevTools();
 	} else {
 		const siteLocation = path.resolve(process.resourcesPath, "dist", "index.html");
 		win.loadFile(siteLocation);
