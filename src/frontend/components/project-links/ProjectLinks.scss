@@ -1,0 +1,17 @@
+.project-links {
+	&_wrapper {
+		position: absolute;
+		bottom: 10px;
+		color: white;
+
+		display: flex;
+		flex-direction: row;
+		gap: 15px;
+
+		font-size: 25px;
+
+		& > div {
+			cursor: pointer;
+		}
+	}
+}

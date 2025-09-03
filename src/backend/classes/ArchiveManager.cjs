@@ -41,7 +41,7 @@ class ArchiveManager {
 		filePath,
 		destinationDirectory,
 		ignoreFileName,
-		printCallback = undefined
+		printCallback = undefined,
 	) {
 		// eslint-disable-next-line no-async-promise-executor
 		return new Promise(async (resolve, reject) => {

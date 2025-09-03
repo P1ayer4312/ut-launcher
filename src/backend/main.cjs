@@ -8,6 +8,8 @@ const { registerSessionProtocol } = require("./events/registerSessionProtocol.cj
 
 // clearStore();
 
+const isDev = Boolean(process.env.DEV);
+
 if (require("electron-squirrel-startup")) {
 	app.quit();
 }
@@ -35,13 +37,13 @@ function createWindow() {
 		webPreferences: {
 			preload: path.resolve(__dirname, "preload.cjs"),
 			partition: partition,
-			devTools: false,
+			devTools: isDev,
 		},
 	});
 
-	if (process.env.DEV) {
+	if (isDev) {
 		win.loadURL("http://localhost:5173");
-		// win.webContents.openDevTools();
+		win.webContents.openDevTools();
 	} else {
 		const siteLocation = path.resolve(process.resourcesPath, "dist", "index.html");
 		win.loadFile(siteLocation);

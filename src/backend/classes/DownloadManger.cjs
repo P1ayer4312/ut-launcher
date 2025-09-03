@@ -84,6 +84,7 @@ class DownloadManager extends EventEmitter {
 			})
 			.catch((err) => {
 				const msg = `Error while trying to download: ${url}`;
+				// eslint-disable-next-line no-console
 				console.error(msg, err);
 				this.emit("error", msg);
 			});

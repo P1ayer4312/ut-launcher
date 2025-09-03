@@ -38,12 +38,13 @@ class ActionsHandler {
 		this.worker = new Worker(path.resolve(this.workerFolderPath, workerFileName), {
 			env: {
 				...workerOptions.env,
-				DEV: process.env.DEV,
+				DEV: process.env.DEV == "true",
 			},
 			...workerOptions,
 		});
 
 		this.worker.on("message", (data) => {
+			console.log(data);
 			if (data.key === "updateLocalGameStore") {
 				// Can't change the local store from within a worker
 				setGameUserData(data.value.gameId, { installed: data.value.installed });

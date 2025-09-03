@@ -1,5 +1,10 @@
+import GameDescription from "../../../../../game-description/GameDescription";
 import "./Home.scss";
 
 export default function Home() {
-  return <div style={{ color: "red" }}>Unavailable</div>;
+	return (
+		<div>
+			<GameDescription />
+		</div>
+	);
 }

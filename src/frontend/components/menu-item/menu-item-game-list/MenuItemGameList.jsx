@@ -1,5 +1,6 @@
 import "./MenuItemGameList.scss";
 import MenuItemGame from "../menu-item-game/MenuItemGame";
+import ProjectLinks from "../../project-links/ProjectLinks";
 
 const games = [
 	{ title: "UNREAL", imgLocation: "./imgs/badges/unreal.png", gameId: "unreal" },
@@ -28,6 +29,8 @@ export default function MenuItemGameList() {
 					gameId={game.gameId}
 				/>
 			))}
+
+			<ProjectLinks />
 		</div>
 	);
 }
