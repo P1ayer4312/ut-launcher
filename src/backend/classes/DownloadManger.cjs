@@ -159,4 +159,4 @@ function formatDownloadProgress(info, fileName) {
 	return `${downloaded}/${total} ${speed} ${eta} - ${fileName}`;
 }
 
-module.exports = DownloadManager;
+module.exports = { DownloadManager };

@@ -1,39 +1,39 @@
-/** @import { TWorkerData } from "../types/gameConfigData.cjs" */
-const { parentPort, workerData: _workerData } = require("node:worker_threads");
-const process = require("node:process");
-const DownloadManager = require("../classes/DownloadManger.cjs");
-const downloadUT1999 = require("./downloadGameSteps/ut-1999.cjs");
-
-/** @type {TWorkerData} */
-const workerData = _workerData;
+const { DownloadManager } = require("../classes/DownloadManger.cjs");
+const { downloadUT1999 } = require("./downloadGameSteps/ut-1999.cjs");
+const { WorkerHelper } = require("../classes/WorkerHelper.cjs");
 
 (async () => {
 	const dl = new DownloadManager();
 
-	dl.on("progressFormatted", (data) => parentPort.postMessage({ key: "progressFormatted", value: data }));
-	dl.on("progress", (data) => parentPort.postMessage({ key: "progress", value: data }));
-	dl.on("error", (err) => parentPort.postMessage({ key: "error", value: err }));
+	dl.on("progressFormatted", (data) => WorkerHelper.postMessage("progressFormatted", data));
+	dl.on("progress", (data) => WorkerHelper.postMessage("progress", data));
+	dl.on("error", (err) => WorkerHelper.postMessage("error", err));
 
-	parentPort.on("message", (data) => {
+	WorkerHelper.parentPort.on("message", (data) => {
 		if (data.key === "terminate") {
 			dl.stop();
-			process.exit(0);
+			WorkerHelper.exit(0);
 		}
 	});
 
 	// Add initial value to the progress bar to not look broken
-	parentPort.postMessage({ key: "progressFormatted", value: "Preparing..." });
-	parentPort.postMessage({ key: "progress", value: { progress: 0 } });
+	WorkerHelper.postMessage("progressFormatted", "Preparing...");
+	WorkerHelper.postMessage("progress", { progress: 0 });
 
 	/** @param {string} value */
 	function sevenZipLogsCallback(value) {
 		if (value.includes("%")) {
-			parentPort.postMessage({ key: "progressFormatted", value: `Extracting files... ${value}` });
+			const percent = value.match(/(\d+)(?=%)/)[0];
+			let parsedNum;
+			if (!isNaN(percent) && (parsedNum = Number(percent)) >= 0) {
+				WorkerHelper.postMessage("progress", { progress: parsedNum / 100 });
+			}
+			WorkerHelper.postMessage("progressFormatted", `Extracting files... ${value}`);
 		}
 	}
 
 	// Run download steps function for selected game
-	switch (workerData.gameId) {
+	switch (WorkerHelper.workerData.gameId) {
 		case "ut-1999":
 			downloadUT1999(dl, sevenZipLogsCallback);
 			break;

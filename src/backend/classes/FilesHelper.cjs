@@ -6,11 +6,11 @@ class FilesHelper {
 	/**
 	 * Helper function for referencing config files location
 	 * between dev and prod
-	 * @param {string} devEnv
+	 * @param {boolean} devEnv
 	 * @param {string} fileLocation
 	 */
 	static configFilePath(devEnv, fileLocation) {
-		if (devEnv == "true") {
+		if (devEnv) {
 			return path.resolve(__dirname, "../config", fileLocation);
 		}
 
@@ -37,4 +37,4 @@ class FilesHelper {
 	}
 }
 
-module.exports = FilesHelper;
+module.exports = { FilesHelper };

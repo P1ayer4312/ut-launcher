@@ -33,4 +33,4 @@ const linksProvider = {
 	},
 };
 
-module.exports = linksProvider;
+module.exports = { linksProvider };

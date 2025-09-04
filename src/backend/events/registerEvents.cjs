@@ -2,7 +2,7 @@ const { ipcMain, BrowserWindow, app, shell, clipboard, nativeImage } = require("
 const { Window } = require("node-screenshots");
 const fs = require("node:fs");
 const path = require("node:path");
-const actionsHandler = require("../handlers/actionsHandler.cjs");
+const { actionsHandler } = require("../handlers/actionsHandler.cjs");
 
 /** @param {BrowserWindow} window */
 function registerEvents(window) {

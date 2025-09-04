@@ -72,4 +72,4 @@ class ArchiveManager {
 	}
 }
 
-module.exports = ArchiveManager;
+module.exports = { ArchiveManager };

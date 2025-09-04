@@ -1,15 +1,11 @@
 /** @import DownloadManager from '../../classes/DownloadManger.cjs*/
-/** @import { TWorkerData } from '../../types/gameConfigData.cjs' */
-const { parentPort, workerData: _workerData } = require("node:worker_threads");
 const path = require("node:path");
 const fs = require("node:fs");
-const ArchiveManager = require("../../classes/ArchiveManager.cjs");
-const linksProvider = require("../../providers/linksProvider.cjs");
+const { ArchiveManager } = require("../../classes/ArchiveManager.cjs");
+const { linksProvider } = require("../../providers/linksProvider.cjs");
 const axios = require("axios");
-const FilesHelper = require("../../classes/FilesHelper.cjs");
-
-/** @type {TWorkerData} */
-const workerData = _workerData;
+const { FilesHelper } = require("../../classes/FilesHelper.cjs");
+const { WorkerHelper } = require("../../classes/WorkerHelper.cjs");
 
 /**
  * Download UT1999, patch, extract and configure
@@ -18,13 +14,13 @@ const workerData = _workerData;
  */
 async function downloadUT1999(dl, sevenZipLogsCallback) {
 	let latestPatchUrl;
-	const links = process.env.DEV == "true" ? linksProvider["ut-1999"].dev : linksProvider["ut-1999"].prod;
-	dl.setDownloadDestination(workerData.installDirectory, workerData.gameId);
+	const links = WorkerHelper.isDev() ? linksProvider["ut-1999"].dev : linksProvider["ut-1999"].prod;
+	dl.setDownloadDestination(WorkerHelper.workerData.installDirectory, WorkerHelper.workerData.gameId);
 
 	// Download all necessary files
 	// eslint-disable-next-line no-async-promise-executor
 	await new Promise(async (resolve, reject) => {
-		if (process.env.DEV == "true") {
+		if (WorkerHelper.isDev()) {
 			// Use local download for testing
 			dl.setUrls([links.gameFiles, links.patch]);
 			latestPatchUrl = links.patch;
@@ -54,13 +50,13 @@ async function downloadUT1999(dl, sevenZipLogsCallback) {
 	});
 
 	// Start extracting files
-	parentPort.postMessage({ key: "progressFormatted", value: "Extracting files..." });
-	parentPort.postMessage({ key: "progress", value: { progress: 1 } });
+	WorkerHelper.postMessage("progressFormatted", "Extracting files...");
+	WorkerHelper.postMessage("progress", { progress: 1 });
 
 	// Copy the skip files list next to the game archive
 	await FilesHelper.copyFile(
-		FilesHelper.configFilePath(process.env.DEV, "ut-1999/skip.txt"),
-		dl.installFilesFolder
+		FilesHelper.configFilePath(WorkerHelper.isDev(), "ut-1999/skip.txt"),
+		dl.installFilesFolder,
 	);
 
 	// Extract game files and exclude the ones on the list
@@ -68,25 +64,28 @@ async function downloadUT1999(dl, sevenZipLogsCallback) {
 		dl.getFileLocationFromUrl(links.gameFiles),
 		dl.destination,
 		"skip.txt",
-		sevenZipLogsCallback
+		sevenZipLogsCallback,
 	);
 
 	// Extract the patch in the game folder
 	await ArchiveManager.extractFiles(
 		dl.getFileLocationFromUrl(latestPatchUrl),
 		dl.destination,
-		sevenZipLogsCallback
+		sevenZipLogsCallback,
 	);
 
 	// Copy config files in the game folder
-	parentPort.postMessage({ key: "progressFormatted", value: "Alter game configuration..." });
+	WorkerHelper.postMessage("progressFormatted", "Alter game configuration...");
 	const gameSystemFolder = path.resolve(dl.destination, "System");
 	await Promise.all([
 		FilesHelper.copyFile(
-			FilesHelper.configFilePath(process.env.DEV, "ut-1999/UnrealTournament.ini"),
-			gameSystemFolder
+			FilesHelper.configFilePath(WorkerHelper.isDev(), "ut-1999/UnrealTournament.ini"),
+			gameSystemFolder,
 		),
-		FilesHelper.copyFile(FilesHelper.configFilePath(process.env.DEV, "ut-1999/User.ini"), gameSystemFolder),
+		FilesHelper.copyFile(
+			FilesHelper.configFilePath(WorkerHelper.isDev(), "ut-1999/User.ini"),
+			gameSystemFolder,
+		),
 	]);
 
 	// Create screenshots folder
@@ -96,13 +95,13 @@ async function downloadUT1999(dl, sevenZipLogsCallback) {
 	}
 
 	// Update the local store for the installed game
-	parentPort.postMessage({
-		key: "updateLocalGameStore",
-		value: { gameId: "ut-1999", installed: true },
+	WorkerHelper.postMessage("updateLocalGameStore", {
+		gameId: "ut-1999",
+		installed: true,
 	});
 
 	// Stop the worker
-	process.exit(0);
+	WorkerHelper.exit(0);
 }
 
-module.exports = downloadUT1999;
+module.exports = { downloadUT1999 };

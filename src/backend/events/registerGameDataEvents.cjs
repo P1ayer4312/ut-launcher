@@ -6,8 +6,8 @@ const {
 	setLastSelectedGame,
 	resetStoreForGame,
 } = require("../store/userPreferences.cjs");
-const actionsHandler = require("../handlers/actionsHandler.cjs");
-const Helper = require("../classes/Helper.cjs");
+const { actionsHandler } = require("../handlers/actionsHandler.cjs");
+const { Helper } = require("../classes/Helper.cjs");
 
 /**
  * Events used for fetching and storing local data for each game
@@ -66,7 +66,7 @@ function registerGameDataEvents() {
 			() => {
 				actionsHandler.sendMessage("resetRunningGame", null);
 				actionsHandler.resetRunningGame();
-			}
+			},
 		);
 
 		actionsHandler.setRunningProcess(gameProcess);

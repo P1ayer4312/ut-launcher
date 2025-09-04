@@ -1,6 +1,18 @@
 import { useEffect } from "react";
 import contextBridge from "./contextBridge";
 import { useGlobalState } from "../state/useGlobalState";
+/** @import { TEventKeyNames, TEventKeyValueMapping, TActionsHandlerMessageEventData } from "../../backend/types/actionsHandler.cjs" */
+
+/**
+ * Couldn't find a better way to add type to the value part using JSDoc :/
+ * @template {TEventKeyNames} K
+ * @param {K} key
+ * @param {TActionsHandlerMessageEventData} data
+ * @returns {{value: TEventKeyValueMapping[K]}}
+ */
+function typeCast(key, data) {
+	return { value: data.value };
+}
 
 /**
  * Wrapper component for handling the messages between the contextBridge.
@@ -27,53 +39,65 @@ export default function ContextBridgeMessageHandler() {
 		contextBridge.gameData.getLastSelectedGame().then(setSelectedGame);
 
 		// Assign a callback function for handling messages received from Electron
-		contextBridge.actionsHandler.onMessageEvent((data) => {
-			switch (data.key) {
-				case "progressFormatted":
+		contextBridge.actionsHandler.onMessageEvent((dataReceived) => {
+			switch (dataReceived.key) {
+				case "progressFormatted": {
+					const data = typeCast("progressFormatted", dataReceived);
 					setProgressBar({ text: data.value });
 					break;
+				}
 
-				case "progress":
+				case "progress": {
+					const data = typeCast("progress", dataReceived);
 					setProgressBar({ percentage: Math.floor(data.value.progress * 100) });
 					break;
+				}
 
-				case "screenshot":
+				case "screenshot": {
 					screenshotAudio.play();
 					break;
+				}
 
-				case "updateLocalGameStore":
+				case "updateLocalGameStore": {
+					const data = typeCast("updateLocalGameStore", dataReceived);
 					setLocalDataStoreForGameId(data.value.gameId, { installed: data.value.installed });
 					setDownloadingGame(null);
 					break;
+				}
+				case "setRunningGame": {
+					const data = typeCast("setRunningGame", dataReceived);
 
-				case "setRunningGame":
 					setRunningGame(data.value);
 					break;
+				}
 
-				case "resetRunningGame":
+				case "resetRunningGame": {
 					setRunningGame(null);
 					break;
+				}
 
-				case "uninstallingGameMessage":
-					console.log("======= called ?");
+				case "uninstallingGameMessage": {
 					setProgressBar({ percentage: 0, text: "Removing game files..." });
 					// Progress bar is shown only if the game is being downloaded,
 					// so we just set it to "downloading" for it to be displayed
 					setDownloadingGame(selectedGame);
 					setModalData({ isOpened: false, modalType: "blank" });
 					break;
+				}
 
-				case "uninstallFinished":
+				case "uninstallFinished": {
 					contextBridge.gameData.get(selectedGame).then((data) => {
 						setLocalDataStore({ [selectedGame]: data });
 						setDownloadingGame(null);
 					});
 					break;
+				}
 
-				default:
+				default: {
 					// eslint-disable-next-line no-console
-					console.error("Unhandled message:", data);
+					console.error("Unhandled message:", dataReceived);
 					break;
+				}
 			}
 		});
 	}, [

@@ -1,14 +1,13 @@
 /** @import { WorkerOptions } from "node:worker_threads" */
 /** @import { ChildProcessWithoutNullStreams } from "node:child_process" */
 /** @import { TGameId } from "../types/gameConfigData.cjs" */
+/** @import { TEventKeyNames, TEventKeyValueMapping } from "../types/actionsHandler.cjs" */
 const { BrowserWindow } = require("electron");
 const { Worker } = require("node:worker_threads");
 const path = require("node:path");
 const { setGameUserData, getGameUserData } = require("../store/userPreferences.cjs");
 
-/**
- * Class used for handling and displaying actions between Electron and the main world
- */
+/** Class used for handling and displaying actions between Electron and the main world */
 class ActionsHandler {
 	constructor() {
 		/** @type {Worker | null} */
@@ -36,15 +35,14 @@ class ActionsHandler {
 		}
 
 		this.worker = new Worker(path.resolve(this.workerFolderPath, workerFileName), {
+			...workerOptions,
 			env: {
 				...workerOptions.env,
 				DEV: process.env.DEV == "true",
 			},
-			...workerOptions,
 		});
 
 		this.worker.on("message", (data) => {
-			console.log(data);
 			if (data.key === "updateLocalGameStore") {
 				// Can't change the local store from within a worker
 				setGameUserData(data.value.gameId, { installed: data.value.installed });
@@ -76,15 +74,13 @@ class ActionsHandler {
 
 	/**
 	 * Emit an event to the main window. Message handlers are defined inside `ContextBridgeMessageHandler.jsx`
-	 * @param {string} keyString
-	 * @param {any} message
+	 * @template {TEventKeyNames} K
+	 * @param {K} key
+	 * @param {TEventKeyValueMapping[K]} value
 	 */
-	sendMessage(keyString, message) {
+	sendMessage(key, value = null) {
 		const mainWindow = BrowserWindow.fromId(this.mainWindowId);
-		mainWindow.webContents.send("actionsHandler-message", {
-			key: keyString,
-			value: message,
-		});
+		mainWindow.webContents.send("actionsHandler-message", { key, value });
 	}
 
 	/**
@@ -126,9 +122,8 @@ class ActionsHandler {
 	 * @param {number} num
 	 */
 	setMainWindowId(num) {
-		console.log(num);
 		this.mainWindowId = num;
 	}
 }
 
-module.exports = ActionsHandler;
+module.exports = { ActionsHandler };

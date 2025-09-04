@@ -3,7 +3,7 @@ const path = require("node:path");
 const fs = require("node:fs");
 const { spawn } = require("node:child_process");
 const { resetStoreForGame, getGameUserData } = require("../store/userPreferences.cjs");
-const actionsHandler = require("../handlers/actionsHandler.cjs");
+const { actionsHandler } = require("../handlers/actionsHandler.cjs");
 
 class Helper {
 	/**
@@ -55,4 +55,4 @@ class Helper {
 	static saveScreenshot() {}
 }
 
-module.exports = Helper;
+module.exports = { Helper };
