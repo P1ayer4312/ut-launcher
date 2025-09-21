@@ -15,7 +15,8 @@ import { create } from "zustand";
  *
  * @typedef {object} TModalData
  * @prop {boolean} isOpened
- * @prop {('blank'|'uninstall'|'confirm')} modalType
+ * @prop {('blank'|'uninstall'|'confirm'|'error')} modalType
+ * @prop {string | null} errorModalText
  */
 
 /**
@@ -61,9 +62,10 @@ export const useGlobalState = create((set) => ({
 			localDataStore: { [key]: { ...current.localDataStore[key], ...value } },
 		}));
 	},
-
-	modalData: { isOpened: false, modalType: "" },
+	modalData: { isOpened: false, modalType: "blank", errorModalText: null },
 	setModalData: (value) => {
-		set((current) => ({ modalData: { ...current.modalData, ...value } }));
+		set((current) => ({
+			modalData: { ...current.modalData, ...value, errorModalText: value.errorModalText ?? null },
+		}));
 	},
 }));

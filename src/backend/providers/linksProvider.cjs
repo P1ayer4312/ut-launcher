@@ -3,7 +3,7 @@
 /**
  * @typedef {object} TLinks
  * @prop {string} gameFiles
- * @prop {string} patch
+ * @prop {string | null} patch
  * @prop {string | null} installer
  *
  * @typedef {object} TLinksPerEnv
@@ -29,6 +29,18 @@ const linksProvider = {
 			gameFiles: "https://archive.org/download/ut-cd-1-436/UT_CD1_436_Final.iso",
 			installer: "https://www.oldunreal.com/site/assets/files/1107/ut_goty.zip",
 			patch: "https://api.github.com/repos/OldUnreal/UnrealTournamentPatches/releases",
+		},
+	},
+	"ut-2004": {
+		dev: {
+			gameFiles: "http://localhost:3000/UT2004.zip",
+			installer: null,
+			patch: null,
+		},
+		prod: {
+			gameFiles: "https://archive.org/download/ut2004-3369/UT2004.zip",
+			installer: null,
+			patch: null,
 		},
 	},
 };

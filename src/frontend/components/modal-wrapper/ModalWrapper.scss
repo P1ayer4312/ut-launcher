@@ -39,5 +39,14 @@
 		&:focus {
 			outline: none;
 		}
+
+		// Top border colors based on modal type
+		&_confirm {
+			border-image: linear-gradient(90deg, hsla(192, 96%, 50%, 1) 0%, hsla(65, 92%, 54%, 1) 100%) 1;
+		}
+
+		&_error {
+			border-image: linear-gradient(90deg, hsla(347, 89%, 61%, 1) 0%, hsla(242, 42%, 40%, 1) 100%) 1;
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * @import { TGameId } from "../types/gameConfigData.cjs"
+ * @import { TGameId, TGameKey } from "../types/gameConfigData.cjs"
  * @import { AxiosProgressEvent } from "axios"
  *
  * @typedef {object} TContextBridgeActionsHandler
@@ -7,6 +7,7 @@
  * @prop {(value: string) => Promise<string[]>} fetchScreenshotsFromPath
  * @prop {(value: string) => Promise<void>} open
  * @prop {(value: string) => Promise<void>} copyImgToClipboard
+ * @prop {(value: TGameKey) => Promise<void>} registerGameKey //TODO: Revisit the value part
  *
  * @typedef {object} TContextBridgeTitleBar
  * @prop {() => Promise<void>} close

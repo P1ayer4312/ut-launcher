@@ -1,6 +1,7 @@
 const { DownloadManager } = require("../classes/DownloadManger.cjs");
 const { downloadUT1999 } = require("./downloadGameSteps/ut-1999.cjs");
 const { WorkerHelper } = require("../classes/WorkerHelper.cjs");
+const { downloadUT2004 } = require("./downloadGameSteps/ut-2004.cjs");
 
 (async () => {
 	const dl = new DownloadManager();
@@ -8,6 +9,8 @@ const { WorkerHelper } = require("../classes/WorkerHelper.cjs");
 	dl.on("progressFormatted", (data) => WorkerHelper.postMessage("progressFormatted", data));
 	dl.on("progress", (data) => WorkerHelper.postMessage("progress", data));
 	dl.on("error", (err) => WorkerHelper.postMessage("error", err));
+
+	dl.setDownloadDestination(WorkerHelper.workerData.installDirectory, WorkerHelper.workerData.gameId);
 
 	WorkerHelper.parentPort.on("message", (data) => {
 		if (data.key === "terminate") {
@@ -36,6 +39,10 @@ const { WorkerHelper } = require("../classes/WorkerHelper.cjs");
 	switch (WorkerHelper.workerData.gameId) {
 		case "ut-1999":
 			downloadUT1999(dl, sevenZipLogsCallback);
+			break;
+
+		case "ut-2004":
+			downloadUT2004(dl, sevenZipLogsCallback);
 			break;
 
 		default:

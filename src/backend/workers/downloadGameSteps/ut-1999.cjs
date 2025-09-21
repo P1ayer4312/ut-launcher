@@ -1,8 +1,7 @@
-/** @import DownloadManager from '../../classes/DownloadManger.cjs*/
+/** @import { DownloadManager } from '../../classes/DownloadManger.cjs*/
 const path = require("node:path");
 const fs = require("node:fs");
 const { ArchiveManager } = require("../../classes/ArchiveManager.cjs");
-const { linksProvider } = require("../../providers/linksProvider.cjs");
 const axios = require("axios");
 const { FilesHelper } = require("../../classes/FilesHelper.cjs");
 const { WorkerHelper } = require("../../classes/WorkerHelper.cjs");
@@ -14,8 +13,7 @@ const { WorkerHelper } = require("../../classes/WorkerHelper.cjs");
  */
 async function downloadUT1999(dl, sevenZipLogsCallback) {
 	let latestPatchUrl;
-	const links = WorkerHelper.isDev() ? linksProvider["ut-1999"].dev : linksProvider["ut-1999"].prod;
-	dl.setDownloadDestination(WorkerHelper.workerData.installDirectory, WorkerHelper.workerData.gameId);
+	const links = WorkerHelper.getGameLinks("ut-1999");
 
 	// Download all necessary files
 	// eslint-disable-next-line no-async-promise-executor
@@ -42,8 +40,8 @@ async function downloadUT1999(dl, sevenZipLogsCallback) {
 			dl.setUrls([links.gameFiles, latestPatchUrl]);
 		}
 
-		dl.on("error", (err) => reject(err));
-		dl.on("finish", () => resolve());
+		dl.on("error", reject);
+		dl.on("finish", resolve);
 
 		// Start the download
 		dl.start();
@@ -94,7 +92,7 @@ async function downloadUT1999(dl, sevenZipLogsCallback) {
 		fs.mkdirSync(screenshotsFolder);
 	}
 
-	// Update the local store for the installed game
+	// Update the local store for the installed game and tag it as installed
 	WorkerHelper.postMessage("updateLocalGameStore", {
 		gameId: "ut-1999",
 		installed: true,

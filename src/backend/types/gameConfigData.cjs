@@ -3,6 +3,8 @@
  * "unreal"|"ut-1999"|"ut-2004"|"ut-alpha"|"ut-champs-2"|"unreal-2"|"ut-2003"|"ut-3"|"ut-champs"
  * )} TGameId
  *
+ * @typedef {("ut-2004"|"ut-2003"|"ut-3")} TGameKey
+ *
  * @typedef {object} TGameData
  * @prop {string} directory
  * @prop {string | null} patchVersion

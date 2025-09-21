@@ -1,7 +1,8 @@
-/** @import { TActionsHandlerMessageEventData, TEventKeyNames, TEventKeyValueMapping } from "../types/actionsHandler.cjs" */
-/** @import { TWorkerData } from "../types/gameConfigData.cjs" */
+/** @import { TEventKeyNames, TEventKeyValueMapping } from "../types/actionsHandler.cjs" */
+/** @import { TWorkerData, TGameId } from "../types/gameConfigData.cjs" */
 const { parentPort, workerData } = require("node:worker_threads");
 const process = require("node:process");
+const { linksProvider } = require("../providers/linksProvider.cjs");
 
 /** Helper class for wrapping worker methods any giving them types */
 class WorkerHelper {
@@ -32,6 +33,15 @@ class WorkerHelper {
 	/** Check if we work in a DEV env */
 	static isDev() {
 		return process.env.DEV == "true";
+	}
+
+	/**
+	 * Returns game links object from the `linksProvider`
+	 * @param {TGameId} gameId
+	 * @returns
+	 */
+	static getGameLinks(gameId) {
+		return WorkerHelper.isDev() ? linksProvider[gameId].dev : linksProvider[gameId].prod;
 	}
 }
 

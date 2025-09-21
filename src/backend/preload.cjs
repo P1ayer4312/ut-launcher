@@ -34,4 +34,5 @@ contextBridge.exposeInMainWorld("actionsHandler", {
 	fetchScreenshotsFromPath: (value) => ipcRenderer.invoke("actionsHandler-fetchScreenshotsFromPath", value),
 	open: (value) => ipcRenderer.invoke("actionsHandler-open", value),
 	copyImgToClipboard: (value) => ipcRenderer.invoke("actionsHandler-copyImgToClipboard", value),
+	registerGameKey: (value) => ipcRenderer.invoke("actionsHandler-registerGameKey", value),
 });

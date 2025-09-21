@@ -54,6 +54,7 @@ class ActionsHandler {
 		this.worker.on("error", (err) => {
 			// eslint-disable-next-line no-console
 			console.error("WORKER_ERROR", err);
+			this.sendMessage("error", err.message);
 		});
 
 		this.worker.once("exit", () => {

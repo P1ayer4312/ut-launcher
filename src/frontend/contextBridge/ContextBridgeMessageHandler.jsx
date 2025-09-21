@@ -93,6 +93,12 @@ export default function ContextBridgeMessageHandler() {
 					break;
 				}
 
+				case "error": {
+					const data = typeCast("error", dataReceived);
+					setModalData({ isOpened: true, modalType: "error", errorModalText: data.value });
+					break;
+				}
+
 				default: {
 					// eslint-disable-next-line no-console
 					console.error("Unhandled message:", dataReceived);

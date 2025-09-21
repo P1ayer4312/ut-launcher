@@ -3,6 +3,7 @@ const { Window } = require("node-screenshots");
 const fs = require("node:fs");
 const path = require("node:path");
 const { actionsHandler } = require("../handlers/actionsHandler.cjs");
+const { registerGameKey } = require("../handlers/registerGameKey.cjs");
 
 /** @param {BrowserWindow} window */
 function registerEvents(window) {
@@ -66,6 +67,27 @@ function registerEvents(window) {
 		const img = nativeImage.createFromPath(value);
 		clipboard.writeImage(img);
 	});
+
+	ipcMain.handle("actionsHandler-registerGameKey", (event, value) => {
+		const key = registerGameKey(value);
+		console.log("KEY", key);
+	});
+
+	// Override the default Error.toString to redirect errors to the frontend
+	Error.prototype.toString = function () {
+		actionsHandler.sendMessage("error", this);
+
+		if (this === null || (typeof this !== "object" && typeof this !== "function")) {
+			throw new TypeError();
+		}
+		let name = this.name;
+		name = name === undefined ? "Error" : `${name}`;
+		let msg = this.message;
+		msg = msg === undefined ? "" : `${msg}`;
+		if (name === "") return msg;
+		if (msg === "") return name;
+		return `${name}: ${msg}`;
+	};
 }
 
 module.exports = { registerEvents };
