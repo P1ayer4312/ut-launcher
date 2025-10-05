@@ -16,8 +16,16 @@
 /** @type {TLinksProvider} */
 const linksProvider = {
 	unreal: {
-		dev: {},
-		prod: {},
+		dev: {
+			gameFiles: "http://localhost:3000/UNREAL_GOLD.ISO",
+			patch: "http://localhost:3000/OldUnreal-UnrealPatch227k-Windows.zip",
+			installer: null,
+		},
+		prod: {
+			gameFiles: "https://files.oldunreal.net/UNREAL_GOLD.ISO",
+			patch: "https://api.github.com/repos/OldUnreal/Unreal-testing/releases",
+			installer: "https://www.oldunreal.com/site/assets/files/1106/unreal_gold.zip",
+		},
 	},
 	"ut-1999": {
 		dev: {

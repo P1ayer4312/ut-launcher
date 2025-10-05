@@ -1,15 +1,20 @@
 import "./ProjectLinks.scss";
 import { FaDiscord, FaGithub } from "react-icons/fa";
+import { IoIosSettings } from "react-icons/io";
+import MenuItemGame from "../menu-item/menu-item-game/MenuItemGame";
 
 export default function ProjectLinks() {
 	return (
 		<div className="project-links_wrapper">
-			<div className="project-links_github">
-				<FaGithub />
-			</div>
-			<div className="project-links_discord">
-				<FaDiscord />
-			</div>
+			<MenuItemGame
+				icon={FaDiscord}
+				title="DISCORD"
+				onClick={() => {
+					throw new Error("TODO: ADD LINK");
+				}}
+			/>
+			<MenuItemGame icon={FaGithub} title="GITHUB" />
+			<MenuItemGame icon={IoIosSettings} title="SETTINGS" onClick={() => alert("clicked")} />
 		</div>
 	);
 }

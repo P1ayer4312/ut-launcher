@@ -81,6 +81,13 @@ class ActionsHandler {
 	 */
 	sendMessage(key, value = null) {
 		const mainWindow = BrowserWindow.fromId(this.mainWindowId);
+
+		if (key === "progress") {
+			/** @type {TEventKeyValueMapping['progress']} */
+			const val = value;
+			mainWindow.setProgressBar(Number(val.progress.toFixed(2)));
+		}
+
 		mainWindow.webContents.send("actionsHandler-message", { key, value });
 	}
 

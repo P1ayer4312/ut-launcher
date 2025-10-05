@@ -6,12 +6,12 @@
  * inside `backend/preload.cjs`
  */
 const contextBridge = {
-  /** @type {TContextBridgeGameData} */
-  gameData: window.gameData ?? {},
-  /** @type {TContextBridgeActionsHandler} */
-  actionsHandler: window.actionsHandler ?? {},
-  /** @type {TContextBridgeTitleBar} */
-  titleBarControls: window.titleBarControls ?? {},
+	/** @type {TContextBridgeGameData} */
+	gameData: window.gameData ?? {},
+	/** @type {TContextBridgeActionsHandler} */
+	actionsHandler: window.actionsHandler ?? {},
+	/** @type {TContextBridgeTitleBar} */
+	titleBarControls: window.titleBarControls ?? {},
 };
 
 export default contextBridge;

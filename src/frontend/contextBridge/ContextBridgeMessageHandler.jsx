@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import contextBridge from "./contextBridge";
 import { useGlobalState } from "../state/useGlobalState";
 /** @import { TEventKeyNames, TEventKeyValueMapping, TActionsHandlerMessageEventData } from "../../backend/types/actionsHandler.cjs" */
@@ -30,6 +30,17 @@ export default function ContextBridgeMessageHandler() {
 		selectedGame,
 		downloadingGame,
 	} = useGlobalState();
+
+	// Catch any errors and display them inside a modal
+	useState(() => {
+		const displayErrorFunc = (err) => {
+			setModalData({ isOpened: true, modalType: "error", errorModalText: err.message });
+		};
+
+		window.addEventListener("error", displayErrorFunc);
+
+		return () => window.removeEventListener("error", displayErrorFunc);
+	}, []);
 
 	useEffect(() => {
 		const screenshotAudio = new Audio("./sounds/steam-screenshot.mp3");

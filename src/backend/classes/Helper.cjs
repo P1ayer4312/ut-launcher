@@ -27,6 +27,9 @@ class Helper {
 	 */
 	static getExePathForGameId(gameId, directory) {
 		switch (gameId) {
+			case "unreal":
+				return path.resolve(directory, gameId, "System64/Unreal.exe");
+
 			case "ut-1999":
 				return path.resolve(directory, gameId, "System/UnrealTournament.exe");
 

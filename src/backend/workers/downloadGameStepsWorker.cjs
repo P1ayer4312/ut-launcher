@@ -2,6 +2,7 @@ const { DownloadManager } = require("../classes/DownloadManger.cjs");
 const { downloadUT1999 } = require("./downloadGameSteps/ut-1999.cjs");
 const { WorkerHelper } = require("../classes/WorkerHelper.cjs");
 const { downloadUT2004 } = require("./downloadGameSteps/ut-2004.cjs");
+const { downloadUnreal } = require("./downloadGameSteps/unreal.cjs");
 
 (async () => {
 	const dl = new DownloadManager();
@@ -37,6 +38,10 @@ const { downloadUT2004 } = require("./downloadGameSteps/ut-2004.cjs");
 
 	// Run download steps function for selected game
 	switch (WorkerHelper.workerData.gameId) {
+		case "unreal":
+			downloadUnreal(dl, sevenZipLogsCallback);
+			break;
+
 		case "ut-1999":
 			downloadUT1999(dl, sevenZipLogsCallback);
 			break;
