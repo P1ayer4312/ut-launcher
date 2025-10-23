@@ -51,8 +51,6 @@ function registerGameDataEvents() {
 	});
 
 	ipcMain.handle("gameData-uninstallGame", (event, gameId) => {
-		// TODO:
-		console.log("gameData-uninstallGame");
 		Helper.uninstallGame(gameId);
 	});
 
@@ -60,8 +58,9 @@ function registerGameDataEvents() {
 		// Store the active game's id and directory
 		actionsHandler.setRunningGame(gameId);
 
+		const exeConfig = Helper.getExePathForGameId(gameId, actionsHandler.runningGameDirectory);
 		const gameProcess = Helper.runExecutable(
-			Helper.getExePathForGameId(gameId, actionsHandler.runningGameDirectory),
+			exeConfig,
 			() => actionsHandler.sendMessage("setRunningGame", gameId),
 			() => {
 				actionsHandler.sendMessage("resetRunningGame", null);

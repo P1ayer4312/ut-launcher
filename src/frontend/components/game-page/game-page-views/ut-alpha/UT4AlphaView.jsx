@@ -5,39 +5,45 @@ import GamePageLoadingBar from "../../game-page-loading-bar/GamePageLoadingBar";
 import Home from "./tab-views/home/Home";
 import Community from "./tab-views/community/Community";
 import Guides from "./tab-views/guides/Guides";
+import SettingsTab from "../../../navbar-tabs/settings-tab/SettingsTab";
 
 export default function UT4AlphaView() {
-  const { downloadingGame, selectedGame } = useGlobalState();
-  const [activeTab, setActiveTab] = useState("home");
+	const { downloadingGame, selectedGame } = useGlobalState();
+	const [activeTab, setActiveTab] = useState("home");
 
-  function getTabView(activeTab) {
-    switch (activeTab) {
-      case "home":
-        return <Home />;
-      case "community":
-        return <Community />;
-      case "guides":
-        return <Guides />;
-      default:
-        return null;
-    }
-  }
+	function getTabView(activeTab) {
+		switch (activeTab) {
+			case "home":
+				return <Home />;
+			case "community":
+				return <Community />;
+			case "guides":
+				return <Guides />;
+			case "settings":
+				return <SettingsTab />;
+			default:
+				return null;
+		}
+	}
 
-  return (
-    <>
-      <GamePageNavbar>
-        <div className="game-page-navbar_button" onClick={() => setActiveTab("home")}>
-          Home
-        </div>
-        <div className="game-page-navbar_button" onClick={() => setActiveTab("community")}>
-          Community
-        </div>
-        <div className="game-page-navbar_button" onClick={() => setActiveTab("guides")}>
-          Guides
-        </div>
-      </GamePageNavbar>
-      {selectedGame == downloadingGame && <GamePageLoadingBar valuePercent={22} />}
-      {getTabView(activeTab)}
-    </>
-  );
+	return (
+		<>
+			<GamePageNavbar>
+				<div className="game-page-navbar_button" onClick={() => setActiveTab("home")}>
+					Home
+				</div>
+				<div className="game-page-navbar_button" onClick={() => setActiveTab("community")}>
+					Community
+				</div>
+				<div className="game-page-navbar_button" onClick={() => setActiveTab("guides")}>
+					Guides
+				</div>
+				<div className="game-page-navbar_button" onClick={() => setActiveTab("settings")}>
+					Settings
+				</div>
+			</GamePageNavbar>
+			{selectedGame == downloadingGame && <GamePageLoadingBar valuePercent={22} />}
+			{getTabView(activeTab)}
+		</>
+	);
 }

@@ -1,4 +1,4 @@
-/** @import { TGameId } from "../types/gameConfigData.cjs" */
+/** @import { TGameId, TExeOptions } from "../types/gameConfigData.cjs" */
 const path = require("node:path");
 const fs = require("node:fs");
 const { spawn } = require("node:child_process");
@@ -8,12 +8,12 @@ const { actionsHandler } = require("../handlers/actionsHandler.cjs");
 class Helper {
 	/**
 	 * Run executable
-	 * @param {string} exePath
+	 * @param {TExeOptions} exeOptions
 	 * @param {() => void} onSpawnCallback
 	 * @param {() => void} onCloseCallback
 	 */
-	static runExecutable(exePath, onSpawnCallback, onCloseCallback) {
-		const newProcess = spawn(exePath, { detached: true });
+	static runExecutable(exeOptions, onSpawnCallback, onCloseCallback) {
+		const newProcess = spawn(exeOptions.path, exeOptions.args, { detached: true });
 		newProcess.once("spawn", onSpawnCallback);
 		newProcess.once("close", onCloseCallback);
 
@@ -24,14 +24,21 @@ class Helper {
 	 * Helper function for getting the path of the game's executable
 	 * @param {TGameId} gameId
 	 * @param {string} directory
+	 * @returns {TExeOptions}
 	 */
 	static getExePathForGameId(gameId, directory) {
 		switch (gameId) {
 			case "unreal":
-				return path.resolve(directory, gameId, "System64/Unreal.exe");
+				return { path: path.resolve(directory, gameId, "System64/Unreal.exe"), args: [] };
 
 			case "ut-1999":
-				return path.resolve(directory, gameId, "System/UnrealTournament.exe");
+				return { path: path.resolve(directory, gameId, "System/UnrealTournament.exe"), args: [] };
+
+			case "ut-alpha":
+				return {
+					path: path.resolve(directory, gameId, "Engine/Binaries/Win64/UE4-Win64-Shipping.exe"),
+					args: ["UnrealTournament", "-epicapp=UnrealTournamentDev", "-epicenv=Prod", "-EpicPortal"],
+				};
 
 			default:
 				throw new Error("Invalid gameId provided");

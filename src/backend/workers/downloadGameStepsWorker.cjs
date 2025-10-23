@@ -3,6 +3,7 @@ const { downloadUT1999 } = require("./downloadGameSteps/ut-1999.cjs");
 const { WorkerHelper } = require("../classes/WorkerHelper.cjs");
 const { downloadUT2004 } = require("./downloadGameSteps/ut-2004.cjs");
 const { downloadUnreal } = require("./downloadGameSteps/unreal.cjs");
+const { downloadUT4Alpha } = require("./downloadGameSteps/ut-alpha.cjs");
 
 (async () => {
 	const dl = new DownloadManager();
@@ -48,6 +49,10 @@ const { downloadUnreal } = require("./downloadGameSteps/unreal.cjs");
 
 		case "ut-2004":
 			downloadUT2004(dl, sevenZipLogsCallback);
+			break;
+
+		case "ut-alpha":
+			downloadUT4Alpha(dl, sevenZipLogsCallback);
 			break;
 
 		default:

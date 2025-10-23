@@ -26,4 +26,8 @@
  * @typedef {object} TWorkerData
  * @prop {string} installDirectory
  * @prop {TGameId} gameId
+ *
+ * @typedef {object} TExeOptions
+ * @prop {string} path Path of the executable
+ * @prop {string[]} args Exe arguments
  */

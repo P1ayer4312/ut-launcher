@@ -1,5 +1,6 @@
 const path = require("node:path");
 const fs = require("node:fs");
+const fsPromise = require("node:fs/promises");
 
 /** Helper class for managing files and file paths */
 class FilesHelper {
@@ -34,6 +35,63 @@ class FilesHelper {
 
 			readStream.pipe(writeStream);
 		});
+	}
+
+	/**
+	 * Move everything from one folder to another
+	 * @param {string} from
+	 * @param {string} to
+	 * @param {boolean} removeAfterMove Remove the `from` folder when finished
+	 * @returns {Promise<void>}
+	 */
+	static async moveAll(from, to, removeAfterMove = false) {
+		const files = await fsPromise.readdir(from, { recursive: true, withFileTypes: true }).then((res) => {
+			return res.filter((item) => item.isFile());
+		});
+
+		// Check if the overwrite file exists and remove it
+		const renameItemsCollector = [];
+		files.forEach(async (file) => {
+			const relativePath = path.relative(from, file.parentPath);
+			const newFileLocation = path.resolve(to, relativePath);
+			const newFilePath = path.join(to, relativePath, file.name);
+			const oldFilePath = path.join(from, relativePath, file.name);
+
+			if (!fs.existsSync(newFileLocation)) {
+				fs.mkdirSync(newFileLocation, { recursive: true });
+			}
+
+			if (fs.existsSync(newFilePath)) {
+				await fsPromise.rm(newFilePath, { force: true });
+			}
+
+			renameItemsCollector.push(fsPromise.rename(oldFilePath, newFilePath));
+		});
+
+		await Promise.all(renameItemsCollector);
+
+		if (removeAfterMove) {
+			FilesHelper.remove(from);
+		}
+	}
+
+	/**
+	 * Create `launcher_screenshots` folder
+	 * @param {string} gameFolder
+	 */
+	static createScreenshotsFolder(gameFolder) {
+		const screenshotsFolder = path.resolve(gameFolder, "launcher_screenshots");
+		if (!fs.existsSync(screenshotsFolder)) {
+			fs.mkdirSync(screenshotsFolder);
+		}
+	}
+
+	/**
+	 * Remove file/folder
+	 * @param {string} path
+	 */
+	static remove(path) {
+		return fs.rmSync(path, { force: true, recursive: true });
 	}
 }
 

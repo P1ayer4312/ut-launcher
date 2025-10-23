@@ -65,6 +65,12 @@ class ActionsHandler {
 	terminateWorker() {
 		// eslint-disable-next-line no-console
 		console.log("Terminating worker");
+
+		const mainWindow = BrowserWindow.fromId(this.mainWindowId);
+		if (mainWindow) {
+			mainWindow.setProgressBar(0);
+		}
+
 		if (this.worker && this.worker?.threadId !== -1) {
 			this.worker.postMessage({
 				key: "terminate",
@@ -81,6 +87,9 @@ class ActionsHandler {
 	 */
 	sendMessage(key, value = null) {
 		const mainWindow = BrowserWindow.fromId(this.mainWindowId);
+		if (!mainWindow) {
+			throw new Error("Can't find the main window");
+		}
 
 		if (key === "progress") {
 			/** @type {TEventKeyValueMapping['progress']} */

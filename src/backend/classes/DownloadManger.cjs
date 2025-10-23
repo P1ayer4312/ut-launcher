@@ -27,6 +27,7 @@ class DownloadManager extends EventEmitter {
 		this.destination = "";
 		this.abortController = null;
 		this.fileName = "";
+		/** The `install_files` folder where the game files and patches are downloaded */
 		this.installFilesFolder = "";
 	}
 

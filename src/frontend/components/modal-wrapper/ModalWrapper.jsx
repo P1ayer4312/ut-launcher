@@ -18,9 +18,7 @@ export default function ModalWrapper() {
 				return (
 					<ContinueModal
 						onContinueClicked={() => {
-							// setModalData({ isOpened: false })
-							console.log(1);
-							contextBridge.actionsHandler.registerGameKey("u");
+							// TODO: Add logic
 						}}
 					>
 						<div style={{ marginTop: "10px" }}>

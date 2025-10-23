@@ -51,6 +51,20 @@ const linksProvider = {
 			patch: null,
 		},
 	},
+	"ut-alpha": {
+		// https://archive.org/details/ut-4-windows-build.-7z
+		dev: {
+			gameFiles: "http://localhost:3000/UT4%20Windows%20Build%20(includes%20Windows%20Server%20binaries).7z",
+			installer: null,
+			patch: "http://localhost:3000/UT4UU-v10_1_6.zip",
+		},
+		prod: {
+			gameFiles:
+				"https://archive.org/download/ut-4-windows-build.-7z/UT4%20Windows%20Build%20%28includes%20Windows%20Server%20binaries%29.7z",
+			installer: null,
+			patch: "https://api.github.com/repos/timiimit/UT4UU-Public/releases",
+		},
+	},
 };
 
 module.exports = { linksProvider };

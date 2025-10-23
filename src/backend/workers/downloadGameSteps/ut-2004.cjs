@@ -41,6 +41,7 @@ async function downloadUT2004(dl, sevenZipLogsCallback) {
 
 	WorkerHelper.postMessage("progressFormatted", "Moving files...");
 
+	// TODO: Replace this with the custom function
 	const extractedFolderPath = path.resolve(dl.installFilesFolder, "UT2004");
 	const files = await fs.readdir(extractedFolderPath);
 
