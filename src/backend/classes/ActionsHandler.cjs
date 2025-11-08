@@ -95,6 +95,8 @@ class ActionsHandler {
 			/** @type {TEventKeyValueMapping['progress']} */
 			const val = value;
 			mainWindow.setProgressBar(Number(val.progress.toFixed(2)));
+		} else if (key === "uninstallFinished") {
+			mainWindow.setProgressBar(0);
 		}
 
 		mainWindow.webContents.send("actionsHandler-message", { key, value });

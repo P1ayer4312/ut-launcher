@@ -23,6 +23,7 @@ class ArchiveManager {
 				// Extract the file
 				wasm7z.callMain(["x", `/in/${path.basename(filePath)}`, "-o/out", "-aoa"]);
 			} catch (error) {
+				// eslint-disable-next-line no-console
 				console.error(error);
 				reject(error);
 			}

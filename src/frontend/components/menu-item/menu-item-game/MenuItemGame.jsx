@@ -4,6 +4,7 @@ import "./MenuItemGame.scss";
 import contextBridge from "../../../contextBridge/contextBridge";
 import { useGlobalState } from "../../../state/useGlobalState";
 import SpinnerProgressBar from "../../spinner-progress-bar/SpinnerProgressBar";
+import { useCallback } from "react";
 
 /**
  * Menu item cards for each game
@@ -21,18 +22,14 @@ import SpinnerProgressBar from "../../spinner-progress-bar/SpinnerProgressBar";
 export default function MenuItemGame(props) {
 	const { setSelectedGame, downloadingGame } = useGlobalState();
 
-	function changeSelectedGame(value) {
-		setSelectedGame(value);
-		contextBridge.gameData.setLastSelectedGame(value);
-	}
-
-	function handleOnClick() {
+	const handleOnClick = useCallback(() => {
 		if (props.onClick) {
 			props.onClick();
 		} else if (props.gameId) {
-			changeSelectedGame(props.gameId);
+			setSelectedGame(props.gameId);
+			contextBridge.gameData.setLastSelectedGame(props.gameId);
 		}
-	}
+	}, [props, setSelectedGame]);
 
 	return (
 		<div className="menu-item-game_wrapper" onClick={handleOnClick}>

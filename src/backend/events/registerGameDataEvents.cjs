@@ -13,30 +13,30 @@ const { Helper } = require("../classes/Helper.cjs");
  * Events used for fetching and storing local data for each game
  */
 function registerGameDataEvents() {
-	ipcMain.handle("gameData-get", (event, value) => {
+	ipcMain.handle("gameData-get", (_event, value) => {
 		return getGameUserData(value);
 	});
 
-	ipcMain.handle("gameData-set", (event, key, value) => {
+	ipcMain.handle("gameData-set", (_event, key, value) => {
 		setGameUserData(key, value);
 	});
 
-	ipcMain.handle("gameData-getLastSelectedGame", (event) => {
+	ipcMain.handle("gameData-getLastSelectedGame", () => {
 		return getLastSelectedGame();
 	});
 
-	ipcMain.handle("gameData-setLastSelectedGame", (event, value) => {
+	ipcMain.handle("gameData-setLastSelectedGame", (_event, value) => {
 		setLastSelectedGame(value);
 	});
 
-	ipcMain.handle("gameData-selectInstallDir", (event) => {
+	ipcMain.handle("gameData-selectInstallDir", () => {
 		return dialog.showOpenDialog({
 			title: "Select install folder destination",
 			properties: ["openDirectory"],
 		});
 	});
 
-	ipcMain.handle("gameData-startGameDownload", (event, gameId, installDirectory) => {
+	ipcMain.handle("gameData-startGameDownload", (_event, gameId, installDirectory) => {
 		actionsHandler.runWorker("downloadGameStepsWorker.cjs", {
 			workerData: {
 				gameId,
@@ -45,16 +45,16 @@ function registerGameDataEvents() {
 		});
 	});
 
-	ipcMain.handle("gameData-stopGameDownload", (event, gameId) => {
+	ipcMain.handle("gameData-stopGameDownload", (_event, gameId) => {
 		actionsHandler.terminateWorker();
 		resetStoreForGame(gameId);
 	});
 
-	ipcMain.handle("gameData-uninstallGame", (event, gameId) => {
+	ipcMain.handle("gameData-uninstallGame", (_event, gameId) => {
 		Helper.uninstallGame(gameId);
 	});
 
-	ipcMain.handle("gameData-startInstalledGame", (event, gameId) => {
+	ipcMain.handle("gameData-startInstalledGame", (_event, gameId) => {
 		// Store the active game's id and directory
 		actionsHandler.setRunningGame(gameId);
 
@@ -71,7 +71,7 @@ function registerGameDataEvents() {
 		actionsHandler.setRunningProcess(gameProcess);
 	});
 
-	ipcMain.handle("gameData-stopInstalledGame", (event) => {
+	ipcMain.handle("gameData-stopInstalledGame", () => {
 		actionsHandler.stopRunningGame();
 		actionsHandler.resetRunningGame();
 	});

@@ -28,8 +28,6 @@ function registerEvents(window) {
 	});
 
 	window.webContents.setWindowOpenHandler((details) => {
-		console.log(details);
-
 		if (details.frameName === "popup-window") {
 			return {
 				action: "allow",
