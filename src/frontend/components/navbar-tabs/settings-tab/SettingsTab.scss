@@ -1,11 +1,15 @@
 .settings-tab {
+	display: flex;
+	flex-direction: row;
+	gap: 50px;
+
 	&_header {
 		color: white;
 	}
 
 	&_local-buttons {
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		gap: 15px;
 	}
 

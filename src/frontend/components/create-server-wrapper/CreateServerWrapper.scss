@@ -1,0 +1,127 @@
+$component-width: 500px;
+
+.create-server {
+	font-family: JetBrainsMono-Light;
+	color: black;
+	width: $component-width;
+	background-color: #9d773a;
+	border: 3px outset rgba(252, 218, 166, 1);
+
+	&_title-bar {
+		display: flex;
+		align-items: center;
+		background: linear-gradient(
+			180deg,
+			rgba(255, 236, 201, 1) 0%,
+			rgba(163, 124, 65, 1) 5%,
+			rgba(252, 218, 166, 1) 50%,
+			rgba(252, 218, 166, 1) 90%,
+			rgba(163, 124, 65, 1) 100%
+		);
+		font-size: 12px;
+		font-weight: bolder;
+		border-bottom: 2px solid black;
+		width: 100%;
+		height: 20px;
+
+		& > span {
+			margin-left: 10px;
+		}
+	}
+
+	&_content {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&_tabs {
+		display: flex;
+		flex-direction: row;
+		gap: 3px;
+		user-select: none;
+		margin: 0 0;
+	}
+
+	&_single-tab {
+		border: 2px outset #fbefde;
+		border-bottom: unset;
+		border-top-left-radius: 6px;
+		background-color: #e7c38e;
+
+		box-shadow: 2px 0 0 0 black;
+
+		height: fit-content;
+		margin-top: auto;
+		padding: 1px 8px;
+		font-size: 12px;
+		font-weight: 500;
+
+		&_selected {
+			// background-color: rgba($color: #ffffff, $alpha: 0.4);
+			font-weight: 900;
+			font-size: 14px;
+		}
+	}
+
+	&_tab-options {
+		height: 200px;
+		// TODO: Remove fixed value ?
+
+		padding: 10px 10px;
+		margin: 0 0;
+		border: 2px outset #fbefde;
+		background: linear-gradient(90deg, rgba(80, 98, 57, 1) 0%, rgba(205, 220, 186, 1) 100%);
+	}
+
+	&_start-server {
+		width: fit-content;
+		background: linear-gradient(
+			180deg,
+			rgba(255, 236, 201, 1) 0%,
+			rgba(163, 124, 65, 1) 5%,
+			rgba(252, 218, 166, 1) 50%,
+			rgba(252, 218, 166, 1) 90%,
+			rgba(163, 124, 65, 1) 100%
+		);
+		border: 2px outset rgb(172, 144, 104);
+		padding: 1px 10px;
+		margin-left: auto;
+		margin-right: 5px;
+		cursor: pointer;
+		user-select: none;
+
+		&:active {
+			background: linear-gradient(
+				0deg,
+				rgba(255, 236, 201, 1) 0%,
+				rgba(163, 124, 65, 1) 5%,
+				rgba(252, 218, 166, 1) 50%,
+				rgba(252, 218, 166, 1) 90%,
+				rgba(163, 124, 65, 1) 100%
+			);
+			border: 2px inset rgb(172, 144, 104);
+		}
+	}
+
+	&_footer {
+		font-size: 12px;
+		padding: 5px 0;
+		background-color: #eac791;
+	}
+
+	&_input {
+		border: 2px inset #c2d2b0;
+		background-color: white;
+		width: 300px;
+		height: 20px;
+
+		&:focus {
+			outline: none;
+		}
+
+		&::selection {
+			color: white;
+			background-color: black;
+		}
+	}
+}

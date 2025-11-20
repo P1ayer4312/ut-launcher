@@ -54,7 +54,7 @@ class Helper {
 		const gameFolder = gameData.directory !== "" ? path.resolve(gameData.directory, gameId) : null;
 		if (gameFolder && fs.existsSync(gameFolder)) {
 			actionsHandler.sendMessage("uninstallingGameMessage", null);
-			fs.rmSync(gameFolder, { recursive: true });
+			fs.rmSync(gameFolder, { recursive: true, force: true });
 			resetStoreForGame(gameId);
 			actionsHandler.sendMessage("uninstallFinished", null);
 		} else {

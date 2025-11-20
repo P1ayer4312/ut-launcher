@@ -34,7 +34,7 @@ export default function ContextBridgeMessageHandler() {
 	// Catch any errors and display them inside a modal
 	useState(() => {
 		const displayErrorFunc = (err) => {
-			setModalData({ isOpened: true, modalType: "error", errorModalText: err.message });
+			setModalData({ isOpened: true, modalType: "error", errorModalText: String(err.message) });
 		};
 
 		window.addEventListener("error", displayErrorFunc);
@@ -106,7 +106,7 @@ export default function ContextBridgeMessageHandler() {
 
 				case "error": {
 					const data = typeCast("error", dataReceived);
-					setModalData({ isOpened: true, modalType: "error", errorModalText: data.value });
+					setModalData({ isOpened: true, modalType: "error", errorModalText: String(data.value) });
 					break;
 				}
 

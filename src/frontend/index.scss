@@ -1,15 +1,22 @@
 @font-face {
-  font-family: HeadingNowVariable;
-  font-style: normal;
-  font-stretch: normal;
-  font-display: swap;
-  src: url(/fonts/HeadingNowVariable.woff2) format("woff2");
+	font-family: HeadingNowVariable;
+	font-style: normal;
+	font-stretch: normal;
+	font-display: swap;
+	src: url(/fonts/HeadingNowVariable.woff2) format("woff2");
 }
 
 @font-face {
-  font-family: HeadingNowVariableItalic;
-  font-style: italic;
-  font-stretch: normal;
-  font-display: swap;
-  src: url(/fonts/HeadingNowVariableItalic.woff2) format("woff2");
+	font-family: HeadingNowVariableItalic;
+	font-style: italic;
+	font-stretch: normal;
+	font-display: swap;
+	src: url(/fonts/HeadingNowVariableItalic.woff2) format("woff2");
+}
+
+@font-face {
+	font-family: "JetBrainsMono-Light";
+	src: url(/fonts/JetBrainsMono-Light.ttf) format("truetype");
+	font-weight: normal;
+	font-style: normal;
 }
