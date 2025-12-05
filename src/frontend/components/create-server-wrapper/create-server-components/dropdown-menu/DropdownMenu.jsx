@@ -10,6 +10,7 @@ import { ImCheckmark } from "react-icons/im";
  * @prop {boolean} multiple
  * @prop {Option[]} items
  * @prop {(value: Option[]) => void} onChange Passes a list of selected options
+ * @prop {string} className
  */
 
 /**
@@ -23,7 +24,10 @@ export default function DropdownMenu(props) {
 	const [selected, setSelected] = useState(props.multiple ? {} : { [props.items[0].title]: props.items[0] });
 
 	return (
-		<div className="custom-dropdown-multi" onMouseLeave={() => setDropdownOpened(false)}>
+		<div
+			className={`custom-dropdown-multi ${props.className ?? ""}`}
+			onMouseLeave={() => setDropdownOpened(false)}
+		>
 			<div className="custom-dropdown-multi_clickable" onClick={() => setDropdownOpened((value) => !value)}>
 				<div className="custom-dropdown-multi_text">
 					{props.multiple ? (

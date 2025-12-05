@@ -1,0 +1,8 @@
+.checkbox-field {
+	width: fit-content;
+
+	& > div {
+		width: 20px;
+		height: 20px;
+	}
+}

@@ -1,9 +1,9 @@
-$dropdown-input-width: 300px;
-$dropdown-menu-height: 200px;
+$dropdown-menu-width: 300px;
+$dropdown-menu-height: 100px;
 
 .custom-dropdown-multi {
 	font-family: JetBrainsMono-Light;
-	width: $dropdown-input-width;
+	width: $dropdown-menu-width;
 
 	z-index: 100;
 
@@ -47,11 +47,13 @@ $dropdown-menu-height: 200px;
 	}
 
 	&_dropdown {
+		z-index: 10;
 		position: absolute;
 		user-select: none;
 
-		width: calc($dropdown-input-width - 6px);
-		height: $dropdown-menu-height;
+		width: calc($dropdown-menu-width - 6px);
+		min-height: 50px;
+		max-height: $dropdown-menu-height;
 		overflow-y: scroll;
 
 		border: 2px outset rgb(172, 144, 104);
@@ -79,6 +81,7 @@ $dropdown-menu-height: 200px;
 	}
 
 	&_checkbox {
+		user-select: none;
 		display: flex;
 		flex-direction: row;
 		align-items: center;

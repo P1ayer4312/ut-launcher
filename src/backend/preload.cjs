@@ -24,12 +24,16 @@ contextBridge.exposeInMainWorld("gameData", {
 	// ==================================================================================================
 	startInstalledGame: (gameId) => ipcRenderer.invoke("gameData-startInstalledGame", gameId),
 	stopInstalledGame: () => ipcRenderer.invoke("gameData-stopInstalledGame"),
+	// ==================================================================================================
+	readServerIni: (gameId) => ipcRenderer.invoke("gameData-readServerIni", gameId),
+	saveServerIni: (gameId, modifiedFields) =>
+		ipcRenderer.invoke("gameData-saveServerIni", gameId, modifiedFields),
 });
 
 // Events for custom actions
 contextBridge.exposeInMainWorld("actionsHandler", {
 	onMessageEvent: (callback) => {
-		ipcRenderer.on("actionsHandler-message", (event, message) => callback(message));
+		ipcRenderer.on("actionsHandler-message", (_event, message) => callback(message));
 	},
 	fetchScreenshotsFromPath: (value) => ipcRenderer.invoke("actionsHandler-fetchScreenshotsFromPath", value),
 	open: (value) => ipcRenderer.invoke("actionsHandler-open", value),

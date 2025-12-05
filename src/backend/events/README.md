@@ -6,9 +6,9 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("titleBarControls", {
-  close: () => ipcRenderer.invoke("titlebar-close"),
-  minimize: () => ipcRenderer.invoke("titlebar-minimize"),
-  maximize: () => ipcRenderer.invoke("titlebar-maximize"),
+	close: () => ipcRenderer.invoke("titlebar-close"),
+	minimize: () => ipcRenderer.invoke("titlebar-minimize"),
+	maximize: () => ipcRenderer.invoke("titlebar-maximize"),
 });
 ```
 
@@ -18,13 +18,13 @@ contextBridge.exposeInMainWorld("titleBarControls", {
 const { ipcMain } = require("electron");
 
 ipcMain.handle("titlebar-close", () => {
-  /* ... */
+	/* ... */
 });
 ipcMain.handle("titlebar-maximize", () => {
-  /* ... */
+	/* ... */
 });
 ipcMain.handle("titlebar-minimize", () => {
-  /* ... */
+	/* ... */
 });
 ```
 
@@ -45,8 +45,8 @@ ipcMain.handle("titlebar-minimize", () => {
 /** @import { TContextBridgeTitleBar } from "../../backend/types/actionsHandler.cjs" */
 
 const contextBridge = {
-  /** @type {TContextBridgeTitleBar} */
-  titleBarControls: window.titleBarControls ?? {},
+	/** @type {TContextBridgeTitleBar} */
+	titleBarControls: window.titleBarControls ?? {},
 };
 ```
 
@@ -56,7 +56,7 @@ const contextBridge = {
 import contextBridge from "../../contextBridge/contextBridge";
 
 export default function TitleBar() {
-  const titleBarControls = contextBridge.titleBarControls;
-  //...
+	const titleBarControls = contextBridge.titleBarControls;
+	//...
 }
 ```

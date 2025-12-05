@@ -33,7 +33,9 @@ export default function SettingsTab(props) {
 					</div>
 				)}
 			</div>
-			<CreateServerWrapper />
+			<div className="settings-tab_server-component">
+				<CreateServerWrapper />
+			</div>
 		</div>
 	);
 }

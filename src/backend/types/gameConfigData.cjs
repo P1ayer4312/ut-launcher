@@ -22,6 +22,8 @@
  * @prop {(gameId: TGameId) => Promise<void>} startInstalledGame
  * @prop {() => Promise<void>} stopInstalledGame
  * @prop {(gameId: TGameId) => Promise<void>} uninstallGame
+ * @prop {(gameId: TGameId) => Promise<object>} readServerIni
+ * @prop {(gameId: TGameId, modifiedFields: object) => Promise<void>} saveServerIni
  *
  * @typedef {object} TWorkerData
  * @prop {string} installDirectory

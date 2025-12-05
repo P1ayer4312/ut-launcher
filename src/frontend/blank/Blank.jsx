@@ -8,7 +8,12 @@ export default function Blank() {
 			<div>
 				<CreateServerWrapper />
 			</div>
-			<img style={{ marginTop: "100px" }} src="\imgs\unreal1-server-create.png" />
+			<div style={{ position: "relative" }}>
+				<img
+					style={{ marginTop: "100px", position: "absolute", left: "-550px" }}
+					src="\imgs\unreal1-server-create.png"
+				/>
+			</div>
 		</>
 	);
 }

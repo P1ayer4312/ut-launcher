@@ -8,6 +8,7 @@ const {
 } = require("../store/userPreferences.cjs");
 const { actionsHandler } = require("../handlers/actionsHandler.cjs");
 const { Helper } = require("../classes/Helper.cjs");
+const { IniHelper } = require("../classes/IniHelper.cjs");
 
 /**
  * Events used for fetching and storing local data for each game
@@ -74,6 +75,17 @@ function registerGameDataEvents() {
 	ipcMain.handle("gameData-stopInstalledGame", () => {
 		actionsHandler.stopRunningGame();
 		actionsHandler.resetRunningGame();
+	});
+
+	ipcMain.handle("gameData-readServerIni", (_event, gameId) => {
+		const serverFields = IniHelper.readServerIni(gameId);
+		// console.log(serverFields);
+
+		return serverFields;
+	});
+
+	ipcMain.handle("gameData-saveServerIni", (_event, gameId, modifiedFields) => {
+		IniHelper.saveServerIni(gameId, modifiedFields);
 	});
 }
 
