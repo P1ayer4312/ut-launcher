@@ -8,7 +8,9 @@ const {
 } = require("../store/userPreferences.cjs");
 const { actionsHandler } = require("../handlers/actionsHandler.cjs");
 const { Helper } = require("../classes/Helper.cjs");
-const { IniHelper } = require("../classes/IniHelper.cjs");
+const { IniHelper } = require("../classes/IniHelper2.cjs");
+const { IniHelper: REPLACE_ME } = require("../classes/IniHelper.cjs");
+const path = require("node:path");
 
 /**
  * Events used for fetching and storing local data for each game
@@ -84,8 +86,15 @@ function registerGameDataEvents() {
 		return serverFields;
 	});
 
-	ipcMain.handle("gameData-saveServerIni", (_event, gameId, modifiedFields) => {
-		IniHelper.saveServerIni(gameId, modifiedFields);
+	ipcMain.handle("gameData-saveServerIni", async (_event, gameId, modifiedFields) => {
+		// IniHelper.saveServerIni(gameId, modifiedFields);
+		const filePath = "System64/Unreal.ini";
+		const gameData = getGameUserData(gameId);
+		const gameFolderFilePath = path.resolve(gameData.directory, gameId, filePath);
+		const ini = new REPLACE_ME(true);
+		await ini.readFile(gameFolderFilePath);
+		ini.saveFile("./temp.ini");
+		console.log(ini.getValuesFromSection("Engine.GameReplicationInfo", ["AdminName", "Region", "MOTDLine1"]));
 	});
 }
 

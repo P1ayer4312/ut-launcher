@@ -1,73 +1,115 @@
-/** @import { TGameId } from "../types/gameConfigData.cjs" */
-const path = require("node:path");
+const readline = require("node:readline");
 const fs = require("node:fs");
-const ini = require("ini");
-const { getGameUserData } = require("../store/userPreferences.cjs");
 
-// TODO: Add server mapping for the other games
-
-/** Helper class for working with .ini files */
 class IniHelper {
-	/**
-	 * Read the server ini file from a selected game's folder
-	 * @param {TGameId} gameId
-	 */
-	static readServerIni(gameId) {
-		const filePath = "System64/Unreal.ini";
-		const gameData = getGameUserData(gameId);
-		const gameFolderFilePath = path.resolve(gameData.directory, gameId, filePath);
-		const iniData = fs.readFileSync(gameFolderFilePath, { encoding: "utf-8" });
+	/** @typedef {{[x: string]: ({key: string, value: string})[]}} DataFormat */
 
-		// const parsedData = require("../../../unreal-dump.json");
-		const parsedData = ini.parse(iniData);
-		const GameReplicationInfo = parsedData.Engine.GameReplicationInfo;
+	/** @param {boolean} strict Throw error if a section or key doesn't exist */
+	constructor(strict = false) {
+		/** @type {DataFormat} */
+		this.data = {};
+		this.strict = strict;
+		this.filePath = "";
+	}
 
-		// Extract only the needed fields from the ini file
-		const fieldsData = {
-			ServerName: GameReplicationInfo.ServerName,
-			AdminName: GameReplicationInfo.AdminName,
-			AdminEmail: GameReplicationInfo.AdminEmail,
-			MOTDLine1: GameReplicationInfo.MOTDLine1,
-			MOTDLine2: GameReplicationInfo.MOTDLine2,
-			MOTDLine3: GameReplicationInfo.MOTDLine3,
-			MOTDLine4: GameReplicationInfo.MOTDLine4,
-			ShowMOTD: GameReplicationInfo.ShowMOTD,
-			GameType: parsedData.UMenu.UMenuStartGameClientWindow.GameType,
-			Map: parsedData.UMenu.UMenuStartGameClientWindow.Map,
-			MaxPlayers: parsedData.Engine.GameInfo.MaxPlayers,
-			Difficulty: parsedData.UnrealShare.BotInfo.Difficulty,
-		};
+	/** @param {string} filePath */
+	async readFile(filePath) {
+		this.data = {};
+		this.filePath = filePath;
+		let section = "";
+		const rl = readline.createInterface({ input: fs.createReadStream(filePath, "utf-8") });
 
-		return fieldsData;
+		for await (let line of rl) {
+			if (line.startsWith("[") && line.endsWith("]")) {
+				section = line.substring(1, line.length - 1);
+				this.data[section] = [];
+			} else if (line !== "") {
+				const key = line.substring(0, line.indexOf("=")).trim();
+				const value = line.substring(line.indexOf("=") + 1).trim();
+				this.data[section].push({ key, value });
+			}
+		}
+	}
+
+	getSections() {
+		const keys = Object.keys(this.data);
+		if (keys.length === 0) {
+			throw new Error('No data present, make sure to load a file using the "readFile" function');
+		}
+
+		return keys;
+	}
+
+	/** @param {string} name */
+	getSection(name) {
+		const section = this.data[name];
+		if (!section) {
+			throw new Error(`Invalid section name: ${name}`);
+		}
+
+		return section;
 	}
 
 	/**
-	 * Save the modified server fields inside the ini file
-	 * @param {TGameId} gameId
-	 * @param {object} modifiedFields
+	 * @param {string} section
+	 * @param {string} key
+	 * @param {any} value
+	 * @param {boolean} append Add key as a duplicate
 	 */
-	static saveServerIni(gameId, modifiedFields = {}) {
-		const filePath = "System64/Unreal.ini";
-		const gameData = getGameUserData(gameId);
-		const gameFolderFilePath = path.resolve(gameData.directory, gameId, filePath);
-		const iniData = fs.readFileSync(gameFolderFilePath, { encoding: "utf-8" });
-		const newData = ini.parse(iniData);
+	setValue(section, key, value, append = false) {
+		let sectionData = this.data[section];
 
-		const GameReplicationInfo = newData.Engine.GameReplicationInfo;
-		GameReplicationInfo.ServerName = modifiedFields.ServerName;
-		GameReplicationInfo.AdminName = modifiedFields.AdminName;
-		GameReplicationInfo.AdminEmail = modifiedFields.AdminEmail;
-		GameReplicationInfo.MOTDLine1 = modifiedFields.MOTDLine1;
-		GameReplicationInfo.MOTDLine2 = modifiedFields.MOTDLine2;
-		GameReplicationInfo.MOTDLine3 = modifiedFields.MOTDLine3;
-		GameReplicationInfo.MOTDLine4 = modifiedFields.MOTDLine4;
-		GameReplicationInfo.ShowMOTD = modifiedFields.ShowMOTD;
-		newData.UMenu.UMenuStartGameClientWindow.GameType = modifiedFields.GameType;
-		newData.UMenu.UMenuStartGameClientWindow.Map = modifiedFields.Map;
-		newData.Engine.GameInfo.MaxPlayers = modifiedFields.MaxPlayers;
-		newData.UnrealShare.BotInfo.Difficulty = modifiedFields.Difficulty;
+		if (this.strict && !sectionData) {
+			throw new Error(`Invalid section name: ${section}`);
+		} else if (!sectionData) {
+			sectionData = this.data[section] = [];
+		}
 
-		fs.writeFileSync("./dump.ini", ini.stringify(newData), { encoding: "utf-8" });
+		if (append) {
+			sectionData.push({ key, value: String(value) });
+			return;
+		}
+
+		const foundItem = sectionData.find((item) => item.key === key);
+		if (this.strict && !foundItem) {
+			throw new Error(`Key "${key}" doesn't exist in section "${section}"`);
+		} else if (!foundItem) {
+			sectionData.push({ key, value: String(value) });
+		} else {
+			foundItem.value = String(value);
+		}
+	}
+
+	getData() {
+		return this.data;
+	}
+
+	/**
+	 * @param {string} section
+	 * @param {string[]} keys
+	 */
+	getValuesFromSection(section, keys) {
+		const selectedSection = this.getSection(section);
+		const items = selectedSection.filter((item) => keys.includes(item.key));
+
+		return items;
+	}
+
+	/** @param {string} filePath */
+	saveFile(filePath) {
+		const file = fs.createWriteStream(filePath || this.filePath);
+
+		for (let section of Object.keys(this.data)) {
+			file.write(`[${section}]\n`);
+
+			for (let item of this.data[section]) {
+				file.write(`${item.key}=${item.value}\n`);
+			}
+
+			file.write("\n");
+		}
+
+		file.close();
 	}
 }
 
