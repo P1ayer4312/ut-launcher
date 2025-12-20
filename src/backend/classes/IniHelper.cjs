@@ -2,7 +2,7 @@ const readline = require("node:readline");
 const fs = require("node:fs");
 
 class IniHelper {
-	/** @typedef {{[x: string]: ({key: string, value: string})[]}} DataFormat */
+	/** @typedef {{[x: string]: {[key: string]: string[]}}} DataFormat */
 
 	/** @param {boolean} strict Throw error if a section or key doesn't exist */
 	constructor(strict = false) {
@@ -22,11 +22,17 @@ class IniHelper {
 		for await (let line of rl) {
 			if (line.startsWith("[") && line.endsWith("]")) {
 				section = line.substring(1, line.length - 1);
-				this.data[section] = [];
+				this.data[section] = {};
 			} else if (line !== "") {
 				const key = line.substring(0, line.indexOf("=")).trim();
 				const value = line.substring(line.indexOf("=") + 1).trim();
-				this.data[section].push({ key, value });
+				const param = this.data[section];
+
+				if (Array.isArray(param[key])) {
+					param[key].push(value);
+				} else {
+					param[key] = [value];
+				}
 			}
 		}
 	}
@@ -54,29 +60,24 @@ class IniHelper {
 	 * @param {string} section
 	 * @param {string} key
 	 * @param {any} value
-	 * @param {boolean} append Add key as a duplicate
+	 * @param {number?} paramIndex If there are duplicate keys, select which one to be replaced/where to place the value
 	 */
-	setValue(section, key, value, append = false) {
+	setValue(section, key, value, paramIndex = 0) {
 		let sectionData = this.data[section];
 
 		if (this.strict && !sectionData) {
 			throw new Error(`Invalid section name: ${section}`);
 		} else if (!sectionData) {
-			sectionData = this.data[section] = [];
+			sectionData = this.data[section] = {};
 		}
 
-		if (append) {
-			sectionData.push({ key, value: String(value) });
-			return;
-		}
-
-		const foundItem = sectionData.find((item) => item.key === key);
+		const foundItem = Object.keys(sectionData).includes(key);
 		if (this.strict && !foundItem) {
 			throw new Error(`Key "${key}" doesn't exist in section "${section}"`);
 		} else if (!foundItem) {
-			sectionData.push({ key, value: String(value) });
+			sectionData[key] = [value];
 		} else {
-			foundItem.value = String(value);
+			sectionData[key][paramIndex] = value;
 		}
 	}
 
@@ -89,21 +90,28 @@ class IniHelper {
 	 * @param {string[]} keys
 	 */
 	getValuesFromSection(section, keys) {
-		const selectedSection = this.getSection(section);
-		const items = selectedSection.filter((item) => keys.includes(item.key));
+		if (!keys || keys?.length === 0) {
+			throw new Error("No parameter names provided");
+		}
 
-		return items;
+		const selectedSection = this.getSection(section);
+		const neededItems = {};
+		keys.forEach((key) => {
+			neededItems[key] = selectedSection[key];
+		});
+
+		return { [section.replace(/\./g, "_")]: neededItems };
 	}
 
 	/** @param {string} filePath */
 	saveFile(filePath) {
 		const file = fs.createWriteStream(filePath || this.filePath);
-
 		for (let section of Object.keys(this.data)) {
-			file.write(`[${section}]\n`);
-
-			for (let item of this.data[section]) {
-				file.write(`${item.key}=${item.value}\n`);
+			file.write(`[${section.replace(/_/g, ".")}]\n`);
+			for (let item of Object.keys(this.data[section])) {
+				this.data[section][item].forEach((value) => {
+					file.write(`${item}=${value}\n`);
+				});
 			}
 
 			file.write("\n");

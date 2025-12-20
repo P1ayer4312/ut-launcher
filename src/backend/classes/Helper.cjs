@@ -63,6 +63,25 @@ class Helper {
 	}
 
 	static saveScreenshot() {}
+
+	/**
+	 * TODO: REMOVE
+	 * Returns a list of maps for a selected game
+	 * @param {TGameId} gameId
+	 */
+	static getGameMapsNames(gameId) {
+		const gameData = getGameUserData(gameId);
+		const gameFolder = gameData.directory;
+
+		if (gameId === "unreal") {
+			const mapsPath = path.resolve(gameFolder, "unreal/MAPS");
+			const mapNames = fs.readdirSync(mapsPath, { recursive: true }).map((item) => {
+				return path.basename(item, ".unr");
+			});
+
+			return mapNames;
+		}
+	}
 }
 
 module.exports = { Helper };

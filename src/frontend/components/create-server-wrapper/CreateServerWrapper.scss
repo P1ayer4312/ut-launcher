@@ -6,6 +6,7 @@ $component-width: 500px;
 	width: $component-width;
 	background-color: #9d773a;
 	border: 3px outset rgba(252, 218, 166, 1);
+	user-select: none;
 
 	&_title-bar {
 		display: flex;
@@ -171,6 +172,42 @@ $component-width: 500px;
 
 		&-number {
 			width: 40px;
+		}
+
+		&-range {
+			width: 100%;
+			overflow: hidden;
+			-webkit-appearance: none;
+			background-color: transparent;
+			z-index: 1;
+
+			&::-webkit-slider-runnable-track {
+				height: 20px;
+				width: 100%;
+				-webkit-appearance: none;
+				z-index: 1;
+			}
+
+			&::-webkit-slider-thumb {
+				width: 10px;
+				-webkit-appearance: none;
+				height: 20px;
+				background: #e7c38e;
+				border: 2px outset rgb(172, 144, 104);
+				z-index: 1;
+				color: #43e5f7;
+			}
+
+			&-wrapper {
+				position: relative;
+			}
+
+			&-slider {
+				position: absolute;
+				width: 100%;
+				top: calc(50% - 3px);
+				border: 2px outset rgba(252, 218, 166, 1);
+			}
 		}
 	}
 

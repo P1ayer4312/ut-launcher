@@ -1,5 +1,7 @@
+#It seems that slashes are mixed so to ensure that it works we cover both cases
 #Root files:
 Autorun.inf
+AUTORUN.INF
 DATA.TAG
 data1.cab
 lang.dat
@@ -22,44 +24,69 @@ UNINSTAL.EXE
 #UT GOTY files:
 DirectX7
 DirectX7\*
+DirectX7/*
 GameSpy
 GameSpy\*
+GameSpy/*
 Microsoft
 Microsoft\*
+Microsoft/*
 System400
 System400\*
-System\UnrealTournament.ini
-System\User.ini
+System400/*
+SYSTEM\UnrealTournament.ini
+SYSTEM\User.ini
+SYSTEM/UnrealTournament.ini
+SYSTEM/User.ini
 
 #Localizations files
-System\*.ctt
-System\*.det
-System\*.elt
-System\*.est
-System\*.frt
-System\*.int
-System\*.itt
-System\*.nlt
-System\*.ptt
-System\*.rut
+SYSTEM\*.ctt
+SYSTEM\*.det
+SYSTEM\*.elt
+SYSTEM\*.est
+SYSTEM\*.frt
+SYSTEM\*.int
+SYSTEM\*.itt
+SYSTEM\*.nlt
+SYSTEM\*.ptt
+SYSTEM\*.rut
+
+SYSTEM/*.ctt
+SYSTEM/*.det
+SYSTEM/*.elt
+SYSTEM/*.est
+SYSTEM/*.frt
+SYSTEM/*.int
+SYSTEM/*.itt
+SYSTEM/*.nlt
+SYSTEM/*.ptt
+SYSTEM/*.rut
 
 #Unreal files:
 DirectX
 DirectX\*
+DirectX/*
 Glide
 Glide\*
+Glide/*
 Heat
 Heat\*
+Heat/*
 MPath
 MPath\*
+MPath/*
 Patches
 Patches\*
+Patches/*
 Shared
 Shared\*
+Shared/*
 WorldNet
 WorldNet\*
-System\Unreal.ini
+WorldNet/*
+SYSTEM\Unreal.ini
 
 #Unreal Gold files:
 DIRECTX7
 DIRECTX7\*
+DIRECTX7/*

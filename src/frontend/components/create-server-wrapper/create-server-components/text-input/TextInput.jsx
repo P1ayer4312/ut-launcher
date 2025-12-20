@@ -15,7 +15,7 @@ export default function TextInput(props) {
 			className={`create-server_input ${props.className ?? ""}`}
 			onBlur={(event) => props.onBlur?.(event.currentTarget.value || "")}
 			onChange={(event) => props.onChange?.(event.currentTarget.value || "")}
-			value={props.value ?? undefined}
+			value={props.value ?? ""}
 		/>
 	);
 }

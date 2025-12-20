@@ -33,9 +33,11 @@ export default function SettingsTab(props) {
 					</div>
 				)}
 			</div>
-			<div className="settings-tab_server-component">
-				<CreateServerWrapper />
-			</div>
+			{localData.installed && (
+				<div className="settings-tab_server-component">
+					<CreateServerWrapper />
+				</div>
+			)}
 		</div>
 	);
 }

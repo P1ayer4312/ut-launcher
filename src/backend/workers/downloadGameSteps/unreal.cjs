@@ -73,17 +73,11 @@ async function downloadUnreal(dl, sevenZipLogsCallback) {
 
 	// Copy config files in the game folder
 	WorkerHelper.postMessage("progressFormatted", "Alter game configuration...");
-	const gameSystemFolder = path.resolve(dl.destination, "System");
-	await Promise.all([
-		FilesHelper.copyFile(
-			FilesHelper.configFilePath(WorkerHelper.isDev(), "unreal/UnrealTournament.ini"),
-			gameSystemFolder,
-		),
-		FilesHelper.copyFile(
-			FilesHelper.configFilePath(WorkerHelper.isDev(), "unreal/User.ini"),
-			gameSystemFolder,
-		),
-	]);
+	const gameSystemFolder = path.resolve(dl.destination, "System64");
+	await FilesHelper.copyFile(
+		FilesHelper.configFilePath(WorkerHelper.isDev(), "unreal/Unreal.ini"),
+		gameSystemFolder,
+	);
 
 	// Create screenshots folder
 	const screenshotsFolder = path.resolve(dl.destination, "launcher_screenshots");

@@ -11,7 +11,10 @@ export default function CreateServerWrapper(gameId) {
 	const [serverData, setServerData] = useState(null);
 
 	useEffect(() => {
-		contextBridge.gameData.readServerIni("unreal").then(setServerData);
+		contextBridge.gameData.readServerIni("unreal").then((data) => {
+			setServerData(data);
+			console.log("====", data);
+		});
 	}, [setServerData]);
 
 	return (
@@ -29,7 +32,10 @@ export default function CreateServerWrapper(gameId) {
 					<div className="create-server_footer">
 						<div
 							className="create-server_start-server"
-							onClick={() => contextBridge.gameData.saveServerIni("unreal", serverData)}
+							onClick={() => {
+								console.log("=== create", serverData);
+								// contextBridge.gameData.saveServerIni("unreal", serverData);
+							}}
 						>
 							<span>Start server</span>
 						</div>

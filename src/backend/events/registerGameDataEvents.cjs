@@ -8,9 +8,9 @@ const {
 } = require("../store/userPreferences.cjs");
 const { actionsHandler } = require("../handlers/actionsHandler.cjs");
 const { Helper } = require("../classes/Helper.cjs");
-const { IniHelper } = require("../classes/IniHelper2.cjs");
-const { IniHelper: REPLACE_ME } = require("../classes/IniHelper.cjs");
+const { IniHelper } = require("../classes/IniHelper.cjs");
 const path = require("node:path");
+const { CreateServerDataHelper } = require("../classes/CreateServerDataHelper.cjs");
 
 /**
  * Events used for fetching and storing local data for each game
@@ -41,10 +41,7 @@ function registerGameDataEvents() {
 
 	ipcMain.handle("gameData-startGameDownload", (_event, gameId, installDirectory) => {
 		actionsHandler.runWorker("downloadGameStepsWorker.cjs", {
-			workerData: {
-				gameId,
-				installDirectory,
-			},
+			workerData: { gameId, installDirectory },
 		});
 	});
 
@@ -80,21 +77,20 @@ function registerGameDataEvents() {
 	});
 
 	ipcMain.handle("gameData-readServerIni", (_event, gameId) => {
-		const serverFields = IniHelper.readServerIni(gameId);
+		// const serverFields = { ...IniHelper.readServerIni(gameId), Maps: Helper.getGameMapsNames(gameId) };
 		// console.log(serverFields);
 
-		return serverFields;
+		// return serverFields
+		return CreateServerDataHelper.readServerIni(gameId);
 	});
 
 	ipcMain.handle("gameData-saveServerIni", async (_event, gameId, modifiedFields) => {
 		// IniHelper.saveServerIni(gameId, modifiedFields);
-		const filePath = "System64/Unreal.ini";
-		const gameData = getGameUserData(gameId);
-		const gameFolderFilePath = path.resolve(gameData.directory, gameId, filePath);
-		const ini = new REPLACE_ME(true);
-		await ini.readFile(gameFolderFilePath);
-		ini.saveFile("./temp.ini");
-		console.log(ini.getValuesFromSection("Engine.GameReplicationInfo", ["AdminName", "Region", "MOTDLine1"]));
+
+		CreateServerDataHelper.readServerIni(gameId);
+
+		// const maps = Helper.getGameMapsNames(gameId);
+		// console.log(maps);
 	});
 }
 

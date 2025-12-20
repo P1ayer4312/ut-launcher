@@ -1,5 +1,5 @@
 import "./DropdownMenu.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdArrowDropDown } from "react-icons/md";
 import { ImCheckmark } from "react-icons/im";
 
@@ -10,7 +10,9 @@ import { ImCheckmark } from "react-icons/im";
  * @prop {boolean} multiple
  * @prop {Option[]} items
  * @prop {(value: Option[]) => void} onChange Passes a list of selected options
+ * @prop {(value: Option[]) => void} onInit
  * @prop {string} className
+ * @prop {string?} initialValue
  */
 
 /**
@@ -21,7 +23,14 @@ export default function DropdownMenu(props) {
 	if (!props.items?.length) throw new Error("No items provided");
 
 	const [dropdownOpened, setDropdownOpened] = useState(false);
-	const [selected, setSelected] = useState(props.multiple ? {} : { [props.items[0].title]: props.items[0] });
+	const [selected, setSelected] = useState({});
+
+	useEffect(() => {
+		const initialValue = props.multiple ? {} : initialValueCheck(props.initialValue, props.items);
+		setSelected(initialValue);
+		props.onInit?.();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [props.initialValue, props.items, props.multiple, props.items]);
 
 	return (
 		<div
@@ -30,11 +39,9 @@ export default function DropdownMenu(props) {
 		>
 			<div className="custom-dropdown-multi_clickable" onClick={() => setDropdownOpened((value) => !value)}>
 				<div className="custom-dropdown-multi_text">
-					{props.multiple ? (
-						<span>{`${Object.keys(selected).length} selected`}</span>
-					) : (
-						<span>{Object.keys(selected)[0]}</span>
-					)}
+					<span>
+						{props.multiple ? `${Object.keys(selected).length} selected` : Object.keys(selected)[0]}
+					</span>
 				</div>
 				<div className="custom-dropdown-multi_input-arrow">
 					<MdArrowDropDown />
@@ -64,7 +71,7 @@ export default function DropdownMenu(props) {
 															delete selectedCopy[item.title];
 														}
 
-														props.onChange(Object.values(selectedCopy));
+														props.onChange?.(Object.values(selectedCopy));
 														return selectedCopy;
 													});
 												}}
@@ -84,7 +91,7 @@ export default function DropdownMenu(props) {
 								className="custom-dropdown-multi_item"
 								onClick={() => {
 									const selectedOption = { title: item.title, value: item.value };
-									props.onChange([selectedOption]);
+									props.onChange?.([selectedOption]);
 									setSelected({ [item.title]: selectedOption });
 									setDropdownOpened(false);
 								}}
@@ -97,4 +104,23 @@ export default function DropdownMenu(props) {
 			)}
 		</div>
 	);
+}
+
+/**
+ * Small helper function for setting the initial selected value
+ * @param {string} value
+ * @param {Option[]} items
+ */
+function initialValueCheck(value, items) {
+	if (!value) {
+		return { [items[0].title]: items[0] };
+	}
+
+	for (let item of items) {
+		if (item.value === value) {
+			return { [item.title]: item };
+		}
+	}
+
+	throw new Error("The provided initial value does not match any item value from the list");
 }

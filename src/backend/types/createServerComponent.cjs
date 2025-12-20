@@ -11,17 +11,44 @@
 /** @typedef {Context} Context */
 
 /**
+ * @typedef {object} GameType
+ * @prop {string} title
+ * @prop {string} value
+ * @prop {string | null} mapPrefix
+ */
+
+/**
  * @typedef {object} CreateServerUnreal
- * @prop {string} AdminEmail
- * @prop {string} AdminName
- * @prop {string} Difficulty
- * @prop {string} GameType
- * @prop {string} MOTDLine1
- * @prop {string} MOTDLine2
- * @prop {string} MOTDLine3
- * @prop {string} MOTDLine4
- * @prop {string} Map
- * @prop {string} MaxPlayers
- * @prop {string} ServerName
- * @prop {string} ShowMOTD
+ * @prop {{
+ * "ServerName": string[],
+ * "AdminName": string[],
+ * "AdminEmail": string[],
+ * "MOTDLine1": string[],
+ * "MOTDLine2": string[],
+ * "MOTDLine3": string[],
+ * "MOTDLine4": string[]
+ * }} Engine_GameReplicationInfo
+ * @prop {{
+ * "Difficulty": string[],
+ * "bAdjustSkill": string[],
+ * "bRandomOrder": string[]
+ * }} UnrealShare_BotInfo
+ * @prop {{
+ * "InitialBots": string[],
+ * "bMultiPlayerBots": string[]
+ * "FragLimit": string[]
+ * "TimeLimit": string[]
+ * "bHumansOnly": string[]
+ * "bCoopWeaponMode": string[]
+ * }} UnrealShare_DeathMatchGame
+ * @prop {{
+ * "GameType": string[]
+ * "Map": string[]
+ * }} UMenu_UMenuStartGameClientWindow
+ * @prop {GameType[]} AllGameTypes
+ * @prop {string[]} AllMaps
+ * @prop {{
+ * "MaxPlayers": string[]
+ * "MaxSpectators": string[]
+ * }} Engine_GameInfo
  */
