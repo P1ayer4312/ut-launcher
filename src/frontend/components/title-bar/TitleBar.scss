@@ -1,55 +1,55 @@
 .title-bar {
-	&_wrapper {
-		// background-color: orange;
-		z-index: 200;
-		position: absolute;
-		top: 0;
-		left: 0;
-		display: flex;
-		align-items: center;
-		height: 35px;
-		width: 100%;
-		user-select: none;
-		color: white;
-	}
+  &_wrapper {
+    // background-color: orange;
+    z-index: 200;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    height: 35px;
+    width: 100%;
+    user-select: none;
+    color: white;
+  }
 
-	&_draggable {
-		height: 100%;
-		width: 100%;
-		// app-region: drag;
-		-webkit-app-region: drag;
-	}
+  &_draggable {
+    height: 100%;
+    width: 100%;
+    // app-region: drag;
+    -webkit-app-region: drag;
+  }
 
-	&_blocker {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-	}
+  &_blocker {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
 
-	&_controls {
-		display: flex;
-		position: relative;
-		align-items: center;
-		justify-content: center;
-		width: 45px;
-		height: 30px;
-		margin-top: 5px;
+  &_controls {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 30px;
+    margin-top: 5px;
 
-		& img {
-			height: 50%;
-		}
-	}
+    & img {
+      height: 50%;
+    }
+  }
 
-	&_close {
-		margin-right: 5px;
+  &_close {
+    margin-right: 5px;
 
-		&:hover {
-			background-color: rgba(255, 0, 0, 0.7);
-		}
-	}
+    &:hover {
+      background-color: rgba(255, 0, 0, 0.7);
+    }
+  }
 
-	&_min:hover,
-	&_max:hover {
-		background-color: rgba(92, 92, 92, 0.7);
-	}
+  &_min:hover,
+  &_max:hover {
+    background-color: rgba(92, 92, 92, 0.7);
+  }
 }

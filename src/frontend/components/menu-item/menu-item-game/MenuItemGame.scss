@@ -1,55 +1,57 @@
 .menu-item-game {
-	&_wrapper {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		vertical-align: middle;
-		user-select: none;
-		position: relative;
+  &_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    vertical-align: middle;
+    user-select: none;
+    position: relative;
 
-		gap: 10px;
-		width: 200px;
-		margin-bottom: 5px;
-		padding: 6px 6px;
+    gap: 10px;
+    width: 200px;
+    margin-bottom: 5px;
+    padding: 6px 6px;
 
-		&:hover {
-			cursor: pointer;
-			transition: 400ms;
-			background-color: rgba(255, 255, 255, 0.1);
-			box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-			border-radius: 1rem;
-		}
-	}
+    &:hover {
+      cursor: pointer;
+      transition: 400ms;
+      background-color: rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+    }
+  }
 
-	&_drag-blocker {
-		position: absolute;
-		top: 0;
-		width: 100%;
-		height: 100%;
-	}
+  &_drag-blocker {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
 
-	&_badge-wrapper {
-		padding-left: 5p;
-		height: 20px;
-	}
+  &_badge-wrapper {
+    padding-left: 5p;
+    height: 20px;
+  }
 
-	&_badge {
-		width: 20px;
-		height: 20px;
-	}
+  &_badge {
+    padding-left: 5px;
+    width: 20px;
+    height: 20px;
+  }
 
-	&_icon {
-		color: white;
-		font-size: 20px;
-	}
+  &_icon {
+    padding-left: 5px;
+    color: white;
+    font-size: 20px;
+  }
 
-	&_title {
-		font-family: HeadingNowVariable;
-		color: white;
-		font-size: 8px;
-		line-height: 10px;
-		font-variation-settings:
-			"wdth" 630,
-			"wght" 550;
-	}
+  &_title {
+    font-family: HeadingNowVariable;
+    color: white;
+    font-size: 8px;
+    line-height: 10px;
+    font-variation-settings:
+      "wdth" 630,
+      "wght" 550;
+  }
 }
