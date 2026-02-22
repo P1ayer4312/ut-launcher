@@ -1,12 +1,20 @@
+import { actionsHandler } from "@src/backend/classes/ActionsHandler";
 import type {
+  ActionsHandlerMappedChannel,
   IpcMainGenericHandle,
   TitlebarMappedChannels,
 } from "@src/backend/types/contextBridgeChannels.type";
 
 import { app, ipcMain, type BrowserWindow } from "electron";
 
+type GenericHandler = IpcMainGenericHandle<TitlebarMappedChannels> &
+  IpcMainGenericHandle<ActionsHandlerMappedChannel>;
+
 export function generalHandlers(window: BrowserWindow) {
-  const handle = ipcMain.handle as IpcMainGenericHandle<TitlebarMappedChannels>;
+  // Store mainWindow's id
+  actionsHandler.setMainWindowId(window.id);
+
+  const handle = ipcMain.handle as GenericHandler;
 
   handle("titlebar:close", () => {
     if (process.platform !== "darwin") {
@@ -25,4 +33,6 @@ export function generalHandlers(window: BrowserWindow) {
   handle("titlebar:minimize", () => {
     window.minimize();
   });
+
+  // handle("actionsHandler:copyImgToClipboard");
 }

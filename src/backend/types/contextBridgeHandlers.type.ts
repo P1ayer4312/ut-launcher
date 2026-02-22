@@ -32,13 +32,11 @@ export type TEventKeyValueMapping = {
 /** List of all event names sent between frontend and backend */
 export type TEventKeyNames = keyof TEventKeyValueMapping;
 
-/**
- * Distributed Union for Message Events
- * This ensures that if key is "progress", value must be AxiosProgressEvent
- */
 export type TActionsHandlerMessageEventData = {
   [K in TEventKeyNames]: {
     key: K;
     value: TEventKeyValueMapping[K];
   };
 }[TEventKeyNames];
+
+export type OnMessageEventCallback = (data: TActionsHandlerMessageEventData) => void;

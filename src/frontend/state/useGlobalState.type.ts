@@ -30,19 +30,19 @@ export interface TGlobalState {
   setSelectedGame: (value: TGameId) => void;
 
   runningGame: TGameId | null;
-  setRunningGame: (value: TGameId) => void;
+  setRunningGame: (value: TGameId | null) => void;
 
   downloadingGame: TGameId | null;
   setDownloadingGame: (value: TGameId | null) => void;
 
   progressBar: TProgressBar;
-  setProgressBar: (value: TProgressBar) => void;
+  setProgressBar: (value: Partial<TProgressBar>) => void;
 
   /** Store games' configs in the global state */
   localDataStore: TLocalDataStore;
   setLocalDataStore: (value: TLocalDataStore) => void;
-  setLocalDataStoreForGameId: (key: TGameId, value: TGameData) => void;
+  setLocalDataStoreForGameId: (key: TGameId, value: Partial<TGameData>) => void;
 
   modalData: TModalData;
-  setModalData: (value: TModalData) => void;
+  setModalData: (value: Partial<TModalData>) => void;
 }

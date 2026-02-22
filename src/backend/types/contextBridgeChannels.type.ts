@@ -1,5 +1,6 @@
 import type { IpcMainInvokeEvent } from "electron";
 import type { TContextBridgeGameData } from "./gameConfigData.type";
+import type { TContextBridgeActionsHandler } from "./contextBridgeHandlers.type";
 
 export type IpcMainGenericHandle<T> = (
   channel: T,
@@ -37,13 +38,21 @@ export type GameDataIpcHandler = <K extends GameDataMappedChannels>(
   listener: (event: IpcMainInvokeEvent, ...args: Parameters<TContextBridgeGameData[UnmapChannel<K>]>) => void,
 ) => void;
 
-// TODO: Remove backup
-// type UnmapChannel<T extends string> = T extends `${string}:${infer U}` ? U : T;
+// Actions handler
+export type ActionsHandlerApi = "actionsHandler";
+export type ActionsHandlerChannels =
+  | "onMessageEvent"
+  | "fetchScreenshotsFromPath"
+  | "open"
+  | "copyImgToClipboard"
+  | "registerGameKey";
 
-// export type GameDataIpcHandler = <K extends GameDataMappedChannels>(
-//   channel: K,
-//   listener: (
-//     event: IpcMainInvokeEvent,
-//     ...args: Parameters<TContextBridgeGameData[UnmapChannel<K>]>
-//   ) => ReturnType<TContextBridgeGameData[UnmapChannel<K>]>,
-// ) => void;
+export type ActionsHandlerMappedChannel = `${ActionsHandlerApi}:${ActionsHandlerChannels}`;
+
+export type ActionsHandlerIpcHandler = <K extends ActionsHandlerChannels>(
+  channel: K,
+  listener: (
+    event: IpcMainInvokeEvent,
+    ...args: Parameters<TContextBridgeActionsHandler[UnmapChannel<K>]>
+  ) => void,
+) => void;

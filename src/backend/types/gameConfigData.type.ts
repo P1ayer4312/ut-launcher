@@ -20,7 +20,7 @@ export type TGameData = {
 
 export type TContextBridgeGameData = {
   get: (value: TGameId) => Promise<TGameData>;
-  set: (key: TGameId, value: TGameData) => Promise<void>;
+  set: (key: TGameId, value: Partial<TGameData>) => Promise<void>;
   getLastSelectedGame: () => Promise<TGameId>;
   setLastSelectedGame: (value: TGameId) => Promise<void>;
   selectInstallDir: () => Promise<{ canceled: boolean; filePaths: string[] }>;

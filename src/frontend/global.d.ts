@@ -1,9 +1,13 @@
-import type { TContextBridgeTitleBar } from "@src/backend/types/contextBridgeHandlers.type";
+import type {
+  TContextBridgeTitleBar,
+  TContextBridgeActionsHandler,
+} from "@src/backend/types/contextBridgeHandlers.type";
 import type { TContextBridgeGameData } from "@src/backend/types/gameConfigData.type";
 
 declare global {
   interface Window {
     titlebar: TContextBridgeTitleBar;
     gameData: TContextBridgeGameData;
+    actionsHandler: TContextBridgeActionsHandler;
   }
 }

@@ -5,6 +5,7 @@
 const contextBridge = {
   titleBarControls: window.titlebar,
   gameData: window.gameData,
+  actionsHandler: window.actionsHandler,
 };
 
 export default contextBridge;
