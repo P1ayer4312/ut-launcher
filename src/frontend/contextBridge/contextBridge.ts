@@ -3,7 +3,7 @@
  * inside `backend/preload.ts`
  */
 const contextBridge = {
-  titleBarControls: window.titlebar,
+  titleBarControls: window.titleBar,
   gameData: window.gameData,
   actionsHandler: window.actionsHandler,
 };

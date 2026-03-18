@@ -9,7 +9,7 @@ export class FilesHelper {
    */
   static configFilePath(devEnv: boolean, fileLocation: string) {
     if (devEnv) {
-      return path.resolve(__dirname, "../config", fileLocation);
+      return path.resolve(__dirname, "../../src/backend/config", fileLocation);
     }
 
     return path.resolve(process.resourcesPath, "config", fileLocation);

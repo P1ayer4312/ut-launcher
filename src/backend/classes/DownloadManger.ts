@@ -2,6 +2,7 @@ import axios, { type AxiosProgressEvent } from "axios";
 import { EventEmitter } from "node:events";
 import fs from "node:fs";
 import path from "node:path";
+import type { Endpoints } from "@octokit/types";
 
 type CustomEvents = {
   start: [boolean];
@@ -11,6 +12,9 @@ type CustomEvents = {
   finish: [boolean];
   stop: [boolean];
 };
+
+export type SevenZipLogsCallback = (value: string) => void;
+export type GithubReleases = Endpoints["GET /repos/{owner}/{repo}/releases"]["response"]["data"];
 
 /**
  * Create download instance, use the `start()` function to

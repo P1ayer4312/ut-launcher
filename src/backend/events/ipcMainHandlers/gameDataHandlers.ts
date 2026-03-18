@@ -1,10 +1,12 @@
-import { ipcMain, dialog } from "electron";
-import type { GameDataIpcHandler } from "@src/backend/types/contextBridgeChannels.type";
 // prettier-ignore
 import {
   getGameUserData, setGameUserData, resetStoreForGame,
   getLastSelectedGame, setLastSelectedGame
 } from "@src/backend/store/userPreferences";
+import { ipcMain, dialog } from "electron";
+import type { GameDataIpcHandler } from "@src/backend/types/contextBridgeChannels.type";
+import { actionsHandler } from "@src/backend/classes/ActionsHandler";
+import { Helper } from "@src/backend/classes/Helper";
 
 export function gameDataHandlers() {
   const handle = ipcMain.handle as GameDataIpcHandler;
@@ -33,41 +35,50 @@ export function gameDataHandlers() {
   });
 
   handle("gameData:startGameDownload", (_event, gameId, installDirectory) => {
-    // TODO: Add actionsHandler
-    // actionsHandler.runWorker("downloadGameStepsWorker.cjs", {
-    // 	workerData: { gameId, installDirectory },
-    // });
+    actionsHandler.runWorker("downloadGameStepsWorker", {
+      workerData: { gameId, installDirectory },
+    });
   });
 
   handle("gameData:stopGameDownload", (_event, gameId) => {
-    // TODO: Add actionsHandler
-    // actionsHandler.terminateWorker();
-    // resetStoreForGame(gameId);
+    actionsHandler.terminateWorker();
+    resetStoreForGame(gameId);
   });
 
   handle("gameData:uninstallGame", (_event, gameId) => {
-    // TODO: Add Helper
-    // Helper.uninstallGame(gameId);
+    Helper.uninstallGame(gameId);
   });
 
   handle("gameData:startInstalledGame", (_event, gameId) => {
-    // Store the active game's id and directory
-    // actionsHandler.setRunningGame(gameId);
-    // const exeConfig = Helper.getExePathForGameId(gameId, actionsHandler.runningGameDirectory);
-    // const gameProcess = Helper.runExecutable(
-    //   exeConfig,
-    //   () => actionsHandler.sendMessage("setRunningGame", gameId),
-    //   () => {
-    //     actionsHandler.sendMessage("resetRunningGame", null);
-    //     actionsHandler.resetRunningGame();
-    //   },
-    // );
-    // actionsHandler.setRunningProcess(gameProcess);
+    // Store the active game's id and directory\
+
+    console.log("run game called");
+
+    actionsHandler.setRunningGame(gameId);
+
+    console.log(actionsHandler.runningGame);
+
+    if (!actionsHandler.runningGameDirectory) {
+      throw new Error(`"runningGameDirectory" not set`);
+    }
+
+    const exeConfig = Helper.getExePathForGameId(gameId, actionsHandler.runningGameDirectory);
+    console.log(exeConfig);
+    const gameProcess = Helper.runExecutable(
+      exeConfig,
+      () => actionsHandler.sendMessage("setRunningGame", gameId),
+      () => {
+        console.log("reset ?");
+        actionsHandler.sendMessage("resetRunningGame", null);
+        actionsHandler.resetRunningGame();
+      },
+    );
+    actionsHandler.setRunningProcess(gameProcess);
   });
 
   handle("gameData:stopInstalledGame", () => {
-    // actionsHandler.stopRunningGame();
-    // actionsHandler.resetRunningGame();
+    actionsHandler.stopRunningGame();
+    actionsHandler.resetRunningGame();
   });
 
   handle("gameData:readServerIni", (_event, gameId) => {

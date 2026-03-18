@@ -6,8 +6,15 @@ import type { TContextBridgeGameData } from "@src/backend/types/gameConfigData.t
 
 declare global {
   interface Window {
-    titlebar: TContextBridgeTitleBar;
+    titleBar: TContextBridgeTitleBar;
     gameData: TContextBridgeGameData;
     actionsHandler: TContextBridgeActionsHandler;
+  }
+
+  namespace NodeJS {
+    interface ProcessEnv {
+      DEV: "true" | "false";
+      DIR?: string;
+    }
   }
 }

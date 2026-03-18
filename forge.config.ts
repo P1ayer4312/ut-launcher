@@ -7,14 +7,25 @@ import { VitePlugin } from "@electron-forge/plugin-vite";
 import { FusesPlugin } from "@electron-forge/plugin-fuses";
 import { FuseV1Options, FuseVersion } from "@electron/fuses";
 import path from "node:path";
+import fs from "node:fs/promises";
 
 const config: ForgeConfig = {
+  hooks: {
+    packageAfterCopy: async (_config, buildPath) => {
+      // Copy "js7z-tools" as an external module
+      const moduleName = "js7z-tools";
+      const src = path.join(__dirname, "node_modules", moduleName);
+      const dest = path.join(buildPath, "node_modules", moduleName);
+      await fs.mkdir(path.dirname(dest), { recursive: true });
+      await fs.cp(src, dest, { recursive: true });
+    },
+  },
   packagerConfig: {
     asar: true,
     icon: path.resolve("./public/icon/icon.ico"),
-    extraResource: ["./public"],
+    // Include all assets and extra config files
+    extraResource: ["./public", "./src/backend/config"],
   },
-  rebuildConfig: {},
   makers: [
     new MakerSquirrel({ setupIcon: path.resolve("./public/icon/icon.ico") }),
     new MakerZIP({}, ["darwin"]),
@@ -36,6 +47,11 @@ const config: ForgeConfig = {
           entry: "src/backend/preload.ts",
           config: "vite.preload.config.mts",
           target: "preload",
+        },
+        // We need to transpile the workers from Typescript to JS in order to run them
+        {
+          entry: "src/backend/workers/downloadGameStepsWorker.ts",
+          config: "vite.main.config.mts",
         },
       ],
       renderer: [

@@ -19,7 +19,7 @@ export class ActionsHandler {
 
   constructor() {
     this.worker = null;
-    this.workerFolderPath = path.resolve(__dirname, "../workers");
+    this.workerFolderPath = __dirname;
     this.runningGame = null;
     this.runningGameDirectory = null;
     this.runningProcess = null;
@@ -28,17 +28,19 @@ export class ActionsHandler {
 
   /**
    * Run worker script from the `src\backend\workers` folder
+   * @param workerFileName Only provide the file name without its extension
    */
   runWorker(workerFileName: string, workerOptions: WorkerOptions) {
     if (this.worker !== null) {
       throw new Error(`More than one worker cannot be present at the same time`);
     }
 
-    this.worker = new Worker(path.resolve(this.workerFolderPath, workerFileName), {
+    this.worker = new Worker(path.resolve(this.workerFolderPath, `${workerFileName}.js`), {
       ...workerOptions,
       env: {
         ...((workerOptions.env as object) ?? {}),
         DEV: process.env.DEV,
+        DIR: __dirname,
       },
     });
 
@@ -82,9 +84,7 @@ export class ActionsHandler {
     }
   }
 
-  /**
-   * Emit an event to the main window. Message handlers are defined inside `ContextBridgeMessageHandler.tsx`
-   */
+  /** Emit an event to the main window. Message handlers are defined inside `ContextBridgeMessageHandler.tsx`*/
   sendMessage<K extends TEventKeyNames>(key: K, value: TEventKeyValueMapping[K]) {
     if (!this.mainWindowId) {
       throw new Error(`"mainWindowId" is not set`);
@@ -131,16 +131,12 @@ export class ActionsHandler {
     }
   }
 
-  /**
-   * Store a reference to the running game
-   */
+  /** Store a reference to the running game */
   setRunningProcess(proc: ChildProcessWithoutNullStreams) {
     this.runningProcess = proc;
   }
 
-  /**
-   * Store the main window's id for reference
-   */
+  /**  Store the main window's id for reference */
   setMainWindowId(num: number) {
     this.mainWindowId = num;
   }

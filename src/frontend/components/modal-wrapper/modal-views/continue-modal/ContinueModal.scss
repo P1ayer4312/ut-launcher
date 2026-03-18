@@ -1,0 +1,38 @@
+.continue-modal {
+	&_wrapper {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+	}
+
+	&_content {
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		align-items: center;
+
+		min-height: 70px;
+		font-variation-settings:
+			"wdth" 650,
+			"wght" 350;
+		font-size: 14px;
+	}
+
+	&_button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 6px;
+
+		font-weight: bolder;
+		padding: 5px 10px;
+		width: 150px;
+		text-align: center;
+		cursor: pointer;
+		border-radius: 2px;
+
+		color: white;
+		font-size: 14px;
+		background-image: linear-gradient(90deg, hsla(270, 94%, 25%, 1) 0%, hsla(158, 94%, 49%, 1) 100%);
+	}
+}

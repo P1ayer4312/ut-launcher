@@ -8,9 +8,9 @@ export type IpcMainGenericHandle<T> = (
 ) => void;
 
 // Title bar
-export type TitlebarApi = "titlebar";
-export type TitlebarChannels = "close" | "minimize" | "maximize";
-export type TitlebarMappedChannels = `${TitlebarApi}:${TitlebarChannels}`;
+export type TitleBarApi = "titleBar";
+export type TitleBarChannels = "close" | "minimize" | "maximize";
+export type TitleBarMappedChannels = `${TitleBarApi}:${TitleBarChannels}`;
 
 // Game data
 export type GameDataApi = "gameData";
@@ -45,11 +45,12 @@ export type ActionsHandlerChannels =
   | "fetchScreenshotsFromPath"
   | "open"
   | "copyImgToClipboard"
-  | "registerGameKey";
+  | "registerGameKey"
+  | "isDev";
 
 export type ActionsHandlerMappedChannel = `${ActionsHandlerApi}:${ActionsHandlerChannels}`;
 
-export type ActionsHandlerIpcHandler = <K extends ActionsHandlerChannels>(
+export type ActionsHandlerIpcHandler = <K extends ActionsHandlerMappedChannel>(
   channel: K,
   listener: (
     event: IpcMainInvokeEvent,

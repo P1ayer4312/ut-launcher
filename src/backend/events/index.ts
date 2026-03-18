@@ -1,8 +1,10 @@
 import type { BrowserWindow } from "electron";
 import { generalHandlers } from "./ipcMainHandlers/generalHandlers";
 import { gameDataHandlers } from "./ipcMainHandlers/gameDataHandlers";
+import { windowHandlers } from "./ipcMainHandlers/windowHandlers";
 
 export function registerEvents(win: BrowserWindow) {
-  generalHandlers(win);
+  windowHandlers(win);
+  generalHandlers();
   gameDataHandlers();
 }

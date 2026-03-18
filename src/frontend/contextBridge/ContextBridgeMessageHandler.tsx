@@ -103,10 +103,6 @@ export default function ContextBridgeMessageHandler() {
               break;
             }
           }
-
-          return () => {
-            window.removeEventListener("error", displayErrorFunc);
-          };
         });
       }
     },

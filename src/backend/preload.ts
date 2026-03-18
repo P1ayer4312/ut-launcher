@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
 // prettier-ignore
 import type {
-  TitlebarApi, TitlebarChannels,
+  TitleBarApi, TitleBarChannels,
   GameDataApi, GameDataChannels,
   ActionsHandlerApi, ActionsHandlerChannels
 } from "@/backend/types/contextBridgeChannels.type";
@@ -32,7 +32,7 @@ function exposeInMainWorldFactory<V extends string, T extends string>(
 
 // ###################################################################################################
 
-exposeInMainWorldFactory<TitlebarApi, TitlebarChannels>("titlebar", ["close", "maximize", "minimize"]);
+exposeInMainWorldFactory<TitleBarApi, TitleBarChannels>("titleBar", ["close", "maximize", "minimize"]);
 
 exposeInMainWorldFactory<GameDataApi, GameDataChannels>("gameData", [
   "get",
@@ -51,7 +51,7 @@ exposeInMainWorldFactory<GameDataApi, GameDataChannels>("gameData", [
 
 exposeInMainWorldFactory<ActionsHandlerApi, ActionsHandlerChannels>(
   "actionsHandler",
-  ["fetchScreenshotsFromPath", "open", "copyImgToClipboard", "registerGameKey"],
+  ["fetchScreenshotsFromPath", "open", "copyImgToClipboard", "registerGameKey", "isDev", ""],
   {
     onMessageEvent: (callback: OnMessageEventCallback) => {
       if (ipcRenderer.eventNames().includes("mainWindow:message")) {
@@ -59,7 +59,6 @@ exposeInMainWorldFactory<ActionsHandlerApi, ActionsHandlerChannels>(
         return;
       }
 
-      console.log("called");
       ipcRenderer.on("mainWindow:message", (_event, message: TActionsHandlerMessageEventData) => {
         callback(message);
       });

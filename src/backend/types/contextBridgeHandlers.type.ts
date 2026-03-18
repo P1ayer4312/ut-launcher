@@ -1,4 +1,4 @@
-import type { TGameId, TGameKey } from "@/backend/types/gameConfigData.type";
+import type { TGameId, TGameKey } from "@src/backend/types/gameConfigData.type";
 import type { AxiosProgressEvent } from "axios";
 
 export type TContextBridgeActionsHandler = {
@@ -8,6 +8,7 @@ export type TContextBridgeActionsHandler = {
   copyImgToClipboard: (value: string) => Promise<void>;
   /** @todo Revisit the value part */
   registerGameKey: (value: TGameKey) => Promise<void>;
+  isDev: () => Promise<string>;
 };
 
 export type TContextBridgeTitleBar = {
@@ -19,7 +20,7 @@ export type TContextBridgeTitleBar = {
 /** Map expected value for each key event */
 export type TEventKeyValueMapping = {
   progressFormatted: string;
-  progress: AxiosProgressEvent;
+  progress: Partial<AxiosProgressEvent>;
   screenshot: null;
   updateLocalGameStore: { gameId: TGameId; installed: boolean };
   setRunningGame: TGameId;

@@ -18,6 +18,8 @@ export class Helper {
     newProcess.once("spawn", onSpawnCallback);
     newProcess.once("close", onCloseCallback);
 
+    newProcess.on("error", console.log);
+
     return newProcess;
   }
 

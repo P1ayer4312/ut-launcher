@@ -2,8 +2,9 @@ import "./App.scss";
 import MenuItemGameList from "@src/frontend/components/menu-item/menu-item-game-list/MenuItemGameList";
 import TitleBar from "@src/frontend/components/title-bar/TitleBar";
 import BannerImgAndLogo from "@src/frontend/components/banner-img-and-logo/BannerImgAndLogo";
-import ContextBridgeMessageHandler from "./contextBridge/ContextBridgeMessageHandler";
+import ContextBridgeMessageHandler from "@src/frontend/contextBridge/ContextBridgeMessageHandler";
 import GamePageHandler from "@src/frontend/components/game-page/game-page-handler/GamePageHandler";
+import ModalWrapper from "@src/frontend/components/modal-wrapper/ModalWrapper";
 
 export default function App() {
   return (
@@ -16,7 +17,8 @@ export default function App() {
           <GamePageHandler />
         </div>
       </div>
-      <ContextBridgeMessageHandler key={"fixed"} />
+      <ModalWrapper />
+      <ContextBridgeMessageHandler />
     </>
   );
 }

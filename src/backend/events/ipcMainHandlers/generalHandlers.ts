@@ -1,38 +1,38 @@
-import { actionsHandler } from "@src/backend/classes/ActionsHandler";
-import type {
-  ActionsHandlerMappedChannel,
-  IpcMainGenericHandle,
-  TitlebarMappedChannels,
-} from "@src/backend/types/contextBridgeChannels.type";
+import path from "node:path";
+import fs from "node:fs";
+import { ipcMain, shell, clipboard, nativeImage } from "electron";
+import type { ActionsHandlerIpcHandler } from "@src/backend/types/contextBridgeChannels.type";
 
-import { app, ipcMain, type BrowserWindow } from "electron";
+export function generalHandlers() {
+  const handle = ipcMain.handle as ActionsHandlerIpcHandler;
 
-type GenericHandler = IpcMainGenericHandle<TitlebarMappedChannels> &
-  IpcMainGenericHandle<ActionsHandlerMappedChannel>;
+  handle("actionsHandler:fetchScreenshotsFromPath", (_event, value) => {
+    const parsed: string[] = [];
+    fs.readdirSync(value).forEach((item) => {
+      const fullPath = path.resolve(value, item);
+      if (fs.statSync(fullPath).isFile()) {
+        parsed.push(btoa(fullPath));
+      }
+    });
 
-export function generalHandlers(window: BrowserWindow) {
-  // Store mainWindow's id
-  actionsHandler.setMainWindowId(window.id);
-
-  const handle = ipcMain.handle as GenericHandler;
-
-  handle("titlebar:close", () => {
-    if (process.platform !== "darwin") {
-      app.quit();
-    }
+    parsed.reverse();
+    return parsed;
   });
 
-  handle("titlebar:maximize", () => {
-    if (window.isMaximized()) {
-      window.restore();
-    } else {
-      window.maximize();
-    }
+  handle("actionsHandler:open", (_event, value) => {
+    shell.openPath(path.resolve(value));
   });
 
-  handle("titlebar:minimize", () => {
-    window.minimize();
+  handle("actionsHandler:copyImgToClipboard", (_event, value) => {
+    const img = nativeImage.createFromPath(value);
+    clipboard.writeImage(img);
   });
 
-  // handle("actionsHandler:copyImgToClipboard");
+  handle("actionsHandler:isDev", () => process.env.DEV);
+
+  handle("actionsHandler:registerGameKey", (event, value) => {
+    throw new Error("Feature not implemented");
+    // const key = registerGameKey(value);
+    // console.log("KEY", key);
+  });
 }
