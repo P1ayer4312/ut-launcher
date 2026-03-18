@@ -9,6 +9,7 @@ export type TContextBridgeActionsHandler = {
   /** @todo Revisit the value part */
   registerGameKey: (value: TGameKey) => Promise<void>;
   isDev: () => Promise<string>;
+  platform: () => Promise<NodeJS.Platform>;
 };
 
 export type TContextBridgeTitleBar = {

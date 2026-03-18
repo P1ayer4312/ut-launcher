@@ -46,7 +46,8 @@ export type ActionsHandlerChannels =
   | "open"
   | "copyImgToClipboard"
   | "registerGameKey"
-  | "isDev";
+  | "isDev"
+  | "platform";
 
 export type ActionsHandlerMappedChannel = `${ActionsHandlerApi}:${ActionsHandlerChannels}`;
 

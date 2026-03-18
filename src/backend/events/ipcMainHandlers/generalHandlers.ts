@@ -30,6 +30,8 @@ export function generalHandlers() {
 
   handle("actionsHandler:isDev", () => process.env.DEV);
 
+  handle("actionsHandler:platform", () => process.platform);
+
   handle("actionsHandler:registerGameKey", (event, value) => {
     throw new Error("Feature not implemented");
     // const key = registerGameKey(value);

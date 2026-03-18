@@ -4,7 +4,7 @@ import type {
   TitleBarApi, TitleBarChannels,
   GameDataApi, GameDataChannels,
   ActionsHandlerApi, ActionsHandlerChannels
-} from "@/backend/types/contextBridgeChannels.type";
+} from "@src/backend/types/contextBridgeChannels.type";
 import { OnMessageEventCallback, TActionsHandlerMessageEventData } from "./types/contextBridgeHandlers.type";
 
 type ContextBridgeCallback = (...args: never[]) => void;
@@ -51,7 +51,7 @@ exposeInMainWorldFactory<GameDataApi, GameDataChannels>("gameData", [
 
 exposeInMainWorldFactory<ActionsHandlerApi, ActionsHandlerChannels>(
   "actionsHandler",
-  ["fetchScreenshotsFromPath", "open", "copyImgToClipboard", "registerGameKey", "isDev", ""],
+  ["fetchScreenshotsFromPath", "open", "copyImgToClipboard", "registerGameKey", "isDev", "platform"],
   {
     onMessageEvent: (callback: OnMessageEventCallback) => {
       if (ipcRenderer.eventNames().includes("mainWindow:message")) {

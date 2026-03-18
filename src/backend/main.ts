@@ -42,15 +42,17 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
 
+  // Register all needed events
+  registerEvents(mainWindow);
+
   return mainWindow;
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", async () => {
-  const win = createWindow();
-  registerEvents(win);
+app.on("ready", () => {
+  createWindow();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
