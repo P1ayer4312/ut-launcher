@@ -1,0 +1,13 @@
+{
+  "name": "innoextract-wasm",
+  "version": "1.0.0",
+  "description": "WASM port of the Innoextract CLI tool",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}
