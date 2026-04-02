@@ -26,6 +26,19 @@ export const linksProvider: TLinksProvider = {
       installer: "https://www.oldunreal.com/site/assets/files/1106/unreal_gold.zip",
     },
   },
+  "unreal-2": {
+    dev: {
+      gameFiles: "http://localhost:3000/setup_unreal_2_-_the_awakening_special_edition_v2001_(19575).exe",
+      patch: null,
+      installer: null,
+    },
+    prod: {
+      gameFiles:
+        "https://archive.org/download/Unreal-GOG-Collection/Unreal%202%20The%20Awakening%20Special%20Edition/setup_unreal_2_-_the_awakening_special_edition_v2001_%2819575%29.exe",
+      installer: null,
+      patch: null,
+    },
+  },
   "ut-1999": {
     dev: {
       gameFiles: "http://localhost:3000/UT_CD1_436_Final.iso",

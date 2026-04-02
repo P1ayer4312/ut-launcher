@@ -17,6 +17,9 @@ export default function Unreal2View() {
         <div className="game-page-navbar_button" onClick={() => setActiveTab("home")}>
           Home
         </div>
+        <div className="game-page-navbar_button" onClick={() => setActiveTab("settings")}>
+          Settings
+        </div>
       </GamePageNavbar>
       {selectedGame == downloadingGame && <GamePageLoadingBar />}
       <GetTabView activeTab={activeTab} />

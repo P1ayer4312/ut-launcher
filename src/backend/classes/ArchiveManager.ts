@@ -1,3 +1,4 @@
+import InnoExtract from "innoextract-wasm";
 import js7z from "js7z-tools";
 import path from "node:path";
 
@@ -60,6 +61,31 @@ export class ArchiveManager {
             `-x@/in/${ignoreFileName}`,
             `/in/${path.basename(filePath)}`,
           ]);
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.error(error);
+          reject(error);
+        });
+    });
+  }
+
+  static async extractInnoInstaller(
+    filePath: string,
+    destinationDirectory: string,
+    printCallback: LogsCallback = undefined,
+  ) {
+    return new Promise((resolve, reject) => {
+      InnoExtract({ onExit: resolve, onAbort: reject, print: printCallback })
+        .then((wasmInno) => {
+          // Create virtual folders and mount them to system storage
+          wasmInno.FS.mkdir("/in");
+          wasmInno.FS.mkdir("/out");
+          wasmInno.FS.mount(wasmInno.NODEFS, { root: path.dirname(filePath) }, "/in");
+          wasmInno.FS.mount(wasmInno.NODEFS, { root: destinationDirectory }, "/out");
+
+          // Extract the file
+          wasmInno.callMain(["-e", `/in/${path.basename(filePath)}`, "-d", "/out"]);
         })
         .catch((error) => {
           // eslint-disable-next-line no-console

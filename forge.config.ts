@@ -9,15 +9,31 @@ import { FuseV1Options, FuseVersion } from "@electron/fuses";
 import path from "node:path";
 import fs from "node:fs/promises";
 
+type ModuleRef = {
+  moduleName: string;
+  moduleRootFolder: string;
+};
+
 const config: ForgeConfig = {
   hooks: {
     packageAfterCopy: async (_config, buildPath) => {
-      // Copy "js7z-tools" as an external module
-      const moduleName = "js7z-tools";
-      const src = path.join(__dirname, "node_modules", moduleName);
-      const dest = path.join(buildPath, "node_modules", moduleName);
-      await fs.mkdir(path.dirname(dest), { recursive: true });
-      await fs.cp(src, dest, { recursive: true });
+      // Copy these as external modules
+      const modulesToCopy: ModuleRef[] = [
+        { moduleName: "js7z-tools", moduleRootFolder: "node_modules" },
+        {
+          // Even tho local modules are not downloaded from npm, when packaged
+          // it searches them from the node_modules folder, so we copy them there
+          moduleName: "innoextract-wasm",
+          moduleRootFolder: "modules",
+        },
+      ];
+
+      for (const item of modulesToCopy) {
+        const src = path.join(__dirname, item.moduleRootFolder, item.moduleName);
+        const dest = path.join(buildPath, "node_modules", item.moduleName);
+        await fs.mkdir(path.dirname(dest), { recursive: true });
+        await fs.cp(src, dest, { recursive: true });
+      }
     },
   },
   packagerConfig: {
