@@ -12,7 +12,9 @@ interface NavbarProps extends PropsWithChildren {
 }
 
 export default function GamePageNavbar(props: NavbarProps) {
-  const { selectedGame, localDataStore, setLocalDataStore } = useGlobalState();
+  const selectedGame = useGlobalState((e) => e.selectedGame);
+  const localDataStore = useGlobalState((e) => e.localDataStore);
+  const setLocalDataStore = useGlobalState((e) => e.setLocalDataStore);
   const gameData = localDataStore[selectedGame];
 
   useEffect(() => {
@@ -34,14 +36,12 @@ export default function GamePageNavbar(props: NavbarProps) {
 }
 
 function GameButton({ props }: { props: NavbarProps }) {
-  const {
-    selectedGame,
-    runningGame,
-    downloadingGame,
-    localDataStore,
-    setDownloadingGame,
-    setLocalDataStoreForGameId,
-  } = useGlobalState();
+  const selectedGame = useGlobalState((e) => e.selectedGame);
+  const runningGame = useGlobalState((e) => e.runningGame);
+  const downloadingGame = useGlobalState((e) => e.downloadingGame);
+  const localDataStore = useGlobalState((e) => e.localDataStore);
+  const setDownloadingGame = useGlobalState((e) => e.setDownloadingGame);
+  const setLocalDataStoreForGameId = useGlobalState((e) => e.setLocalDataStore);
 
   const gameData = localDataStore[selectedGame];
 

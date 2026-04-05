@@ -16,7 +16,8 @@ type Props = {
 
 /**  Menu item cards for each game */
 export default function MenuItemGame(props: Props) {
-  const { setSelectedGame, downloadingGame } = useGlobalState();
+  const setSelectedGame = useGlobalState((s) => s.setSelectedGame);
+  const downloadingGame = useGlobalState((s) => s.downloadingGame);
 
   const handleOnClick = useCallback(() => {
     if (props.onClick) {

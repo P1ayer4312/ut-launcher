@@ -1,10 +1,10 @@
 import "./GameDescription.scss";
-import { useState } from "react";
+import { memo, useState } from "react";
 import type { TGameId } from "@src/frontend/state/useGlobalState.type";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
 
-export default function GameDescription() {
-  const { selectedGame } = useGlobalState();
+const GameDescription = memo(function GameDescription() {
+  const selectedGame = useGlobalState((e) => e.selectedGame);
   const [selectedImage, setSelectedImage] = useState(1);
   const [animationClass, setAnimationClass] = useState("show");
 
@@ -31,24 +31,28 @@ export default function GameDescription() {
             className={`game-description_image-container_large-image game-description_image-container_large-image_${animationClass}`}
             src={`./imgs/game-description/${selectedGame}/${selectedImage}.webp`}
             alt=""
+            draggable="false"
           />
           <div className="game-description_image-container_panel">
             <img
               className="game-description_image-container_panel-image"
               src={`./imgs/game-description/${selectedGame}/1.webp`}
               alt=""
+              draggable="false"
               onClick={() => imageSwapAnimation(1)}
             />
             <img
               className="game-description_image-container_panel-image"
               src={`./imgs/game-description/${selectedGame}/2.webp`}
               alt=""
+              draggable="false"
               onClick={() => imageSwapAnimation(2)}
             />
             <img
               className="game-description_image-container_panel-image"
               src={`./imgs/game-description/${selectedGame}/3.webp`}
               alt=""
+              draggable="false"
               onClick={() => imageSwapAnimation(3)}
             />
           </div>
@@ -56,10 +60,12 @@ export default function GameDescription() {
       </div>
     </div>
   );
-}
+});
+
+export default GameDescription;
 
 // TODO: Should the text be split or is it fine like this? idk
-function GameText(props: { gameId: TGameId }) {
+const GameText = memo(function GameText(props: { gameId: TGameId }) {
   switch (props.gameId) {
     case "unreal":
       return (
@@ -192,4 +198,4 @@ function GameText(props: { gameId: TGameId }) {
     default:
       return <h1>MISSING_GAME_DESCRIPTION_TEXT</h1>;
   }
-}
+});

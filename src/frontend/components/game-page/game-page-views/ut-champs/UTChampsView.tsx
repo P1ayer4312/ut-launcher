@@ -7,7 +7,8 @@ import Home from "./tab-views/home/Home";
 type Tabs = "home";
 
 export default function UTChampsView() {
-  const { downloadingGame, selectedGame } = useGlobalState();
+  const downloadingGame = useGlobalState((e) => e.downloadingGame);
+  const selectedGame = useGlobalState((e) => e.selectedGame);
   const [activeTab, setActiveTab] = useState<Tabs>("home");
 
   return (

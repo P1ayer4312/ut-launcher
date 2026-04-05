@@ -8,7 +8,8 @@ import Home from "./tab-views/home/Home";
 type Tabs = "home" | "settings";
 
 export default function UnrealView() {
-  const { downloadingGame, selectedGame } = useGlobalState();
+  const downloadingGame = useGlobalState((e) => e.downloadingGame);
+  const selectedGame = useGlobalState((e) => e.selectedGame);
   const [activeTab, setActiveTab] = useState<Tabs>("home");
 
   return (

@@ -10,7 +10,8 @@ import Home from "./tab-views/home/Home";
 type Tabs = "home" | "settings" | "guides" | "community";
 
 export default function UT4AlphaView() {
-  const { downloadingGame, selectedGame } = useGlobalState();
+  const downloadingGame = useGlobalState((e) => e.downloadingGame);
+  const selectedGame = useGlobalState((e) => e.selectedGame);
   const [activeTab, setActiveTab] = useState<Tabs>("home");
 
   return (

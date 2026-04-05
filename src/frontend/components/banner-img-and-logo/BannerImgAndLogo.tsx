@@ -2,7 +2,7 @@ import "./BannerImgAndLogo.scss";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
 
 export default function BannerImgAndLogo() {
-  const { selectedGame } = useGlobalState();
+  const selectedGame = useGlobalState((e) => e.selectedGame);
 
   return (
     <div className="banner-img-and-logo">
