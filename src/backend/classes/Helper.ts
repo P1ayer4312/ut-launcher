@@ -18,6 +18,7 @@ export class Helper {
     newProcess.once("spawn", onSpawnCallback);
     newProcess.once("close", onCloseCallback);
 
+    // eslint-disable-next-line no-console
     newProcess.on("error", console.log);
 
     return newProcess;

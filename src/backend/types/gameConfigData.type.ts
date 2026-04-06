@@ -13,9 +13,8 @@ export type TGameKey = "ut-2004" | "ut-2003" | "ut-3";
 
 export type TGameData = {
   directory: string;
-  patchVersion: string | null;
   installed: boolean;
-  available: boolean;
+  availableOS: (NodeJS.Platform | "")[];
 };
 
 export type TContextBridgeGameData = {

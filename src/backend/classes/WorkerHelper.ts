@@ -15,6 +15,8 @@ export class WorkerHelper {
    * Wrapper for `parentPort.postMessage` used for giving a type to the input
    */
   static postMessage<K extends TEventKeyNames>(key: K, value: TEventKeyValueMapping[K]) {
+    // eslint-disable-next-line no-console
+    console.log(`[${key}] ${JSON.stringify(value)}`);
     parentPort?.postMessage({ key, value });
   }
 

@@ -37,6 +37,8 @@ function createWindow() {
     process.env.DEV = "true";
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
     mainWindow.webContents.openDevTools();
+    // eslint-disable-next-line no-console
+    console.log("App data location:", app.getPath("userData"));
   } else {
     process.env.DEV = "false";
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));

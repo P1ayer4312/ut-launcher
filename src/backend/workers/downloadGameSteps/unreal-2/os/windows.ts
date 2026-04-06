@@ -1,13 +1,8 @@
 import path from "node:path";
-import axios from "axios";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
-import type {
-  DownloadManager,
-  GithubReleases,
-  SevenZipLogsCallback,
-} from "@src/backend/classes/DownloadManger";
+import type { DownloadManager, SevenZipLogsCallback } from "@src/backend/classes/DownloadManger";
 
 /**
  * Download Unreal 1, patch, extract and configure
@@ -38,6 +33,30 @@ export async function downloadUnreal2Windows(
     dl.destination,
     innoextractLogsCallback,
   );
+
+  // Copy config files in the games' folders
+  WorkerHelper.postMessage("progressFormatted", "Alter game configuration...");
+
+  const singleplayerFolder = path.resolve(dl.destination, "singleplayer/System");
+  const multiplayerFolder = path.resolve(dl.destination, "multiplayer/SYSTEM");
+  await Promise.all([
+    FilesHelper.copyFile(
+      FilesHelper.configFilePath(WorkerHelper.isDev(), "unreal-2/singleplayer/System/User.ini"),
+      singleplayerFolder,
+    ),
+    FilesHelper.copyFile(
+      FilesHelper.configFilePath(WorkerHelper.isDev(), "unreal-2/singleplayer/System/Unreal2.ini"),
+      singleplayerFolder,
+    ),
+    FilesHelper.copyFile(
+      FilesHelper.configFilePath(WorkerHelper.isDev(), "unreal-2/multiplayer/system/User.ini"),
+      multiplayerFolder,
+    ),
+    FilesHelper.copyFile(
+      FilesHelper.configFilePath(WorkerHelper.isDev(), "unreal-2/multiplayer/system/MyU2XMP.ini"),
+      multiplayerFolder,
+    ),
+  ]);
 
   // Create screenshots folder
   FilesHelper.createScreenshotsFolder(dl.destination);

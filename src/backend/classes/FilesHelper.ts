@@ -41,9 +41,7 @@ export class FilesHelper {
       return res.filter((item) => item.isFile());
     });
 
-    // Check if the overwrite file exists and remove it
     const renameItemsCollector: Promise<void>[] = [];
-    const removeItemsCollector: Promise<void>[] = [];
 
     files.forEach((file) => {
       const relativePath = path.relative(from, file.parentPath);
@@ -55,14 +53,21 @@ export class FilesHelper {
         fs.mkdirSync(newFileLocation, { recursive: true });
       }
 
+      // Check if the overwrite file exists and remove it
       if (fs.existsSync(newFilePath)) {
-        removeItemsCollector.push(fs.promises.rm(newFilePath, { force: true }));
+        fs.rmSync(newFilePath, { force: true });
+        // eslint-disable-next-line no-console
+        console.log(`Removed: ${newFilePath}`);
       }
 
-      renameItemsCollector.push(fs.promises.rename(oldFilePath, newFilePath));
+      renameItemsCollector.push(
+        fs.promises
+          .rename(oldFilePath, newFilePath)
+          // eslint-disable-next-line no-console
+          .then(() => console.log(`File moved: ${oldFilePath} -> ${newFileLocation}`)),
+      );
     });
 
-    await Promise.all(removeItemsCollector);
     await Promise.all(renameItemsCollector);
 
     if (removeAfterMove) {

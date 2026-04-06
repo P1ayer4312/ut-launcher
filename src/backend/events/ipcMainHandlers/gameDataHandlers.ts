@@ -51,24 +51,16 @@ export function gameDataHandlers() {
 
   handle("gameData:startInstalledGame", (_event, gameId) => {
     // Store the active game's id and directory\
-
-    console.log("run game called");
-
     actionsHandler.setRunningGame(gameId);
-
-    console.log(actionsHandler.runningGame);
-
     if (!actionsHandler.runningGameDirectory) {
       throw new Error(`"runningGameDirectory" not set`);
     }
 
     const exeConfig = Helper.getExePathForGameId(gameId, actionsHandler.runningGameDirectory);
-    console.log(exeConfig);
     const gameProcess = Helper.runExecutable(
       exeConfig,
       () => actionsHandler.sendMessage("setRunningGame", gameId),
       () => {
-        console.log("reset ?");
         actionsHandler.sendMessage("resetRunningGame", null);
         actionsHandler.resetRunningGame();
       },

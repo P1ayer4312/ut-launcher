@@ -13,7 +13,11 @@ export default function ProjectLinks() {
           throw new Error("TODO: ADD LINK");
         }}
       />
-      <MenuItemGame icon={FaGithub} title="GITHUB" />
+      <MenuItemGame
+        icon={FaGithub}
+        title="GITHUB"
+        onClick={() => window.open("https://github.com/P1ayer4312/ut-launcher", "_blank")}
+      />
       <MenuItemGame icon={IoIosSettings} title="SETTINGS" onClick={() => alert("clicked")} />
     </div>
   );

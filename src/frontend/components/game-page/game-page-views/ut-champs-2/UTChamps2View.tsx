@@ -13,7 +13,7 @@ export default function UTChamps2View() {
 
   return (
     <>
-      <GamePageNavbar unavailable={true}>
+      <GamePageNavbar>
         <div className="game-page-navbar_button" onClick={() => setActiveTab("home")}>
           Home
         </div>

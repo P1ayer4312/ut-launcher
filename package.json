@@ -8,10 +8,11 @@
   "private": true,
   "scripts": {
     "start": "electron-forge start",
+    "start:debug": "electron-forge start --inspect-electron",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint .",
+    "lint": "eslint ./src",
     "vite": "vite --config ./vite.renderer.config.mts",
     "cloc": "cloc --exclude-ext=ini ./src"
   },

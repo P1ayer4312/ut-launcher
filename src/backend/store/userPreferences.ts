@@ -50,12 +50,21 @@ export function clearStore() {
 
 /** Reset the local store config for a game */
 export function resetStoreForGame(key: TGameId) {
-  const defaultConfig: TGameData = {
-    directory: "",
-    patchVersion: null,
-    installed: false,
-    available: true,
-  };
+  if (!key) {
+    throw new Error(`Unable to reset store for provided game id: ${key}`);
+  }
 
-  store.set(key, defaultConfig);
+  store.set(key, defaultConfigs[key]);
 }
+
+const defaultConfigs: Record<TGameId, TGameData> = {
+  unreal: { directory: "", installed: false, availableOS: ["win32"] },
+  "unreal-2": { directory: "", installed: false, availableOS: ["win32"] },
+  "ut-1999": { directory: "", installed: false, availableOS: ["win32"] },
+  "ut-2003": { directory: "", installed: false, availableOS: ["win32"] },
+  "ut-2004": { directory: "", installed: false, availableOS: ["win32"] },
+  "ut-3": { directory: "", installed: false, availableOS: ["win32"] },
+  "ut-alpha": { directory: "", installed: false, availableOS: ["win32"] },
+  "ut-champs": { directory: "", installed: false, availableOS: [] },
+  "ut-champs-2": { directory: "", installed: false, availableOS: [] },
+};

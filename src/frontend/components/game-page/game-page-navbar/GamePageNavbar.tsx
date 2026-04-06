@@ -1,17 +1,10 @@
 import "./GamePageNavbar.scss";
-import { useEffect, type PropsWithChildren } from "react";
+import { memo, useEffect, type PropsWithChildren } from "react";
 import { FaPlay, FaDownload, FaTimes } from "react-icons/fa";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
 import contextBridge from "@src/frontend/contextBridge/contextBridge";
 
-interface NavbarProps extends PropsWithChildren {
-  /** Game is unavailable to download */
-  unavailable?: boolean;
-  /** Stop the current download process */
-  stop?: boolean;
-}
-
-export default function GamePageNavbar(props: NavbarProps) {
+export default function GamePageNavbar(props: PropsWithChildren) {
   const selectedGame = useGlobalState((e) => e.selectedGame);
   const localDataStore = useGlobalState((e) => e.localDataStore);
   const setLocalDataStore = useGlobalState((e) => e.setLocalDataStore);
@@ -29,24 +22,24 @@ export default function GamePageNavbar(props: NavbarProps) {
 
   return (
     <div className="game-page-navbar">
-      <GameButton props={props} />
+      <GameButton />
       {props.children}
     </div>
   );
 }
 
-function GameButton({ props }: { props: NavbarProps }) {
+const GameButton = memo(function GameButton() {
   const selectedGame = useGlobalState((e) => e.selectedGame);
   const runningGame = useGlobalState((e) => e.runningGame);
   const downloadingGame = useGlobalState((e) => e.downloadingGame);
   const localDataStore = useGlobalState((e) => e.localDataStore);
   const setDownloadingGame = useGlobalState((e) => e.setDownloadingGame);
-  const setLocalDataStoreForGameId = useGlobalState((e) => e.setLocalDataStore);
+  const setLocalDataStore = useGlobalState((e) => e.setLocalDataStore);
+  const platform = useGlobalState((e) => e.platform);
 
   const gameData = localDataStore[selectedGame];
-
-  // eslint-disable-next-line react/prop-types
-  const { unavailable } = props;
+  const isPlatformSupported =
+    platform !== "" ? localDataStore[selectedGame]?.availableOS?.includes(platform) : false;
 
   function stopButtonClicked() {
     if (selectedGame === runningGame) {
@@ -73,7 +66,7 @@ function GameButton({ props }: { props: NavbarProps }) {
       }
 
       const directoryPath = data.filePaths[0];
-      setLocalDataStoreForGameId(selectedGame, { directory: directoryPath });
+      setLocalDataStore({ [selectedGame]: { directory: directoryPath } });
 
       Promise.all([
         contextBridge.gameData.set(selectedGame, { directory: directoryPath }),
@@ -105,7 +98,7 @@ function GameButton({ props }: { props: NavbarProps }) {
   }
 
   // Show unavailable button
-  if (unavailable) {
+  if (!isPlatformSupported) {
     return (
       <div className="game-page-navbar_action-button game-page-navbar_unavailable">
         <span>UNAVAILABLE</span>
@@ -120,4 +113,4 @@ function GameButton({ props }: { props: NavbarProps }) {
       <span>INSTALL</span>
     </div>
   );
-}
+});

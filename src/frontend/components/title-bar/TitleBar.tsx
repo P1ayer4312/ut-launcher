@@ -2,20 +2,26 @@ import "./TitleBar.scss";
 import contextBridge from "@src/frontend/contextBridge/contextBridge";
 import { VscChromeClose, VscChromeMaximize, VscChromeMinimize } from "react-icons/vsc";
 import { useEffect, useState } from "react";
+import { useGlobalState } from "@src/frontend/state/useGlobalState";
 
 export default function TitleBar() {
   const titleBarControls = contextBridge.titleBarControls;
   const actionsHandler = contextBridge.actionsHandler;
+  const setPlatform = useGlobalState((e) => e.setPlatform);
 
   const [showTitleBar, setShowTitleBar] = useState<boolean>(false);
 
   useEffect(() => {
     actionsHandler.platform().then((platform) => {
       if (platform === "darwin") {
+        // Disable titlebar buttons for Mac
         setShowTitleBar(false);
       } else {
         setShowTitleBar(true);
       }
+
+      // We already pull the platform type, so we'll just pass it to the global state
+      setPlatform(platform);
     });
   }, []);
 

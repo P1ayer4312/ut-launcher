@@ -6,6 +6,8 @@ export const useGlobalState = create<TGlobalState>()((set) => ({
   setSelectedGame: (value) => set({ selectedGame: value }),
   runningGame: null,
   setRunningGame: (value) => set({ runningGame: value }),
+  platform: "",
+  setPlatform: (value) => set({ platform: value }),
 
   downloadingGame: null,
   setDownloadingGame: (value) => set({ downloadingGame: value }),

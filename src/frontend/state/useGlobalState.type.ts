@@ -17,7 +17,7 @@ export type TProgressBar = {
   percentage: number;
 };
 
-export type TLocalDataStore = Partial<Record<TGameId, TGameData>>;
+export type TLocalDataStore = Partial<Record<TGameId, Partial<TGameData>>>;
 
 export type TModalData = {
   isOpened: boolean;
@@ -45,4 +45,7 @@ export interface TGlobalState {
 
   modalData: TModalData;
   setModalData: (value: Partial<TModalData>) => void;
+
+  platform: NodeJS.Platform | "";
+  setPlatform: (value: NodeJS.Platform) => void;
 }
