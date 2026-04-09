@@ -109,10 +109,12 @@ export class DownloadManager extends EventEmitter<CustomEvents> {
   }
 
   /** Stop the download process */
-  stop() {
+  async stop() {
     this.abortController?.abort();
+    // eslint-disable-next-line no-console
+    console.log("Download cancelled, removing folder: " + this.destination);
     // TODO: Return this after testing
-    // fs.rmSync(this.destination, { recursive: true, force: true });
+    // await fs.promises.rm(this.destination, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
     this.emit("stop", true);
   }
 

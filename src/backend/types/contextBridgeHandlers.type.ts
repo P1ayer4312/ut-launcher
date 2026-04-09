@@ -27,7 +27,7 @@ export type TEventKeyValueMapping = {
   setRunningGame: TGameId;
   resetRunningGame: null;
   uninstallingGameMessage: null;
-  uninstallFinished: null;
+  uninstallFinished: TGameId;
   error: unknown;
 };
 

@@ -1,8 +1,10 @@
 import "./GamePageNavbar.scss";
 import { memo, useEffect, type PropsWithChildren } from "react";
 import { FaPlay, FaDownload, FaTimes } from "react-icons/fa";
+import { FaPeopleGroup } from "react-icons/fa6";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
 import contextBridge from "@src/frontend/contextBridge/contextBridge";
+import { TUnreal2Type } from "@src/backend/types/gameConfigData.type";
 
 export default function GamePageNavbar(props: PropsWithChildren) {
   const selectedGame = useGlobalState((e) => e.selectedGame);
@@ -38,8 +40,9 @@ const GameButton = memo(function GameButton() {
   const platform = useGlobalState((e) => e.platform);
 
   const gameData = localDataStore[selectedGame];
+  const isInstalled = gameData?.installed && downloadingGame === null;
   const isPlatformSupported =
-    platform !== "" ? localDataStore[selectedGame]?.availableOS?.includes(platform) : false;
+    platform !== "" && localDataStore[selectedGame]?.availableOS?.includes(platform);
 
   function stopButtonClicked() {
     if (selectedGame === runningGame) {
@@ -53,9 +56,9 @@ const GameButton = memo(function GameButton() {
     }
   }
 
-  function playButtonClicked() {
+  function playButtonClicked(option?: TUnreal2Type) {
     if (selectedGame !== "blank") {
-      contextBridge.gameData.startInstalledGame(selectedGame);
+      contextBridge.gameData.startInstalledGame(selectedGame, option);
     }
   }
 
@@ -66,7 +69,7 @@ const GameButton = memo(function GameButton() {
       }
 
       const directoryPath = data.filePaths[0];
-      setLocalDataStore({ [selectedGame]: { directory: directoryPath } });
+      setLocalDataStore({ [selectedGame]: { ...gameData, directory: directoryPath } });
 
       Promise.all([
         contextBridge.gameData.set(selectedGame, { directory: directoryPath }),
@@ -88,9 +91,34 @@ const GameButton = memo(function GameButton() {
   }
 
   // Show the play button if the game is installed
-  if (gameData?.installed && downloadingGame === null) {
+  if (isInstalled) {
+    if (selectedGame === "unreal-2") {
+      // Unreal 2 has two instances for SP and MP, so we add two buttons
+      return (
+        <div className="game-page-navbar_unreal-2-btns">
+          <div
+            className="game-page-navbar_action-button game-page-navbar_play"
+            onClick={() => playButtonClicked("u2-sp")}
+          >
+            <FaPlay />
+            <span>PLAY</span>
+          </div>
+          <div
+            className="game-page-navbar_action-button  game-page-navbar_u2-xmp"
+            onClick={() => playButtonClicked("u2-xmp")}
+          >
+            <FaPeopleGroup />
+            <span>XMP</span>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="game-page-navbar_action-button game-page-navbar_play" onClick={playButtonClicked}>
+      <div
+        className="game-page-navbar_action-button game-page-navbar_play"
+        onClick={() => playButtonClicked()}
+      >
         <FaPlay />
         <span>PLAY</span>
       </div>

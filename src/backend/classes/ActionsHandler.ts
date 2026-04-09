@@ -67,14 +67,6 @@ export class ActionsHandler {
   terminateWorker() {
     // eslint-disable-next-line no-console
     console.log("Terminating worker");
-    if (!this.mainWindowId) {
-      throw new Error(`"mainWindowId" is not set`);
-    }
-
-    const mainWindow = BrowserWindow.fromId(this.mainWindowId);
-    if (mainWindow) {
-      mainWindow.setProgressBar(0);
-    }
 
     if (this.worker && this.worker?.threadId !== -1) {
       this.worker.postMessage({
@@ -82,6 +74,18 @@ export class ActionsHandler {
         value: true,
       });
     }
+
+    setTimeout(() => {
+      // There might be a better way to do the progressbar cleaning idk
+      if (!this.mainWindowId) {
+        throw new Error(`"mainWindowId" is not set`);
+      }
+
+      const mainWindow = BrowserWindow.fromId(this.mainWindowId);
+      if (mainWindow) {
+        mainWindow.setProgressBar(0);
+      }
+    }, 3000);
   }
 
   /** Emit an event to the main window. Message handlers are defined inside `ContextBridgeMessageHandler.tsx`*/
@@ -98,7 +102,7 @@ export class ActionsHandler {
     if (key === "progress") {
       const val = value as TEventKeyValueMapping["progress"];
       mainWindow.setProgressBar(Number(val.progress?.toFixed(2)) || 0);
-    } else if (key === "uninstallFinished") {
+    } else if (key === "uninstallFinished" || key === "updateLocalGameStore") {
       mainWindow.setProgressBar(0);
     }
 

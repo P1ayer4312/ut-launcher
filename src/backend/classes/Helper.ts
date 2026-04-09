@@ -3,7 +3,7 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 import { resetStoreForGame, getGameUserData } from "@src/backend/store/userPreferences";
 import { actionsHandler } from "./ActionsHandler";
-import type { TGameId, TExeOptions } from "@src/backend/types/gameConfigData.type";
+import type { TGameId, TExeOptions, TUnreal2Type } from "@src/backend/types/gameConfigData.type";
 
 export class Helper {
   /**
@@ -27,10 +27,19 @@ export class Helper {
   /**
    * Helper function for getting the path of the game's executable
    */
-  static getExePathForGameId(gameId: TGameId, directory: string): TExeOptions {
+  static getExePathForGameId(gameId: TGameId, directory: string, option?: TUnreal2Type): TExeOptions {
     switch (gameId) {
       case "unreal":
         return { path: path.resolve(directory, gameId, "System64/Unreal.exe"), args: [] };
+
+      case "unreal-2": {
+        // Only check if XMP is sent, use SinglePlayer as default
+        if (option && option === "u2-xmp") {
+          return { path: path.resolve(directory, gameId, "multiplayer/SYSTEM/U2XMP.exe"), args: [] };
+        }
+
+        return { path: path.resolve(directory, gameId, "singleplayer/System/Unreal2.exe"), args: [] };
+      }
 
       case "ut-1999":
         return { path: path.resolve(directory, gameId, "System/UnrealTournament.exe"), args: [] };
@@ -52,11 +61,12 @@ export class Helper {
   static async uninstallGame(gameId: TGameId) {
     const gameData = getGameUserData(gameId);
     const gameFolder = gameData.directory !== "" ? path.resolve(gameData.directory, gameId) : null;
+
     if (gameFolder && fs.existsSync(gameFolder)) {
       actionsHandler.sendMessage("uninstallingGameMessage", null);
       fs.rmSync(gameFolder, { recursive: true, force: true });
       resetStoreForGame(gameId);
-      actionsHandler.sendMessage("uninstallFinished", null);
+      actionsHandler.sendMessage("uninstallFinished", gameId);
     } else {
       throw new Error("Unable to uninstall the game");
     }

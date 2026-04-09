@@ -79,8 +79,7 @@ export default function ContextBridgeMessageHandler() {
             }
 
             case "uninstallFinished": {
-              if (selectedGame === "blank") return;
-
+              const selectedGame = dataReceived.value;
               contextBridge.gameData.get(selectedGame).then((data) => {
                 setLocalDataStore({ [selectedGame]: data });
                 setDownloadingGame(null);
@@ -108,7 +107,7 @@ export default function ContextBridgeMessageHandler() {
     },
     // prettier-ignore
     [
-			downloadingGame, selectedGame, setDownloadingGame, setLocalDataStore,	setModalData,	
+			downloadingGame, selectedGame, setDownloadingGame, setLocalDataStore,	setModalData,
 			setProgressBar,	setRunningGame,	setSelectedGame, setLocalDataStoreForGameId
 		],
   );

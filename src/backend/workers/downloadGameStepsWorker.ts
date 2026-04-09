@@ -17,16 +17,16 @@ import { downloadUnreal2 } from "./downloadGameSteps/unreal-2";
 
   dl.setDownloadDestination(WorkerHelper.workerData.installDirectory, WorkerHelper.workerData.gameId);
 
-  WorkerHelper.parentPort.on("message", (data) => {
+  WorkerHelper.parentPort.on("message", async (data) => {
     if (data.key === "terminate") {
-      dl.stop();
+      await dl.stop();
       WorkerHelper.exit(0);
     }
   });
 
   // Add initial value to the progress bar to not look broken
   WorkerHelper.postMessage("progressFormatted", "Preparing...");
-  WorkerHelper.postMessage("progress", { progress: 0 });
+  WorkerHelper.postMessage("progress", { progress: 2 });
 
   function sevenZipLogsCallback(value: string) {
     if (value?.includes("%")) {

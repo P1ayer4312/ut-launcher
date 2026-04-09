@@ -49,14 +49,14 @@ export function gameDataHandlers() {
     Helper.uninstallGame(gameId);
   });
 
-  handle("gameData:startInstalledGame", (_event, gameId) => {
+  handle("gameData:startInstalledGame", (_event, gameId, option) => {
     // Store the active game's id and directory\
     actionsHandler.setRunningGame(gameId);
     if (!actionsHandler.runningGameDirectory) {
       throw new Error(`"runningGameDirectory" not set`);
     }
 
-    const exeConfig = Helper.getExePathForGameId(gameId, actionsHandler.runningGameDirectory);
+    const exeConfig = Helper.getExePathForGameId(gameId, actionsHandler.runningGameDirectory, option);
     const gameProcess = Helper.runExecutable(
       exeConfig,
       () => actionsHandler.sendMessage("setRunningGame", gameId),

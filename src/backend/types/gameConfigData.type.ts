@@ -9,6 +9,8 @@ export type TGameId =
   | "ut-2003"
   | "ut-3";
 
+export type TUnreal2Type = "u2-sp" | "u2-xmp";
+
 export type TGameKey = "ut-2004" | "ut-2003" | "ut-3";
 
 export type TGameData = {
@@ -25,7 +27,7 @@ export type TContextBridgeGameData = {
   selectInstallDir: () => Promise<{ canceled: boolean; filePaths: string[] }>;
   startGameDownload: (gameId: TGameId, installDirectory: string) => Promise<void>;
   stopGameDownload: (gameId: TGameId) => Promise<void>;
-  startInstalledGame: (gameId: TGameId) => Promise<void>;
+  startInstalledGame: (gameId: TGameId, option?: TUnreal2Type) => Promise<void>;
   stopInstalledGame: () => Promise<void>;
   uninstallGame: (gameId: TGameId) => Promise<void>;
   readServerIni: (gameId: TGameId) => Promise<object>;
