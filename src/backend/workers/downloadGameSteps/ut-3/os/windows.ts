@@ -53,11 +53,10 @@ export async function downloadUT3Windows(dl: DownloadManager, sevenZipLogsCallba
     tempExtractionFolder,
   );
 
-  const skipPatchArchiveFile = FilesHelper.configFilePath(
-    WorkerHelper.isDev(),
-    "ut-3/skip_patch_archive.txt",
+  await FilesHelper.copyFile(
+    FilesHelper.configFilePath(WorkerHelper.isDev(), "ut-3/skip_patch_archive.txt"),
+    dl.installFilesFolder,
   );
-  await FilesHelper.copyFile(skipPatchArchiveFile, dl.installFilesFolder);
 
   const openSpyPatch = path.resolve(dl.installFilesFolder, "UT3_OS_Patch.zip");
   if (!fs.existsSync(openSpyPatch)) {
@@ -169,7 +168,6 @@ export async function downloadUT3Windows(dl: DownloadManager, sevenZipLogsCallba
   // Cleanup
   WorkerHelper.postMessage("progressFormatted", "Cleanup...");
   await FilesHelper.remove(tempExtractionFolder);
-  await FilesHelper.remove(skipPatchArchiveFile);
 
   // Update the local store for the installed game and tag it as installed
   WorkerHelper.postMessage("updateLocalGameStore", { gameId: "ut-3", installed: true });

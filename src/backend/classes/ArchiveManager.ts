@@ -1,6 +1,7 @@
 import InnoExtract from "innoextract-wasm";
 import js7z from "js7z-tools";
 import path from "node:path";
+import { logger } from "@src/backend/utils/logger";
 
 type LogsCallback = ((value: string) => void) | undefined;
 
@@ -39,8 +40,7 @@ export class ArchiveManager {
           wasm7z.callMain(["x", `/in/${path.basename(filePath)}`, "-o/out", "-aoa"]);
         })
         .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.error(error);
+          logger.error(error);
           reject(error);
         });
     });
@@ -89,8 +89,7 @@ export class ArchiveManager {
           ]);
         })
         .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.error(error);
+          logger.error(error);
           reject(error);
         });
     });
@@ -127,8 +126,7 @@ export class ArchiveManager {
           wasmInno.callMain(["-e", `/in/${path.basename(filePath)}`, "-d", "/out"]);
         })
         .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.error(error);
+          logger.error(error);
           reject(error);
         });
     });

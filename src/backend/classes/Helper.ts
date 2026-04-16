@@ -4,6 +4,7 @@ import { spawn } from "node:child_process";
 import { resetStoreForGame, getGameUserData } from "@src/backend/store/userPreferences";
 import { actionsHandler } from "./ActionsHandler";
 import type { TGameId, TExeOptions, TUnreal2Type } from "@src/backend/types/gameConfigData.type";
+import { logger } from "@src/backend/utils/logger";
 
 export class Helper {
   /**
@@ -17,9 +18,7 @@ export class Helper {
     const newProcess = spawn(exeOptions.path, exeOptions.args, { detached: true });
     newProcess.once("spawn", onSpawnCallback);
     newProcess.once("close", onCloseCallback);
-
-    // eslint-disable-next-line no-console
-    newProcess.on("error", console.log);
+    newProcess.on("error", logger.error);
 
     return newProcess;
   }

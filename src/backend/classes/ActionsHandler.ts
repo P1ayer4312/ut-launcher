@@ -5,6 +5,7 @@ import { setGameUserData, getGameUserData } from "@src/backend/store/userPrefere
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
 import type { TGameId } from "@src/backend/types/gameConfigData.type";
 import type { TEventKeyValueMapping, TEventKeyNames } from "@src/backend/types/contextBridgeHandlers.type";
+import { logger, workerLog } from "@src/backend/utils/logger";
 
 /**
  * Class used for handling and displaying actions between Electron and the main world
@@ -54,8 +55,7 @@ export class ActionsHandler {
     });
 
     this.worker.on("error", (err: ErrorEvent) => {
-      // eslint-disable-next-line no-console
-      console.error("WORKER_ERROR", err);
+      workerLog.error("WORKER_ERROR", err);
       this.sendMessage("error", String(err.message));
     });
 
@@ -65,14 +65,10 @@ export class ActionsHandler {
   }
 
   terminateWorker() {
-    // eslint-disable-next-line no-console
-    console.log("Terminating worker");
+    logger.info("Terminating worker");
 
     if (this.worker && this.worker?.threadId !== -1) {
-      this.worker.postMessage({
-        key: "terminate",
-        value: true,
-      });
+      this.worker.postMessage({ key: "terminate", value: true });
     }
 
     setTimeout(() => {
@@ -90,11 +86,7 @@ export class ActionsHandler {
 
   /** Emit an event to the main window. Message handlers are defined inside `ContextBridgeMessageHandler.tsx`*/
   sendMessage<K extends TEventKeyNames>(key: K, value: TEventKeyValueMapping[K]) {
-    if (!this.mainWindowId) {
-      throw new Error(`"mainWindowId" is not set`);
-    }
-
-    const mainWindow = BrowserWindow.fromId(this.mainWindowId);
+    const mainWindow = this.getMainWindow();
     if (!mainWindow) {
       throw new Error("Can't find the main window");
     }
@@ -130,8 +122,7 @@ export class ActionsHandler {
     if (this.runningProcess?.kill()) {
       this.runningProcess = null;
     } else {
-      // eslint-disable-next-line no-console
-      console.error("Unable to terminate executable");
+      logger.error("Unable to terminate executable");
     }
   }
 
@@ -143,6 +134,15 @@ export class ActionsHandler {
   /**  Store the main window's id for reference */
   setMainWindowId(num: number) {
     this.mainWindowId = num;
+  }
+
+  /** Returns a reference to the main window */
+  getMainWindow() {
+    if (!this.mainWindowId) {
+      throw new Error(`"mainWindowId" is not set`);
+    }
+
+    return BrowserWindow.fromId(this.mainWindowId);
   }
 }
 

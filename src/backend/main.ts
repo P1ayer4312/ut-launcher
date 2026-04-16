@@ -2,11 +2,15 @@ import { app, BrowserWindow } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
 import { registerEvents } from "./events";
+import log from "electron-log/main";
+import { logger } from "@src/backend/utils/logger";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
 }
+
+log.initialize();
 
 function createWindow() {
   // Setup protocol for local file access
@@ -37,8 +41,8 @@ function createWindow() {
     process.env.DEV = "true";
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
     mainWindow.webContents.openDevTools();
-    // eslint-disable-next-line no-console
-    console.log("App data location:", app.getPath("userData"));
+
+    logger.info("App data location:", app.getPath("userData"));
   } else {
     process.env.DEV = "false";
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));

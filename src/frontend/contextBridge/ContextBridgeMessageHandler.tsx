@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import contextBridge from "./contextBridge";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
+import { logger } from "@src/frontend/utils/logger";
 
 /**
  * Wrapper component for handling the messages between the contextBridge.
@@ -97,8 +98,7 @@ export default function ContextBridgeMessageHandler() {
             }
 
             default: {
-              // eslint-disable-next-line no-console
-              console.error("Unhandled message:", dataReceived);
+              logger.error("Unhandled message:", dataReceived);
               break;
             }
           }

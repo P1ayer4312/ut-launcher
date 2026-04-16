@@ -3,6 +3,7 @@ import process from "node:process";
 import { linksProvider } from "@src/backend/providers/linksProvider";
 import type { TWorkerData, TGameId } from "@src/backend/types/gameConfigData.type";
 import type { TEventKeyNames, TEventKeyValueMapping } from "@src/backend/types/contextBridgeHandlers.type";
+import { workerLog } from "@src/backend/utils/logger";
 
 type ExitCode = string | number | null | undefined;
 
@@ -15,8 +16,7 @@ export class WorkerHelper {
    * Wrapper for `parentPort.postMessage` used for giving a type to the input
    */
   static postMessage<K extends TEventKeyNames>(key: K, value: TEventKeyValueMapping[K]) {
-    // eslint-disable-next-line no-console
-    console.log(`[${key}] ${JSON.stringify(value)}`);
+    workerLog.info(`[${key}] ${JSON.stringify(value)}`);
     parentPort?.postMessage({ key, value });
   }
 

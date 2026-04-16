@@ -1,11 +1,11 @@
 import { contextBridge, ipcRenderer } from "electron";
 // prettier-ignore
 import type {
-  TitleBarApi, TitleBarChannels,
-  GameDataApi, GameDataChannels,
+  TitleBarApi, TitleBarChannels, GameDataApi, GameDataChannels,
   ActionsHandlerApi, ActionsHandlerChannels
 } from "@src/backend/types/contextBridgeChannels.type";
 import { OnMessageEventCallback, TActionsHandlerMessageEventData } from "./types/contextBridgeHandlers.type";
+import { ipcLogger } from "@src/frontend/utils/logger";
 
 type ContextBridgeCallback = (...args: never[]) => void;
 type ApiRecord<K extends string> = Partial<Record<K, ContextBridgeCallback>>;
@@ -24,7 +24,10 @@ function exposeInMainWorldFactory<V extends string, T extends string>(
     }
 
     const channel: string = `${apiKey}:${item}`;
-    customApi[item] = (...args: unknown[]) => ipcRenderer.invoke(channel, ...args);
+    customApi[item] = (...args: unknown[]) => {
+      ipcLogger.info(channel, ...args);
+      return ipcRenderer.invoke(channel, ...args);
+    };
   }
 
   contextBridge.exposeInMainWorld(apiKey, customApi);
@@ -51,7 +54,15 @@ exposeInMainWorldFactory<GameDataApi, GameDataChannels>("gameData", [
 
 exposeInMainWorldFactory<ActionsHandlerApi, ActionsHandlerChannels>(
   "actionsHandler",
-  ["fetchScreenshotsFromPath", "open", "copyImgToClipboard", "registerGameKey", "isDev", "platform"],
+  [
+    "fetchScreenshotsFromPath",
+    "open",
+    "copyImgToClipboard",
+    "registerGameKey",
+    "isDev",
+    "platform",
+    "flashFrame",
+  ],
   {
     onMessageEvent: (callback: OnMessageEventCallback) => {
       if (ipcRenderer.eventNames().includes("mainWindow:message")) {

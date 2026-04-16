@@ -1,5 +1,6 @@
 import path from "node:path";
 import fs from "node:fs";
+import { logger } from "@src/backend/utils/logger";
 
 /** Helper class for managing files and file paths */
 export class FilesHelper {
@@ -56,15 +57,13 @@ export class FilesHelper {
       // Check if the overwrite file exists and remove it
       if (fs.existsSync(newFilePath)) {
         await fs.promises.rm(newFilePath, { force: true, maxRetries: 5, retryDelay: 500 });
-        // eslint-disable-next-line no-console
-        console.log(`Removed: ${newFilePath}`);
+        logger.info(`Removed: ${newFilePath}`);
       }
 
       renameItemsCollector.push(
         fs.promises
           .rename(oldFilePath, newFilePath)
-          // eslint-disable-next-line no-console
-          .then(() => console.log(`File moved: ${oldFilePath} -> ${newFileLocation}`)),
+          .then(() => logger.info(`File moved: ${oldFilePath} -> ${newFileLocation}`)),
       );
     });
 

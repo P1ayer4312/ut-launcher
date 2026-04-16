@@ -3,6 +3,7 @@ import { EventEmitter } from "node:events";
 import fs from "node:fs";
 import path from "node:path";
 import type { Endpoints } from "@octokit/types";
+import { logger } from "@src/backend/utils/logger";
 
 type CustomEvents = {
   start: [boolean];
@@ -91,8 +92,7 @@ export class DownloadManager extends EventEmitter<CustomEvents> {
       })
       .catch((err) => {
         const msg = `Error while trying to download: ${url}`;
-        // eslint-disable-next-line no-console
-        console.error(msg, err);
+        logger.error(msg, err);
         this.emit("error", msg);
       });
   }
@@ -111,8 +111,7 @@ export class DownloadManager extends EventEmitter<CustomEvents> {
   /** Stop the download process */
   async stop() {
     this.abortController?.abort();
-    // eslint-disable-next-line no-console
-    console.log("Download cancelled, removing folder: " + this.destination);
+    logger.info("Download cancelled, removing folder: " + this.destination);
     // TODO: Return this after testing
     // await fs.promises.rm(this.destination, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
     this.emit("stop", true);

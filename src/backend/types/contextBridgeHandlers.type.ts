@@ -10,6 +10,7 @@ export type TContextBridgeActionsHandler = {
   registerGameKey: (value: TGameKey) => Promise<void>;
   isDev: () => Promise<string>;
   platform: () => Promise<NodeJS.Platform>;
+  flashFrame: (enable: boolean) => Promise<void>;
 };
 
 export type TContextBridgeTitleBar = {
