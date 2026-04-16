@@ -6,7 +6,10 @@ export default function GamePageLoadingBar() {
   return (
     <div className="game-page_loading-bar">
       <span>{progressBar.text}</span>
-      <div style={{ width: `${progressBar.percentage}%` }} className="game-page_loading-bar-progress"></div>
+      <div
+        style={{ width: `${progressBar.percentage <= 100 ? progressBar.percentage : 100}%` }}
+        className="game-page_loading-bar-progress"
+      ></div>
     </div>
   );
 }

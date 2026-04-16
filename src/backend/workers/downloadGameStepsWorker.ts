@@ -4,6 +4,7 @@ import { downloadUnreal } from "./downloadGameSteps/unreal";
 import { downloadUT1999 } from "./downloadGameSteps/ut-1999";
 import { downloadUT4Alpha } from "./downloadGameSteps/ut-alpha";
 import { downloadUnreal2 } from "./downloadGameSteps/unreal-2";
+import { downloadUT3 } from "./downloadGameSteps/ut-3";
 
 (async () => {
   const dl = new DownloadManager();
@@ -28,7 +29,7 @@ import { downloadUnreal2 } from "./downloadGameSteps/unreal-2";
   WorkerHelper.postMessage("progressFormatted", "Preparing...");
   WorkerHelper.postMessage("progress", { progress: 2 });
 
-  function sevenZipLogsCallback(value: string) {
+  function sevenZipLogsCallback(value: string, customMessage?: string) {
     if (value?.includes("%")) {
       const percent = Number(value.match(/(\d+)(?=%)/)?.[0]);
 
@@ -36,20 +37,14 @@ import { downloadUnreal2 } from "./downloadGameSteps/unreal-2";
         WorkerHelper.postMessage("progress", { progress: percent / 100 });
       }
 
-      WorkerHelper.postMessage("progressFormatted", `Extracting files... ${value}`);
+      const message = customMessage || "Extracting files...";
+
+      WorkerHelper.postMessage("progressFormatted", `${message} ${value}`);
     }
   }
 
   function innoextractLogsCallback(value: string) {
-    // TODO: Check how to handle logs
-    // if (value?.includes("%")) {
-    //   const percent = Number(value.match(/(\d+)(?=%)/)?.[0]);
-
-    //   if (!isNaN(percent) && percent >= 0) {
-    //     WorkerHelper.postMessage("progress", { progress: percent / 100 });
-    //   }
-
-    // }
+    // TODO: Check if there's a better way to represent logs
     WorkerHelper.postMessage("progressFormatted", `Extracting files... ${value}`);
   }
 
@@ -70,6 +65,10 @@ import { downloadUnreal2 } from "./downloadGameSteps/unreal-2";
     // case "ut-2004":
     //   downloadUT2004(dl, sevenZipLogsCallback);
     //   break;
+
+    case "ut-3":
+      downloadUT3(dl, sevenZipLogsCallback);
+      break;
 
     case "ut-alpha":
       downloadUT4Alpha(dl, sevenZipLogsCallback);

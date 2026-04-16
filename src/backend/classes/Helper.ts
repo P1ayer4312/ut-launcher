@@ -44,6 +44,9 @@ export class Helper {
       case "ut-1999":
         return { path: path.resolve(directory, gameId, "System/UnrealTournament.exe"), args: [] };
 
+      case "ut-3":
+        return { path: path.resolve(directory, gameId, "Binaries/UT3_OS_Patch.exe"), args: [] };
+
       case "ut-alpha":
         return {
           path: path.resolve(directory, gameId, "Engine/Binaries/Win64/UE4-Win64-Shipping.exe"),
@@ -64,7 +67,7 @@ export class Helper {
 
     if (gameFolder && fs.existsSync(gameFolder)) {
       actionsHandler.sendMessage("uninstallingGameMessage", null);
-      fs.rmSync(gameFolder, { recursive: true, force: true });
+      await fs.promises.rm(gameFolder, { recursive: true, force: true, maxRetries: 5, retryDelay: 500 });
       resetStoreForGame(gameId);
       actionsHandler.sendMessage("uninstallFinished", gameId);
     } else {

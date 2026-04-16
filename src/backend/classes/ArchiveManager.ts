@@ -14,7 +14,20 @@ export class ArchiveManager {
     printCallback: LogsCallback = undefined,
   ) {
     return new Promise((resolve, reject) => {
-      js7z({ onExit: resolve, onAbort: reject, print: printCallback })
+      const errorLogsCollector: string[] = [];
+      js7z({
+        onExit: () => {
+          // Check if there were any error before exiting
+          if (errorLogsCollector.length > 0) {
+            reject(errorLogsCollector.join(" "));
+          }
+
+          resolve(true);
+        },
+        onAbort: reject,
+        print: printCallback,
+        printErr: (errorLog: string) => errorLogsCollector.push(errorLog),
+      })
         .then((wasm7z) => {
           // Create virtual folders and mount them to system storage
           wasm7z.FS.mkdir("/in");
@@ -44,7 +57,20 @@ export class ArchiveManager {
     printCallback: LogsCallback = undefined,
   ) {
     return new Promise((resolve, reject) => {
-      js7z({ onExit: resolve, onAbort: reject, print: printCallback })
+      const errorLogsCollector: string[] = [];
+      js7z({
+        onExit: () => {
+          // Check if there were any error before exiting
+          if (errorLogsCollector.length > 0) {
+            reject(errorLogsCollector.join(" "));
+          }
+
+          resolve(true);
+        },
+        onAbort: reject,
+        print: printCallback,
+        printErr: (errorLog: string) => errorLogsCollector.push(errorLog),
+      })
         .then((wasm7z) => {
           // Create virtual folders and mount them to system storage
           wasm7z.FS.mkdir("/in");
@@ -76,7 +102,20 @@ export class ArchiveManager {
     printCallback: LogsCallback = undefined,
   ) {
     return new Promise((resolve, reject) => {
-      InnoExtract({ onExit: resolve, onAbort: reject, print: printCallback })
+      const errorLogsCollector: string[] = [];
+      InnoExtract({
+        onExit: () => {
+          // Check if there were any error before exiting
+          if (errorLogsCollector.length > 0) {
+            reject(errorLogsCollector.join(" "));
+          }
+
+          resolve(true);
+        },
+        onAbort: reject,
+        print: printCallback,
+        printErr: (errorLog: string) => errorLogsCollector.push(errorLog),
+      })
         .then((wasmInno) => {
           // Create virtual folders and mount them to system storage
           wasmInno.FS.mkdir("/in");

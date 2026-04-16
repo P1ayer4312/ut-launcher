@@ -3,19 +3,12 @@ import axios from "axios";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
-import type {
-  DownloadManager,
-  GithubReleases,
-  SevenZipLogsCallback,
-} from "@src/backend/classes/DownloadManger";
+import type { DownloadManager, GithubReleases, LogsCallback } from "@src/backend/classes/DownloadManger";
 
 /**
  * Download UT4 Alpha, patch, extract and configure
  */
-export async function downloadUT4AlphaWindows(
-  dl: DownloadManager,
-  sevenZipLogsCallback: SevenZipLogsCallback,
-) {
+export async function downloadUT4AlphaWindows(dl: DownloadManager, sevenZipLogsCallback: LogsCallback) {
   const links = WorkerHelper.getGameLinks("ut-alpha");
   let latestPatchUrl: string | null;
 

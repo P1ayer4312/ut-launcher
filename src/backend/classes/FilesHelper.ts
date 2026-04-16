@@ -43,7 +43,7 @@ export class FilesHelper {
 
     const renameItemsCollector: Promise<void>[] = [];
 
-    files.forEach((file) => {
+    files.forEach(async (file) => {
       const relativePath = path.relative(from, file.parentPath);
       const newFileLocation = path.resolve(to, relativePath);
       const newFilePath = path.join(to, relativePath, file.name);
@@ -55,7 +55,7 @@ export class FilesHelper {
 
       // Check if the overwrite file exists and remove it
       if (fs.existsSync(newFilePath)) {
-        fs.rmSync(newFilePath, { force: true });
+        await fs.promises.rm(newFilePath, { force: true, maxRetries: 5, retryDelay: 500 });
         // eslint-disable-next-line no-console
         console.log(`Removed: ${newFilePath}`);
       }
@@ -86,9 +86,13 @@ export class FilesHelper {
   }
 
   /**
-   * Remove file/folder
+   * Remove file/folder if it exists
    */
-  static remove(path: string) {
-    return fs.rmSync(path, { force: true, recursive: true });
+  static async remove(path: string) {
+    if (fs.existsSync(path)) {
+      return fs.promises.rm(path, { force: true, recursive: true, maxRetries: 5, retryDelay: 500 });
+    }
+
+    return Promise.resolve();
   }
 }

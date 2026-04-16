@@ -13,7 +13,7 @@ type CustomEvents = {
   stop: [boolean];
 };
 
-export type SevenZipLogsCallback = (value: string) => void;
+export type LogsCallback = (value: string, customMessage?: string) => void;
 export type GithubReleases = Endpoints["GET /repos/{owner}/{repo}/releases"]["response"]["data"];
 
 /**

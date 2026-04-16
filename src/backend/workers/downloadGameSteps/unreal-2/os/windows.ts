@@ -2,15 +2,12 @@ import path from "node:path";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
-import type { DownloadManager, SevenZipLogsCallback } from "@src/backend/classes/DownloadManger";
+import type { DownloadManager, LogsCallback } from "@src/backend/classes/DownloadManger";
 
 /**
  * Download Unreal 1, patch, extract and configure
  */
-export async function downloadUnreal2Windows(
-  dl: DownloadManager,
-  innoextractLogsCallback: SevenZipLogsCallback,
-) {
+export async function downloadUnreal2Windows(dl: DownloadManager, innoextractLogsCallback: LogsCallback) {
   const links = WorkerHelper.getGameLinks("unreal-2");
 
   // Download all necessary files

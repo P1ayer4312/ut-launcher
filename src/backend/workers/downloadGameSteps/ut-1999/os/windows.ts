@@ -3,16 +3,12 @@ import axios from "axios";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
-import type {
-  DownloadManager,
-  GithubReleases,
-  SevenZipLogsCallback,
-} from "@src/backend/classes/DownloadManger";
+import type { DownloadManager, GithubReleases, LogsCallback } from "@src/backend/classes/DownloadManger";
 
 /**
  * Download UT1999, patch, extract and configure
  */
-export async function downloadUT1999Windows(dl: DownloadManager, sevenZipLogsCallback: SevenZipLogsCallback) {
+export async function downloadUT1999Windows(dl: DownloadManager, sevenZipLogsCallback: LogsCallback) {
   const links = WorkerHelper.getGameLinks("ut-1999");
   let latestPatchUrl: string | null;
 
