@@ -23,7 +23,14 @@ export const useGlobalState = create<TGlobalState>()((set) => ({
       localDataStore: { [key]: { ...current.localDataStore[key], ...value } },
     }));
   },
-  modalData: { isOpened: false, modalType: "blank", errorModalText: null },
+
+  modalData: {
+    isOpened: false,
+    modalType: "blank",
+    errorModalText: null,
+    continueModalText: null,
+    continueModalVariant: "empty",
+  },
   setModalData: (value) => {
     set((current) => ({
       modalData: { ...current.modalData, ...value, errorModalText: value.errorModalText ?? null },

@@ -34,6 +34,13 @@ export class FilesHelper {
   }
 
   /**
+   * Copy an entire folder from one place to another
+   */
+  static async copyFolder(source: string, dest: string) {
+    return fs.promises.cp(source, dest, { recursive: true });
+  }
+
+  /**
    * Move everything from one folder to another
    * @param removeAfterMove Remove the `from` folder when finished
    */
@@ -89,7 +96,7 @@ export class FilesHelper {
    */
   static async remove(path: string) {
     if (fs.existsSync(path)) {
-      return fs.promises.rm(path, { force: true, recursive: true, maxRetries: 5, retryDelay: 500 });
+      return fs.promises.rm(path, { force: true, recursive: true, maxRetries: 5, retryDelay: 100 });
     }
 
     return Promise.resolve();

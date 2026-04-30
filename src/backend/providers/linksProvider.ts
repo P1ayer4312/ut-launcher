@@ -19,14 +19,14 @@ export const linksProvider: TLinksProvider = {
   unreal: {
     dev: {
       gameFiles: "http://localhost:4312/UNREAL_GOLD.ISO",
-      patch: "http://localhost:4312/OldUnreal-UnrealPatch227k-Windows.zip",
+      patch: "https://api.github.com/repos/OldUnreal/Unreal-testing/releases",
       installer: null,
-      extraFiles: [],
+      extraFiles: ["http://localhost:4312/OldUnreal-UnrealPatch227k-Windows.zip"],
     },
     prod: {
-      gameFiles: "https://files.oldunreal.net/UNREAL_GOLD.ISO",
+      gameFiles: "https://archive.org/download/totallyunreal/UNREAL_GOLD.ISO",
       patch: "https://api.github.com/repos/OldUnreal/Unreal-testing/releases",
-      installer: "https://www.oldunreal.com/site/assets/files/1106/unreal_gold.zip",
+      installer: null,
       extraFiles: [],
     },
   },
@@ -49,14 +49,14 @@ export const linksProvider: TLinksProvider = {
   "ut-1999": {
     dev: {
       gameFiles: "http://localhost:4312/UT_CD1_436_Final.iso",
-      patch: "http://localhost:4312/OldUnreal-UTPatch469e-Windows-x86.zip",
-      installer: "http://localhost:4312/ut_goty.zip",
-      extraFiles: [],
+      patch: "https://api.github.com/repos/OldUnreal/UnrealTournamentPatches/releases",
+      installer: null,
+      extraFiles: ["http://localhost:4312/OldUnreal-UTPatch469e-Windows-x86.zip"],
     },
     prod: {
       gameFiles: "https://archive.org/download/ut-cd-1-436/UT_CD1_436_Final.iso",
-      installer: "https://www.oldunreal.com/site/assets/files/1107/ut_goty.zip",
       patch: "https://api.github.com/repos/OldUnreal/UnrealTournamentPatches/releases",
+      installer: null,
       extraFiles: [],
     },
   },
@@ -96,8 +96,8 @@ export const linksProvider: TLinksProvider = {
     dev: {
       gameFiles: "http://localhost:4312/UT4%20Windows%20Build%20(includes%20Windows%20Server%20binaries).7z",
       installer: null,
-      patch: "http://localhost:4312/UT4UU-v10_1_6.zip",
-      extraFiles: [],
+      patch: "https://api.github.com/repos/timiimit/UT4UU-Public/releases",
+      extraFiles: ["http://localhost:4312/UT4UU-v10_1_6.zip"],
     },
     prod: {
       gameFiles:

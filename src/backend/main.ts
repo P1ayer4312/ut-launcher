@@ -49,7 +49,7 @@ function createWindow() {
   }
 
   // Register all needed events
-  registerEvents(mainWindow);
+  registerEvents(mainWindow, partition);
 
   return mainWindow;
 }

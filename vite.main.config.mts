@@ -6,9 +6,9 @@ export default defineConfig({
     alias: { "@src": path.resolve(__dirname, "./src") },
   },
   build: {
-    rollupOptions: { external: ["js7z-tools", "innoextract-wasm"] },
+    rollupOptions: { external: ["js7z-tools", "innoextract-wasm", "electron"] },
   },
   worker: {
-    rollupOptions: { external: ["js7z-tools", "innoextract-wasm"] },
+    rollupOptions: { external: ["js7z-tools", "innoextract-wasm", "electron"] },
   },
 });

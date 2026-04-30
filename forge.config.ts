@@ -69,6 +69,10 @@ const config: ForgeConfig = {
           entry: "src/backend/workers/downloadGameStepsWorker.ts",
           config: "vite.main.config.mts",
         },
+        {
+          entry: "src/backend/workers/downloadAndInstallPatchWorker.ts",
+          config: "vite.main.config.mts",
+        },
       ],
       renderer: [
         {

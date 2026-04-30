@@ -1,0 +1,61 @@
+.patch {
+  &_title {
+    color: white;
+  }
+
+  &_download {
+    background-image: linear-gradient(90deg, #9ebd13 0%, #008552 100%);
+  }
+
+  &_select {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+    min-width: 220px;
+    outline: none;
+    color: gray;
+    text-shadow: 1px 1px 2px black;
+    font-size: 17px;
+    padding: 5px 10px 5px 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    & option:hover,
+    & option:focus,
+    & option:active,
+    & option:checked {
+      color: white;
+      transition: 200ms;
+      background-color: rgba($color: #000000, $alpha: 0.5);
+      border-radius: 3px;
+    }
+
+    // Scrollbar
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+    }
+  }
+}

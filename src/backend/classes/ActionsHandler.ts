@@ -6,6 +6,7 @@ import type { ChildProcessWithoutNullStreams } from "node:child_process";
 import type { TGameId } from "@src/backend/types/gameConfigData.type";
 import type { TEventKeyValueMapping, TEventKeyNames } from "@src/backend/types/contextBridgeHandlers.type";
 import { logger, workerLog } from "@src/backend/utils/logger";
+import { Helper } from "@src/backend/classes/Helper";
 
 /**
  * Class used for handling and displaying actions between Electron and the main world
@@ -17,6 +18,7 @@ export class ActionsHandler {
   runningGameDirectory: string | null;
   runningProcess: ChildProcessWithoutNullStreams | null;
   mainWindowId: number | null;
+  appDataFolder: string | null;
 
   constructor() {
     this.worker = null;
@@ -25,6 +27,7 @@ export class ActionsHandler {
     this.runningGameDirectory = null;
     this.runningProcess = null;
     this.mainWindowId = null;
+    this.appDataFolder = null;
   }
 
   /**
@@ -46,11 +49,6 @@ export class ActionsHandler {
     });
 
     this.worker.on("message", (data) => {
-      if (data.key === "updateLocalGameStore") {
-        // Can't change the local store from within a worker
-        setGameUserData(data.value.gameId, { installed: data.value.installed });
-      }
-
       this.sendMessage(data.key, data.value);
     });
 
@@ -91,11 +89,35 @@ export class ActionsHandler {
       throw new Error("Can't find the main window");
     }
 
-    if (key === "progress") {
-      const val = value as TEventKeyValueMapping["progress"];
-      mainWindow.setProgressBar(Number(val.progress?.toFixed(2)) || 0);
-    } else if (key === "uninstallFinished" || key === "updateLocalGameStore") {
-      mainWindow.setProgressBar(0);
+    switch (key) {
+      case "progress": {
+        const val = value as TEventKeyValueMapping["progress"];
+        mainWindow.setProgressBar(Number(val.progress?.toFixed(2)) || 0);
+        break;
+      }
+
+      case "hideProgressBar":
+      case "uninstallFinished": {
+        mainWindow.setProgressBar(0);
+        break;
+      }
+
+      case "updateLocalGameStore": {
+        // Can't change the local store from within a worker
+        const val = value as TEventKeyValueMapping["updateLocalGameStore"];
+        setGameUserData(val.gameId, { installed: val.installed });
+        mainWindow.setProgressBar(0);
+        break;
+      }
+
+      case "runPowershellFromWorker": {
+        const val = value as TEventKeyValueMapping["runPowershellFromWorker"];
+        Helper.runElevatedPowershell(val[0], val.splice(1));
+        break;
+      }
+
+      default:
+        break;
     }
 
     mainWindow.webContents.send("mainWindow:message", { key, value });
@@ -143,6 +165,19 @@ export class ActionsHandler {
     }
 
     return BrowserWindow.fromId(this.mainWindowId);
+  }
+
+  /** Store the app data folder path for later use */
+  setAppDataFolder(path: string) {
+    this.appDataFolder = path;
+  }
+
+  getMessageBridgeFile() {
+    if (!this.appDataFolder) {
+      throw new Error(`"appDataFolder" is not set`);
+    }
+
+    return path.resolve(this.appDataFolder, "messageBridge.tmp");
   }
 }
 

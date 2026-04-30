@@ -4,6 +4,7 @@ import fs from "node:fs";
 import { ipcMain, shell, clipboard, nativeImage } from "electron";
 import { actionsHandler } from "@src/backend/classes/ActionsHandler";
 import { ipcLogger } from "@src/backend/utils/logger";
+import { Helper } from "@src/backend/classes/Helper";
 
 export function generalHandlers() {
   const handle = ipcMain.handle as ActionsHandlerIpcHandler;
@@ -63,9 +64,7 @@ export function generalHandlers() {
     ipcLogger.info("actionsHandler:flashFrame");
   });
 
-  handle("actionsHandler:registerGameKey", (event, value) => {
-    throw new Error("Feature not implemented");
-    // const key = registerGameKey(value);
-    // console.log("KEY", key);
+  handle("actionsHandler:runScript", (_event, value) => {
+    return Helper.runScript(value);
   });
 }

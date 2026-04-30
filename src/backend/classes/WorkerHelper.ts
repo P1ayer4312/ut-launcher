@@ -1,9 +1,10 @@
 import { parentPort, workerData } from "node:worker_threads";
 import process from "node:process";
 import { linksProvider } from "@src/backend/providers/linksProvider";
-import type { TWorkerData, TGameId } from "@src/backend/types/gameConfigData.type";
+import type { TGameId } from "@src/backend/types/gameConfigData.type";
 import type { TEventKeyNames, TEventKeyValueMapping } from "@src/backend/types/contextBridgeHandlers.type";
 import { workerLog } from "@src/backend/utils/logger";
+import { TWorkerData } from "@src/backend/types/customTypes.type";
 
 type ExitCode = string | number | null | undefined;
 

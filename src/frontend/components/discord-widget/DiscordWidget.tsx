@@ -12,6 +12,7 @@ const numFormat = Intl.NumberFormat("en-US", {
 
 export default function DiscordWidget({ inviteLink }: Props) {
   const inviteCode = inviteLink?.substring(inviteLink.lastIndexOf("/") + 1);
+  // Prevent api spam on view change
   const query = useQuery({
     queryKey: ["discordData", inviteCode],
     queryFn: () => fetch(`https://discord.com/api/v9/invites/${inviteCode}`).then((res) => res.json()),

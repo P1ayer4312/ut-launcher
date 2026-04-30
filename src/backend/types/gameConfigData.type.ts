@@ -1,3 +1,5 @@
+import { TUnreal2Type } from "@src/backend/types/customTypes.type";
+
 export type TGameId =
   | "unreal"
   | "ut-1999"
@@ -9,14 +11,16 @@ export type TGameId =
   | "ut-2003"
   | "ut-3";
 
-export type TUnreal2Type = "u2-sp" | "u2-xmp";
-
-export type TGameKey = "ut-2004" | "ut-2003" | "ut-3";
-
 export type TGameData = {
   directory: string;
   installed: boolean;
   availableOS: (NodeJS.Platform | "")[];
+};
+
+export type TReleaseFile = {
+  releaseName: string;
+  fileName: string;
+  url: string;
 };
 
 export type TContextBridgeGameData = {
@@ -32,16 +36,6 @@ export type TContextBridgeGameData = {
   uninstallGame: (gameId: TGameId) => Promise<void>;
   readServerIni: (gameId: TGameId) => Promise<object>;
   saveServerIni: (gameId: TGameId, modifiedFields: object) => Promise<void>;
-};
-
-export type TWorkerData = {
-  installDirectory: string;
-  gameId: TGameId;
-};
-
-export type TExeOptions = {
-  /** Path of the executable */
-  path: string;
-  /** Exe arguments */
-  args: string[];
+  fetchPatchesForGame: (gameId: TGameId) => Promise<TReleaseFile[]>;
+  downloadAndInstallPatch: (gameId: TGameId, patchLink: string) => Promise<void>;
 };

@@ -1,8 +1,8 @@
+import type { Endpoints } from "@octokit/types";
 import axios, { type AxiosProgressEvent } from "axios";
-import { EventEmitter } from "node:events";
 import fs from "node:fs";
 import path from "node:path";
-import type { Endpoints } from "@octokit/types";
+import { EventEmitter } from "node:events";
 import { logger } from "@src/backend/utils/logger";
 
 type CustomEvents = {
@@ -30,8 +30,14 @@ export class DownloadManager extends EventEmitter<CustomEvents> {
   fileName: string;
   /** The `install_files` folder where the game files and patches are downloaded */
   installFilesFolder: string;
+  singleFile: boolean;
 
-  constructor() {
+  /**
+   *
+   * @param singleFile  When the download is terminated it removes the whole parent folder,
+   *                    set it to `true` if you download a single file to remove only that one
+   */
+  constructor(singleFile: boolean = false) {
     super();
     this.urls = [];
     this.urlCounter = 0;
@@ -39,12 +45,17 @@ export class DownloadManager extends EventEmitter<CustomEvents> {
     this.abortController = null;
     this.fileName = "";
     this.installFilesFolder = "";
+    this.singleFile = singleFile;
   }
 
   /**
    * Provide an array of urls to download
    */
   setUrls(urls: string[]) {
+    if (this.singleFile && urls.length > 1) {
+      throw new Error(`You can't have "singleFile" enabled and provide more that one url`);
+    }
+
     this.urls = urls;
   }
 
@@ -111,7 +122,12 @@ export class DownloadManager extends EventEmitter<CustomEvents> {
   /** Stop the download process */
   async stop() {
     this.abortController?.abort();
-    logger.info("Download cancelled, removing folder: " + this.destination);
+    logger.info("Download cancelled, removing: " + this.destination);
+
+    if (this.singleFile) {
+      await fs.promises.rm(this.urls[0], { force: true, maxRetries: 5, retryDelay: 200 });
+    }
+    // else {}
     // TODO: Return this after testing
     // await fs.promises.rm(this.destination, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
     this.emit("stop", true);

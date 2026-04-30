@@ -4,7 +4,7 @@ import { FaPlay, FaDownload, FaTimes } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
 import contextBridge from "@src/frontend/contextBridge/contextBridge";
-import { TUnreal2Type } from "@src/backend/types/gameConfigData.type";
+import { TUnreal2Type } from "@src/backend/types/customTypes.type";
 
 export default function GamePageNavbar(props: PropsWithChildren) {
   const selectedGame = useGlobalState((e) => e.selectedGame);

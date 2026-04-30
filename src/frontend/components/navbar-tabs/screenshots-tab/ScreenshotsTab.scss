@@ -8,6 +8,29 @@
     flex-wrap: wrap;
     row-gap: 1px;
     column-gap: 10px;
+
+    &::-webkit-scrollbar {
+      width: 15px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+    }
   }
 
   &_img {

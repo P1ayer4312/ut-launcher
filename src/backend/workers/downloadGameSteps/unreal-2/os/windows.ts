@@ -5,7 +5,7 @@ import { FilesHelper } from "@src/backend/classes/FilesHelper";
 import type { DownloadManager, LogsCallback } from "@src/backend/classes/DownloadManger";
 
 /**
- * Download Unreal 1, patch, extract and configure
+ * Download Unreal 2, patch, extract and configure
  */
 export async function downloadUnreal2Windows(dl: DownloadManager, innoextractLogsCallback: LogsCallback) {
   const links = WorkerHelper.getGameLinks("unreal-2");
@@ -23,6 +23,18 @@ export async function downloadUnreal2Windows(dl: DownloadManager, innoextractLog
 
   WorkerHelper.postMessage("progressFormatted", "Extracting files...");
   WorkerHelper.postMessage("progress", { progress: 1 });
+
+  // Clean up previous files if they exist
+  // prettier-ignore
+  const gameFiles = [
+    "__redist", "__support", "app", "commonappdata", "goggame-1207658677.hashdb",
+    "goggame-1207658677.ico", "goggame-1207658677.info", "goggame-1207658677.script",
+    "goggame.sdb", "multiplayer", "singleplayer", "tmp"
+  ];
+
+  for (const item of gameFiles) {
+    await FilesHelper.remove(path.resolve(dl.destination, item));
+  }
 
   // Extract the installer
   await ArchiveManager.extractInnoInstaller(

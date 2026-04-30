@@ -9,6 +9,9 @@ export function windowHandlers(window: BrowserWindow) {
   // Store mainWindow's id
   actionsHandler.setMainWindowId(window.id);
 
+  // Store app data folder
+  actionsHandler.setAppDataFolder(app.getPath("userData"));
+
   const handle = ipcMain.handle as IpcMainGenericHandle<TitleBarMappedChannels>;
 
   handle("titleBar:close", () => {

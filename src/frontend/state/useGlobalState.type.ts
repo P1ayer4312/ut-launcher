@@ -1,3 +1,4 @@
+import type { TContinueModalVariants } from "@src/backend/types/customTypes.type";
 import type { TGameData } from "@src/backend/types/gameConfigData.type";
 
 export type TGameId =
@@ -21,8 +22,10 @@ export type TLocalDataStore = Partial<Record<TGameId, Partial<TGameData>>>;
 
 export type TModalData = {
   isOpened: boolean;
-  modalType: "blank" | "uninstall" | "confirm" | "error";
+  modalType: "blank" | "uninstall" | "continue" | "error";
   errorModalText: string | null;
+  continueModalText: string | null;
+  continueModalVariant: TContinueModalVariants;
 };
 
 export interface TGlobalState {

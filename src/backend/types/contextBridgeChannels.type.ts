@@ -26,7 +26,9 @@ export type GameDataChannels =
   | "startInstalledGame"
   | "stopInstalledGame"
   | "readServerIni"
-  | "saveServerIni";
+  | "saveServerIni"
+  | "fetchPatchesForGame"
+  | "downloadAndInstallPatch";
 
 export type GameDataMappedChannels = `${GameDataApi}:${GameDataChannels}`;
 
@@ -45,10 +47,10 @@ export type ActionsHandlerChannels =
   | "fetchScreenshotsFromPath"
   | "open"
   | "copyImgToClipboard"
-  | "registerGameKey"
   | "isDev"
   | "platform"
-  | "flashFrame";
+  | "flashFrame"
+  | "runScript";
 
 export type ActionsHandlerMappedChannel = `${ActionsHandlerApi}:${ActionsHandlerChannels}`;
 

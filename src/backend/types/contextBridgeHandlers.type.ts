@@ -1,4 +1,5 @@
-import type { TGameId, TGameKey } from "@src/backend/types/gameConfigData.type";
+import type { TContinueModalVariants, TScriptName } from "@src/backend/types/customTypes.type";
+import type { TGameId } from "@src/backend/types/gameConfigData.type";
 import type { AxiosProgressEvent } from "axios";
 
 export type TContextBridgeActionsHandler = {
@@ -6,11 +7,10 @@ export type TContextBridgeActionsHandler = {
   fetchScreenshotsFromPath: (value: string) => Promise<string[]>;
   open: (value: string) => Promise<void>;
   copyImgToClipboard: (value: string) => Promise<void>;
-  /** @todo Revisit the value part */
-  registerGameKey: (value: TGameKey) => Promise<void>;
   isDev: () => Promise<string>;
   platform: () => Promise<NodeJS.Platform>;
   flashFrame: (enable: boolean) => Promise<void>;
+  runScript: (scriptName: TScriptName) => Promise<void>;
 };
 
 export type TContextBridgeTitleBar = {
@@ -30,6 +30,9 @@ export type TEventKeyValueMapping = {
   uninstallingGameMessage: null;
   uninstallFinished: TGameId;
   error: unknown;
+  runPowershellFromWorker: string[];
+  openContinueModal: { isOpened: boolean; message: string | null; variant: TContinueModalVariants };
+  hideProgressBar: null;
 };
 
 /** List of all event names sent between frontend and backend */

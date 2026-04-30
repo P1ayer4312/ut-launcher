@@ -1,9 +1,11 @@
 import path from "node:path";
-import axios from "axios";
+import os from "node:os";
+import fs from "node:fs";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
-import type { DownloadManager, GithubReleases, LogsCallback } from "@src/backend/classes/DownloadManger";
+import type { DownloadManager, LogsCallback } from "@src/backend/classes/DownloadManger";
+import { fetchGithubReleases } from "@src/backend/utils/fetchGithubReleases";
 
 /**
  * Download UT4 Alpha, patch, extract and configure
@@ -16,20 +18,34 @@ export async function downloadUT4AlphaWindows(dl: DownloadManager, sevenZipLogsC
     throw new Error(`"patch" link not provided for: ut-alpha`);
   }
 
+  const ut4ConfigDestination = path.resolve(os.homedir(), "Documents/UnrealTournament");
+
+  // Clean up previous files if they exist
+  // prettier-ignore
+  const gameFiles = [
+    "Manifest_DebugFiles_Win64.txt", "Manifest_NonUFSFiles_Win64.txt",
+    "Engine", "UnrealTournament", "WindowsServer"
+  ];
+
+  await FilesHelper.remove(ut4ConfigDestination);
+  for (const item of gameFiles) {
+    await FilesHelper.remove(path.resolve(dl.destination, item));
+  }
+
   if (WorkerHelper.isDev()) {
     // Use local download for testing
-    dl.setUrls([links.gameFiles, links.patch]);
-    latestPatchUrl = links.patch;
+    latestPatchUrl = links.extraFiles[0];
+    dl.setUrls([links.gameFiles, latestPatchUrl]);
   } else {
     // Fetch Github releases from OldUnreal's repo
-    const githubReleases = await axios.get<GithubReleases>(links.patch).then((res) => res.data);
+    const githubReleases = await fetchGithubReleases(links.patch);
 
     // Find the patch for Windows x86
     latestPatchUrl =
-      githubReleases[0].assets.find((item) => {
-        const name = item.name.toLowerCase();
-        return name.startsWith("UT4UU") && name.endsWith("zip");
-      })?.browser_download_url || null;
+      githubReleases[0].find((item) => {
+        const name = item.fileName.toLowerCase();
+        return name.startsWith("ut4uu") && name.endsWith("zip");
+      })?.url || null;
 
     if (!latestPatchUrl) {
       throw new Error("Unable to find patch");
@@ -65,7 +81,7 @@ export async function downloadUT4AlphaWindows(dl: DownloadManager, sevenZipLogsC
     sevenZipLogsCallback,
   );
 
-  WorkerHelper.postMessage("progress", { progress: 1 });
+  WorkerHelper.postMessage("progress", { progress: 2 });
   WorkerHelper.postMessage("progressFormatted", "Moving game files...");
 
   // Move game files to the game folder
@@ -86,6 +102,14 @@ export async function downloadUT4AlphaWindows(dl: DownloadManager, sevenZipLogsC
 
   // Create screenshots folder
   FilesHelper.createScreenshotsFolder(dl.destination);
+
+  // Copy the config folder inside the "Documents" folder
+  const savedConfigPath = path.resolve(ut4ConfigDestination, "Saved");
+  await fs.promises.mkdir(savedConfigPath, { recursive: true });
+  await FilesHelper.copyFolder(
+    FilesHelper.configFilePath(WorkerHelper.isDev(), "ut-alpha/Saved"),
+    savedConfigPath,
+  );
 
   // Update the local store for the installed game and tag it as installed
   WorkerHelper.postMessage("updateLocalGameStore", { gameId: "ut-alpha", installed: true });

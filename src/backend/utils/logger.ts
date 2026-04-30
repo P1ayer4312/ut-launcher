@@ -1,4 +1,4 @@
-import log from "electron-log/main";
+import log from "electron-log/node";
 
 export const logger = log.scope("    main");
 export const workerLog = log.scope("  worker");

@@ -60,6 +60,7 @@ export default function ContextBridgeMessageHandler() {
               setDownloadingGame(null);
               break;
             }
+
             case "setRunningGame": {
               setRunningGame(dataReceived.value);
               break;
@@ -93,6 +94,21 @@ export default function ContextBridgeMessageHandler() {
                 isOpened: true,
                 modalType: "error",
                 errorModalText: String(dataReceived.value),
+              });
+              break;
+            }
+
+            case "hideProgressBar": {
+              setDownloadingGame(null);
+              break;
+            }
+
+            case "openContinueModal": {
+              setModalData({
+                modalType: "continue",
+                isOpened: dataReceived.value.isOpened,
+                continueModalText: dataReceived.value.message,
+                continueModalVariant: dataReceived.value.variant,
               });
               break;
             }

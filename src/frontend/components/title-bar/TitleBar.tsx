@@ -3,6 +3,7 @@ import contextBridge from "@src/frontend/contextBridge/contextBridge";
 import { VscChromeClose, VscChromeMaximize, VscChromeMinimize } from "react-icons/vsc";
 import { useEffect, useState } from "react";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
+import { IoIosWarning } from "react-icons/io";
 
 export default function TitleBar() {
   const titleBarControls = contextBridge.titleBarControls;
@@ -28,6 +29,10 @@ export default function TitleBar() {
   return (
     <div className="title-bar_wrapper">
       <div className="title-bar_draggable" onDoubleClick={() => titleBarControls.maximize()}></div>
+      <div className="title-bar_message">
+        <IoIosWarning />
+        <span>Preview build expect bugs</span>
+      </div>
       {showTitleBar && (
         <>
           <div className="title-bar_controls title-bar_min" onClick={() => titleBarControls.minimize()}>

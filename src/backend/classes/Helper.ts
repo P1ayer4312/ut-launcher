@@ -3,9 +3,12 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 import { resetStoreForGame, getGameUserData } from "@src/backend/store/userPreferences";
 import { actionsHandler } from "./ActionsHandler";
-import type { TGameId, TExeOptions, TUnreal2Type } from "@src/backend/types/gameConfigData.type";
 import { logger } from "@src/backend/utils/logger";
+import { FilesHelper } from "@src/backend/classes/FilesHelper";
+import type { TGameId } from "@src/backend/types/gameConfigData.type";
+import type { TExeOptions, TScriptName, TUnreal2Type } from "@src/backend/types/customTypes.type";
 
+// reg query "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Unreal Technology\Installed Apps\UT2004"
 export class Helper {
   /**
    * Run executable and wait for it to be closed
@@ -18,7 +21,10 @@ export class Helper {
     const newProcess = spawn(exeOptions.path, exeOptions.args, { detached: true });
     newProcess.once("spawn", onSpawnCallback);
     newProcess.once("close", onCloseCallback);
-    newProcess.on("error", logger.error);
+    newProcess.on("error", (err) => {
+      logger.error(err.message);
+      actionsHandler.sendMessage("error", err.message);
+    });
 
     return newProcess;
   }
@@ -64,14 +70,102 @@ export class Helper {
     const gameData = getGameUserData(gameId);
     const gameFolder = gameData.directory !== "" ? path.resolve(gameData.directory, gameId) : null;
 
-    if (gameFolder && fs.existsSync(gameFolder)) {
-      actionsHandler.sendMessage("uninstallingGameMessage", null);
-      await fs.promises.rm(gameFolder, { recursive: true, force: true, maxRetries: 5, retryDelay: 500 });
-      resetStoreForGame(gameId);
-      actionsHandler.sendMessage("uninstallFinished", gameId);
-    } else {
-      throw new Error("Unable to uninstall the game");
+    if (gameFolder === null) {
+      throw new Error(`Unable to uninstall the selected game`);
     }
+
+    actionsHandler.sendMessage("uninstallingGameMessage", null);
+    await FilesHelper.remove(gameFolder);
+    resetStoreForGame(gameId);
+    actionsHandler.sendMessage("uninstallFinished", gameId);
+  }
+
+  /**
+   * Run a Powershell script with elevated privileges
+   * @param scriptPath Path of the script
+   * @param args Args to pass to the script, order is important, first arg is always `messageBridgeFile`
+   */
+  static async runElevatedPowershell(scriptPath: string, args: string[] = []) {
+    logger.info(`Running script: ${scriptPath}`);
+    return new Promise((resolve, reject) => {
+      // I didn't want to register and handle a protocol just for sending a few messages
+      // from Powershell, so we'll use a temp file as a bridge
+      const messageBridgeFile = actionsHandler.getMessageBridgeFile();
+      fs.writeFileSync(messageBridgeFile, "", { encoding: "utf-8" });
+
+      const argsMapped = [messageBridgeFile]
+        .concat(args)
+        .map((item) => `"${item}"`)
+        .join(" ");
+
+      const powershellArgs = [
+        "-Command",
+        `$proc = Start-Process powershell -Verb RunAs -WindowStyle Hidden -PassThru -Wait ` +
+          `-ArgumentList '-ExecutionPolicy Bypass -File "${scriptPath}" ${argsMapped}'; exit $proc.ExitCode`,
+      ];
+
+      let lastMessage: string = "";
+      const watcher = fs.watch(messageBridgeFile, (eventType) => {
+        if (eventType !== "change") {
+          return;
+        }
+
+        fs.promises.readFile(messageBridgeFile, { encoding: "utf-8" }).then((text) => {
+          const trimmed = text.trim();
+          if (trimmed.length > 0 && lastMessage !== trimmed) {
+            logger.info(`Shell: ${trimmed}`);
+            lastMessage = trimmed;
+            actionsHandler.sendMessage("openContinueModal", {
+              isOpened: true,
+              message: trimmed,
+              variant: "message-block",
+            });
+          }
+        });
+      });
+
+      const child = spawn("powershell", powershellArgs, { stdio: "inherit", windowsHide: true });
+      child.on("error", reject);
+      child.on("message", logger.info);
+      child.once("close", (code) => {
+        watcher.close();
+        logger.info(`Script finished: ${scriptPath}`);
+        actionsHandler.sendMessage("openContinueModal", { isOpened: false, message: null, variant: "empty" });
+
+        if (code !== 0) {
+          reject(`Elevated script failed with exit code: ${code}`);
+        } else {
+          resolve(code);
+        }
+      });
+    });
+  }
+
+  /**
+   * Instructions for running shell scripts for defined names
+   */
+  static async runScript(scriptName: TScriptName) {
+    try {
+      switch (scriptName) {
+        case "installDriversUT4": {
+          const scriptPath = FilesHelper.configFilePath(this.isDev(), "ut-alpha/scripts/installDrivers.ps1");
+          const vcredist_x64 = FilesHelper.configFilePath(this.isDev(), "ut-alpha/drivers/vcredist_x64.exe");
+          const dxwebsetup = FilesHelper.configFilePath(this.isDev(), "ut-alpha/drivers/dxwebsetup.exe");
+
+          await this.runElevatedPowershell(scriptPath, [vcredist_x64, dxwebsetup]);
+          break;
+        }
+
+        default:
+          throw `Invalid script name provided: ${scriptName}`;
+      }
+    } catch (err) {
+      throw new Error(String(err));
+    }
+  }
+
+  static isDev() {
+    return process.env.DEV === "true";
   }
 
   static saveScreenshot() {}

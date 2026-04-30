@@ -6,4 +6,6 @@ export default defineConfig({
   base: "./",
   plugins: [react()],
   resolve: { alias: { "@src": path.resolve(__dirname, "./src") } },
+  css: { devSourcemap: false },
+  build: { sourcemap: false },
 });

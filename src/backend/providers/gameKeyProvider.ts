@@ -1,15 +1,18 @@
 import crypto from "node:crypto";
 import { Buffer } from "node:buffer";
-import type { TGameKey } from "@src/backend/types/gameConfigData.type";
+import type { TGameKey } from "@src/backend/types/customTypes.type";
+
+type TMagicWord = "This is going to change" | "appDebugfNoInit";
 
 /**
  * Get a CD-Key for a selected game
  */
 export function gameKeyProvider(gameId: TGameKey) {
-  //TODO: This
   switch (gameId) {
+    case "ut-2003":
+      return generate2kKey("This is going to change");
     case "ut-2004":
-      return generate2kKey();
+      return generate2kKey("appDebugfNoInit");
     case "ut-3":
       return generate3Key();
 
@@ -18,7 +21,7 @@ export function gameKeyProvider(gameId: TGameKey) {
   }
 }
 
-function generate2kKey() {
+function generate2kKey(magic: TMagicWord) {
   function scramble(value: string) {
     let result = "";
     const table = "ABCDEFGHJLKMNPQRTUVWXYZ2346789";
@@ -43,7 +46,6 @@ function generate2kKey() {
   const buffer = Buffer.alloc(8);
   crypto.randomFillSync(buffer);
 
-  const magic = "appDebugfNoInit";
   const base = 30;
   const padch = "A";
   const seed = buffer.readBigUInt64LE();

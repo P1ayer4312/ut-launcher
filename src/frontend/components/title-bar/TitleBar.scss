@@ -52,4 +52,20 @@
   &_max:hover {
     background-color: rgba(92, 92, 92, 0.7);
   }
+
+  &_message {
+    position: absolute;
+    left: 25px;
+    top: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    color: yellow;
+
+    & span {
+      color: white;
+    }
+  }
 }

@@ -32,13 +32,11 @@ import { downloadUT3 } from "./downloadGameSteps/ut-3";
   function sevenZipLogsCallback(value: string, customMessage?: string) {
     if (value?.includes("%")) {
       const percent = Number(value.match(/(\d+)(?=%)/)?.[0]);
-
       if (!isNaN(percent) && percent >= 0) {
         WorkerHelper.postMessage("progress", { progress: percent / 100 });
       }
 
       const message = customMessage || "Extracting files...";
-
       WorkerHelper.postMessage("progressFormatted", `${message} ${value}`);
     }
   }

@@ -7,7 +7,8 @@ import {
   getLastSelectedGame, setLastSelectedGame
 } from "@src/backend/store/userPreferences";
 import { Helper } from "@src/backend/classes/Helper";
-import { ipcLogger } from "@src/backend/utils/logger";
+import { ipcLogger, logger } from "@src/backend/utils/logger";
+import { fetchPatchesForGame } from "@src/backend/providers/patchesProvider";
 
 export function gameDataHandlers() {
   const handle = ipcMain.handle as GameDataIpcHandler;
@@ -63,7 +64,7 @@ export function gameDataHandlers() {
   handle("gameData:startInstalledGame", (_event, gameId, option) => {
     ipcLogger.info("gameData:startInstalledGame");
 
-    // Store the active game's id and directory\
+    // Store the active game's id and directory
     actionsHandler.setRunningGame(gameId);
     if (!actionsHandler.runningGameDirectory) {
       throw new Error(`"runningGameDirectory" not set`);
@@ -85,6 +86,22 @@ export function gameDataHandlers() {
     actionsHandler.stopRunningGame();
     actionsHandler.resetRunningGame();
     ipcLogger.info("gameData:stopInstalledGame");
+  });
+
+  handle("gameData:fetchPatchesForGame", (_event, gameId) => {
+    return fetchPatchesForGame(gameId).then((res) => {
+      ipcLogger.info("gameData:fetchPatchesForGame", `Returned ${res.length} items`);
+      return res;
+    });
+  });
+
+  handle("gameData:downloadAndInstallPatch", (_event, gameId, patchLink) => {
+    ipcLogger.info("gameData:downloadAndInstallPatch");
+    const gameData = getGameUserData(gameId);
+    ipcLogger.info(gameData);
+    actionsHandler.runWorker("downloadAndInstallPatchWorker", {
+      workerData: { gameId, installDirectory: gameData.directory, patchFileLink: patchLink },
+    });
   });
 
   handle("gameData:readServerIni", (_event, gameId) => {
