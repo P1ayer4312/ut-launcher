@@ -15,7 +15,6 @@ log.initialize();
 function createWindow() {
   // Setup protocol for local file access
   const partition = "persist:ut-launcher";
-  // registerSessionProtocol(partition);
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({

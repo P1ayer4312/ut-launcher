@@ -1,4 +1,5 @@
 import path from "node:path";
+import fs from "node:fs";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
@@ -91,8 +92,9 @@ export async function downloadUnrealWindows(dl: DownloadManager, sevenZipLogsCal
     gameSystemFolder,
   );
 
-  // Create screenshots folder
-  FilesHelper.createScreenshotsFolder(dl.destination);
+  // Create screenshots folder, during testing if the folder is not present
+  // it can't save the screenshot
+  fs.mkdirSync(path.resolve(gameSystemFolder, "Screenshots"));
 
   // Update the local store for the installed game and tag it as installed
   WorkerHelper.postMessage("updateLocalGameStore", {

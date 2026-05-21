@@ -1,35 +1,32 @@
 import type { ActionsHandlerIpcHandler } from "@src/backend/types/contextBridgeChannels.type";
 import path from "node:path";
-import fs from "node:fs";
-import { ipcMain, shell, clipboard, nativeImage } from "electron";
+import { ipcMain, shell, clipboard, nativeImage, app } from "electron";
 import { actionsHandler } from "@src/backend/classes/ActionsHandler";
 import { ipcLogger } from "@src/backend/utils/logger";
 import { Helper } from "@src/backend/classes/Helper";
+import { FilesHelper } from "@src/backend/classes/FilesHelper";
+import { TScreenshotData } from "@src/backend/types/customTypes.type";
+import { getGameUserData } from "@src/backend/store/userPreferences";
+import { Jimp } from "jimp";
 
 export function generalHandlers() {
   const handle = ipcMain.handle as ActionsHandlerIpcHandler;
-
-  handle("actionsHandler:fetchScreenshotsFromPath", (_event, value) => {
-    const parsed: string[] = [];
-    fs.readdirSync(value).forEach((item) => {
-      const fullPath = path.resolve(value, item);
-      if (fs.statSync(fullPath).isFile()) {
-        parsed.push(btoa(fullPath));
-      }
-    });
-
-    parsed.reverse();
-    ipcLogger.info("actionsHandler:fetchScreenshotsFromPath", `Num screenshots: ${parsed.length}`);
-    return parsed;
-  });
 
   handle("actionsHandler:open", (_event, value) => {
     shell.openPath(path.resolve(value));
     ipcLogger.info("actionsHandler:open");
   });
 
-  handle("actionsHandler:copyImgToClipboard", (_event, value) => {
-    const img = nativeImage.createFromPath(value);
+  handle("actionsHandler:showItemInFolder", (_event, filePath) => {
+    shell.showItemInFolder(filePath);
+  });
+
+  handle("actionsHandler:copyImgToClipboard", async (_event, value) => {
+    // bmp images are not supported, we need to convert them to either jpeg or png -_-
+    const tempImg = await Jimp.read(value);
+    const tempImgBase64 = await tempImg.getBuffer("image/jpeg");
+
+    const img = nativeImage.createFromBuffer(tempImgBase64);
     clipboard.writeImage(img);
     ipcLogger.info("actionsHandler:copyImgToClipboard", `Copied to clipboard: ${value}`);
   });
@@ -66,5 +63,33 @@ export function generalHandlers() {
 
   handle("actionsHandler:runScript", (_event, value) => {
     return Helper.runScript(value);
+  });
+
+  handle("actionsHandler:appVersion", () => {
+    const value = app.getVersion();
+    ipcLogger.info("actionsHandler:appVersion", value);
+    return value;
+  });
+
+  handle("actionsHandler:launcherSettingsAction", (_event, actionName) => {
+    switch (actionName) {
+      case "openAppData":
+        shell.openPath(app.getPath("userData"));
+        break;
+      default:
+        throw new Error(`Invalid action name provided: ${actionName}`);
+    }
+  });
+
+  handle("actionsHandler:fetchScreenshotsForGame", (_event, gameId) => {
+    const data = getGameUserData(gameId);
+    const files = FilesHelper.getAllScreenshotsForGame(gameId, data.directory);
+    // TODO: Pagination might be required, not sure how this'll behave with too many images
+    const parsed: TScreenshotData[] = files.map((filePath) => {
+      return { filePath, dataBase64: btoa(filePath) };
+    });
+
+    ipcLogger.info("actionsHandler:fetchScreenshotsForGame", `Num screenshots: ${parsed.length}`);
+    return parsed;
   });
 }

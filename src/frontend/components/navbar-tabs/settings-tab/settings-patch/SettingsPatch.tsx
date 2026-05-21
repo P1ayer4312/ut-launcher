@@ -49,6 +49,10 @@ export default function SettingsPatch() {
       <div
         className={`settings-tab_button ${selectedPatch !== "" ? "patch_download" : ""}`}
         onClick={() => {
+          if (selectedPatch === "") {
+            return;
+          }
+
           setDownloadingGame(selectedGame);
           contextBridge.gameData.downloadAndInstallPatch(selectedGame, selectedPatch);
         }}

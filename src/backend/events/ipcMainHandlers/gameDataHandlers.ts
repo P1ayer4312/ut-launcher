@@ -7,8 +7,9 @@ import {
   getLastSelectedGame, setLastSelectedGame
 } from "@src/backend/store/userPreferences";
 import { Helper } from "@src/backend/classes/Helper";
-import { ipcLogger, logger } from "@src/backend/utils/logger";
+import { ipcLogger } from "@src/backend/utils/logger";
 import { fetchPatchesForGame } from "@src/backend/providers/patchesProvider";
+import { gameKeyProvider } from "@src/backend/providers/gameKeyProvider";
 
 export function gameDataHandlers() {
   const handle = ipcMain.handle as GameDataIpcHandler;
@@ -102,6 +103,11 @@ export function gameDataHandlers() {
     actionsHandler.runWorker("downloadAndInstallPatchWorker", {
       workerData: { gameId, installDirectory: gameData.directory, patchFileLink: patchLink },
     });
+  });
+
+  handle("gameData:getProductKey", (_event, gameId) => {
+    ipcLogger.info("gameData:getProductKey");
+    return gameKeyProvider(gameId);
   });
 
   handle("gameData:readServerIni", (_event, gameId) => {

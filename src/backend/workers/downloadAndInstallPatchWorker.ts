@@ -2,6 +2,7 @@ import { DownloadManager } from "@src/backend/classes/DownloadManger";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
+import path from "node:path";
 
 // Wasn't really sure how to abstract the patching only part
 
@@ -71,8 +72,33 @@ import { FilesHelper } from "@src/backend/classes/FilesHelper";
       break;
     }
 
-    case "ut-alpha":
+    case "ut-2004": {
+      await ArchiveManager.extractFiles(patchFilePath, dl.destination, sevenZipLogsCallback);
       break;
+    }
+
+    case "ut-alpha": {
+      // Extract the patch inside the install folder
+      await ArchiveManager.extractFiles(
+        dl.getFileLocationFromUrl(latestPatchUrl),
+        dl.installFilesFolder,
+        sevenZipLogsCallback,
+      );
+
+      // Get the folder name for the patch
+      WorkerHelper.postMessage("progress", { progress: 2 });
+      WorkerHelper.postMessage("progressFormatted", "Moving patch files...");
+      const patchFolderName = path.basename(latestPatchUrl, path.extname(latestPatchUrl));
+      const patchFolderPath = path.resolve(dl.installFilesFolder, patchFolderName);
+      const extractedPatchPath = path.resolve(patchFolderPath, "Installer", "Files");
+
+      // Apply the patch to the game folder
+      await FilesHelper.moveAll(extractedPatchPath, dl.destination);
+
+      // Clean up unused files
+      await FilesHelper.remove(patchFolderPath);
+      break;
+    }
 
     default:
       throw new Error("Invalid gameId provided");

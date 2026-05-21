@@ -67,9 +67,6 @@ export async function downloadUnreal2Windows(dl: DownloadManager, innoextractLog
     ),
   ]);
 
-  // Create screenshots folder
-  FilesHelper.createScreenshotsFolder(dl.destination);
-
   // Update the local store for the installed game and tag it as installed
   WorkerHelper.postMessage("updateLocalGameStore", {
     gameId: "unreal-2",

@@ -1,14 +1,16 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { resetStoreForGame, getGameUserData } from "@src/backend/store/userPreferences";
 import { actionsHandler } from "./ActionsHandler";
 import { logger } from "@src/backend/utils/logger";
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
+import { gameKeyProvider } from "@src/backend/providers/gameKeyProvider";
+import { IniHelper } from "@src/backend/classes/IniHelper";
 import type { TGameId } from "@src/backend/types/gameConfigData.type";
 import type { TExeOptions, TScriptName, TUnreal2Type } from "@src/backend/types/customTypes.type";
 
-// reg query "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Unreal Technology\Installed Apps\UT2004"
 export class Helper {
   /**
    * Run executable and wait for it to be closed
@@ -49,6 +51,12 @@ export class Helper {
       case "ut-1999":
         return { path: path.resolve(directory, gameId, "System/UnrealTournament.exe"), args: [] };
 
+      case "ut-2003":
+        return { path: path.resolve(directory, gameId, "System/UT2003.exe"), args: [] };
+
+      case "ut-2004":
+        return { path: path.resolve(directory, gameId, "System/UT2004.exe"), args: [] };
+
       case "ut-3":
         return { path: path.resolve(directory, gameId, "Binaries/UT3_OS_Patch.exe"), args: [] };
 
@@ -84,8 +92,9 @@ export class Helper {
    * Run a Powershell script with elevated privileges
    * @param scriptPath Path of the script
    * @param args Args to pass to the script, order is important, first arg is always `messageBridgeFile`
+   * @param elevated Default to `true`, set to `false` to run a script normally
    */
-  static async runElevatedPowershell(scriptPath: string, args: string[] = []) {
+  static async runElevatedPowershell(scriptPath: string, args: string[] = [], elevated: boolean = true) {
     logger.info(`Running script: ${scriptPath}`);
     return new Promise((resolve, reject) => {
       // I didn't want to register and handle a protocol just for sending a few messages
@@ -100,7 +109,7 @@ export class Helper {
 
       const powershellArgs = [
         "-Command",
-        `$proc = Start-Process powershell -Verb RunAs -WindowStyle Hidden -PassThru -Wait ` +
+        `$proc = Start-Process powershell ${elevated ? "-Verb RunAs" : ""} -WindowStyle Hidden -PassThru -Wait ` +
           `-ArgumentList '-ExecutionPolicy Bypass -File "${scriptPath}" ${argsMapped}'; exit $proc.ExitCode`,
       ];
 
@@ -153,6 +162,46 @@ export class Helper {
           const dxwebsetup = FilesHelper.configFilePath(this.isDev(), "ut-alpha/drivers/dxwebsetup.exe");
 
           await this.runElevatedPowershell(scriptPath, [vcredist_x64, dxwebsetup]);
+          break;
+        }
+
+        case "registerUT2003key": {
+          const scriptPath = FilesHelper.configFilePath(this.isDev(), "ut-2003/scripts/registerKey.ps1");
+          const productKey = gameKeyProvider("ut-2003");
+
+          await this.runElevatedPowershell(scriptPath, [productKey]);
+          break;
+        }
+
+        case "replaceUT3EncryptedKey": {
+          const scriptPath = FilesHelper.configFilePath(this.isDev(), "ut-3/scripts/replaceEncryptedKey.ps1");
+          const productKey = gameKeyProvider("ut-3");
+          const ut3EngineIniPath = path.resolve(
+            os.homedir(),
+            "Documents/My Games/Unreal Tournament 3/UTGame/Config/UTEngine.ini",
+          );
+
+          if (!fs.existsSync(ut3EngineIniPath)) {
+            throw `Missing UTEngine.ini, it might be removed or misconfigured. Launch the game once to regenerate the file.`;
+          }
+
+          const ini = new IniHelper(true);
+          await ini.readFile(ut3EngineIniPath);
+          const data = ini.getValuesFromSection("OnlineSubsystemGameSpy.OnlineSubsystemGameSpy", [
+            "EncryptedProductKey",
+          ]);
+
+          if (data["EncryptedProductKey"] === undefined) {
+            throw `Issues detected with UTEngine.ini, launch the game once to regenerate the file.`;
+          }
+
+          const oldEncryptedString = `EncryptedProductKey=${data["EncryptedProductKey"][0]}`;
+
+          await this.runElevatedPowershell(
+            scriptPath,
+            [productKey, ut3EngineIniPath, oldEncryptedString],
+            false,
+          );
           break;
         }
 

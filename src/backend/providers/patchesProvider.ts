@@ -53,12 +53,24 @@ export async function fetchPatchesForGame(gameID: TGameId): Promise<TReleaseFile
     }
 
     case "ut-2004": {
-      return [];
-      // return fetchGithubReleases(links.patch).then((res) =>
-      //   res.filter((item) => {
-      //     return item.fileName;
-      //   }),
-      // );
+      return fetchGithubReleases(links.patch).then((res) => {
+        return res
+          .map((asset) =>
+            asset
+              .filter((item) => {
+                const name = item.fileName.toLowerCase();
+                return name.includes("windows") && name.endsWith("zip");
+              })
+              .map((filtered) => {
+                return {
+                  // Reduce the release name length
+                  ...filtered,
+                  releaseName: filtered.releaseName.replace("UT2004 Patch ", ""),
+                };
+              }),
+          )
+          .flat();
+      });
     }
 
     case "ut-alpha": {

@@ -1,4 +1,4 @@
-import { TUnreal2Type } from "@src/backend/types/customTypes.type";
+import { TGameKey, TUnreal2Type } from "@src/backend/types/customTypes.type";
 
 export type TGameId =
   | "unreal"
@@ -38,4 +38,5 @@ export type TContextBridgeGameData = {
   saveServerIni: (gameId: TGameId, modifiedFields: object) => Promise<void>;
   fetchPatchesForGame: (gameId: TGameId) => Promise<TReleaseFile[]>;
   downloadAndInstallPatch: (gameId: TGameId, patchLink: string) => Promise<void>;
+  getProductKey: (gameId: TGameKey) => Promise<string>;
 };

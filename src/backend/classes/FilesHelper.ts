@@ -1,6 +1,8 @@
 import path from "node:path";
 import fs from "node:fs";
+import os from "node:os";
 import { logger } from "@src/backend/utils/logger";
+import { TGameId } from "@src/backend/types/gameConfigData.type";
 
 /** Helper class for managing files and file paths */
 export class FilesHelper {
@@ -82,16 +84,6 @@ export class FilesHelper {
   }
 
   /**
-   * Create `launcher_screenshots` folder
-   */
-  static createScreenshotsFolder(gameFolder: string) {
-    const screenshotsFolder = path.resolve(gameFolder, "launcher_screenshots");
-    if (!fs.existsSync(screenshotsFolder)) {
-      fs.mkdirSync(screenshotsFolder);
-    }
-  }
-
-  /**
    * Remove file/folder if it exists
    */
   static async remove(path: string) {
@@ -100,5 +92,85 @@ export class FilesHelper {
     }
 
     return Promise.resolve();
+  }
+
+  /**
+   * Returns a list of screenshot paths, each game stores them in different places
+   */
+  static getAllScreenshotsForGame(gameId: TGameId, directory: string): string[] {
+    function isImage(file: string): boolean {
+      const validExtensions = [".bmp", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg"];
+      return validExtensions.includes(path.extname(file));
+    }
+
+    switch (gameId) {
+      case "unreal": {
+        const screenshotsPath = path.resolve(directory, gameId, "System64/Screenshots");
+        const files = fs.readdirSync(screenshotsPath).filter(isImage);
+
+        return files.map((item) => path.resolve(screenshotsPath, item)).reverse();
+      }
+
+      case "unreal-2": {
+        // Unreal 2 has two instances so we'll need to pull from both folders
+        // Shot00000.bmp
+        const screenshotsPathSP = path.resolve(directory, gameId, "singleplayer/System");
+        const screenshotsPathMP = path.resolve(directory, gameId, "multiplayer/SYSTEM");
+        const filesSP = fs.readdirSync(screenshotsPathSP).filter(isImage);
+        const filesMP = fs.readdirSync(screenshotsPathMP).filter(isImage);
+
+        return [
+          ...filesSP.map((item) => path.resolve(screenshotsPathSP, item)),
+          ...filesMP.map((item) => path.resolve(screenshotsPathMP, item)),
+        ];
+      }
+
+      case "ut-1999": {
+        const screenshotsPath = path.resolve(directory, gameId, "System/Screenshots");
+        const files = fs.readdirSync(screenshotsPath).filter(isImage);
+
+        return files.map((item) => path.resolve(screenshotsPath, item)).reverse();
+      }
+
+      case "ut-2003": {
+        const screenshotsPath = path.resolve(directory, gameId, "System");
+        const files = fs
+          .readdirSync(screenshotsPath)
+          .filter((item) => isImage(item) && item !== "edsplash.bmp");
+
+        return files.map((item) => path.resolve(screenshotsPath, item)).reverse();
+      }
+
+      case "ut-2004": {
+        const screenshotsPath = path.resolve(directory, gameId, "ScreenShots");
+        const files = fs.readdirSync(screenshotsPath).filter(isImage);
+
+        return files.map((item) => path.resolve(screenshotsPath, item)).reverse();
+      }
+
+      case "ut-3": {
+        const screenshotsPath = path.resolve(
+          os.homedir(),
+          "Documents/My Games/Unreal Tournament 3/UTGame/ScreenShots",
+        );
+        const files = fs.readdirSync(screenshotsPath).filter(isImage);
+
+        return files.map((item) => path.resolve(screenshotsPath, item)).reverse();
+      }
+
+      case "ut-alpha": {
+        // C:\Users\Blagoja\Documents\UnrealTournament\Saved\Screenshots\WindowsNoEditor
+        const screenshotsPath = path.resolve(
+          os.homedir(),
+          "Documents/UnrealTournament/Saved/Screenshots/WindowsNoEditor",
+        );
+        const files = fs.readdirSync(screenshotsPath).filter(isImage);
+
+        return files.map((item) => path.resolve(screenshotsPath, item)).reverse();
+      }
+
+      default:
+        throw new Error(`Can't get screenshots for provided game id: ${gameId}`);
+    }
   }
 }

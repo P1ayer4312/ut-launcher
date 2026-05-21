@@ -3,6 +3,10 @@ param(
   [string]$cdKey
 )
 
+function Send-Message($text) {
+  $text | Out-File -FilePath $messageBridgeFile -Encoding utf8
+}
+
 $basePath = "HKLM:\SOFTWARE\Wow6432Node\Unreal Technology\Installed Apps\UT2003"
 
 # Create registry key structure
@@ -20,3 +24,6 @@ New-ItemProperty -Path $basePath -Name "NO_DRIVE" -Value "No CD-ROM or DVD-ROM d
 New-ItemProperty -Path $basePath -Name "TITLEBAR" -Value "Unreal Tournament 2003" -PropertyType String -Force
 New-ItemProperty -Path $basePath -Name "WRONG_DISC" -Value "Wrong disc in drive. Please insert the disc labelled 'Unreal Tournament 2003 Play Disc' to continue." -PropertyType String -Force
 New-ItemProperty -Path $basePath -Name "YEAR" -Value "2003" -PropertyType String -Force
+
+Send-Message('CD-Key registered')
+Start-Sleep -Seconds 1

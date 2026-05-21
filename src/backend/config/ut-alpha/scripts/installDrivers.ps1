@@ -9,11 +9,11 @@ function Send-Message($text) {
 }
 
 Send-Message("Installing vcredist_x64.exe (1/2) ...")
-# Start-Process -FilePath $path_vc -ArgumentList "/install", "/quiet", "/norestart" -Wait
+Start-Process -FilePath $path_vc -ArgumentList "/install", "/quiet", "/norestart" -Wait
 Start-Sleep -Seconds 3
 
 Send-Message("Installing dxwebsetup.exe (2/2) ...")
-# Start-Process -FilePath $path_dx -ArgumentList "/q" -Wait
+Start-Process -FilePath $path_dx -ArgumentList "/q" -Wait
 Start-Sleep -Seconds 3
 
 Send-Message("Done")

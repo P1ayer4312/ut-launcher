@@ -55,11 +55,23 @@ exposeInMainWorldFactory<GameDataApi, GameDataChannels>("gameData", [
   "saveServerIni",
   "fetchPatchesForGame",
   "downloadAndInstallPatch",
+  "getProductKey",
 ]);
 
 exposeInMainWorldFactory<ActionsHandlerApi, ActionsHandlerChannels>(
   "actionsHandler",
-  ["fetchScreenshotsFromPath", "open", "copyImgToClipboard", "isDev", "platform", "flashFrame", "runScript"],
+  [
+    "open",
+    "copyImgToClipboard",
+    "isDev",
+    "platform",
+    "flashFrame",
+    "runScript",
+    "appVersion",
+    "launcherSettingsAction",
+    "fetchScreenshotsForGame",
+    "showItemInFolder",
+  ],
   {
     onMessageEvent: (callback: OnMessageEventCallback) => {
       if (ipcRenderer.eventNames().includes("mainWindow:message")) {

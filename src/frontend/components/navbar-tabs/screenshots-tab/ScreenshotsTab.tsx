@@ -2,6 +2,8 @@ import "./ScreenshotsTab.scss";
 import { useEffect, useState } from "react";
 import contextBridge from "@src/frontend/contextBridge/contextBridge";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "@firefox-devtools/react-contextmenu";
+import { useGlobalState } from "@src/frontend/state/useGlobalState";
+import type { TScreenshotData } from "@src/backend/types/customTypes.type";
 
 type ContextMenuCollect = {
   pathBase64: string;
@@ -9,12 +11,13 @@ type ContextMenuCollect = {
 };
 
 export default function Screenshots() {
-  const [screenshots, setScreenshots] = useState<string[]>([]);
-  const temp = "D:/Steam/userdata/105021511/760/remote/230410/screenshots";
+  const selectedGame = useGlobalState((e) => e.selectedGame);
+  const [screenshots, setScreenshots] = useState<TScreenshotData[] | null>(null);
   useEffect(() => {
     function fetchScreenshotsForGame() {
-      // TODO: Remove the temp value and add 'No screenshots' indicator
-      contextBridge.actionsHandler.fetchScreenshotsFromPath(temp).then(setScreenshots);
+      if (selectedGame !== "blank") {
+        contextBridge.actionsHandler.fetchScreenshotsForGame(selectedGame).then(setScreenshots);
+      }
     }
 
     window.addEventListener("focus", fetchScreenshotsForGame);
@@ -25,11 +28,16 @@ export default function Screenshots() {
 
   return (
     <div className="screenshots_wrapper">
-      {screenshots.length === 0 ? (
-        <div style={{ color: "red" }}>Loading...</div>
+      {screenshots === null ? (
+        <div style={{ color: "white" }}>Loading...</div>
+      ) : screenshots.length === 0 ? (
+        <div style={{ color: "white" }}>
+          <p>No screenshots found</p>
+          <p>Default screenshot key: F9</p>
+        </div>
       ) : (
         screenshots.map((item, index) => {
-          return <ScreenshotItem pathBase64={item} key={index} />;
+          return <ScreenshotItem pathBase64={item.dataBase64} filePath={item.filePath} key={index} />;
         })
       )}
       <ContextMenu id="screenshot-context-menu" className="screenshots_context-menu" hideOnLeave={true}>
@@ -42,7 +50,9 @@ export default function Screenshots() {
           View
         </MenuItem>
         <MenuItem
-          onClick={() => contextBridge.actionsHandler.open(temp)}
+          onClick={(_, collect: ContextMenuCollect) => {
+            contextBridge.actionsHandler.showItemInFolder(collect.filePath);
+          }}
           className="screenshots_context-menu_item"
         >
           Show on disk
@@ -60,8 +70,7 @@ export default function Screenshots() {
   );
 }
 
-function ScreenshotItem({ pathBase64 }: { pathBase64: string }) {
-  const filePath = atob(pathBase64);
+function ScreenshotItem({ pathBase64, filePath }: { pathBase64: string; filePath: string }) {
   return (
     <ContextMenuTrigger
       id="screenshot-context-menu"

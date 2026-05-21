@@ -14,10 +14,7 @@ export default function SettingsTab() {
 
   return (
     <div className="settings-tab">
-      <div className="settings-tab_general">
-        <h3 className="settings-tab_header">Settings</h3>
-        {localData?.installed && <SettingsPerGame />}
-      </div>
+      <div className="settings-tab_general">{localData?.installed && <SettingsPerGame />}</div>
     </div>
   );
 }

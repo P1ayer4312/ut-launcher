@@ -60,17 +60,31 @@ export const linksProvider: TLinksProvider = {
       extraFiles: [],
     },
   },
-  "ut-2004": {
+  "ut-2003": {
     dev: {
-      gameFiles: "http://localhost:4312/UT2004.zip",
+      gameFiles: "http://localhost:4312/UT2003-Retail2225.rar",
       installer: null,
       patch: null,
       extraFiles: [],
     },
     prod: {
-      gameFiles: "https://archive.org/download/ut2004-3369/UT2004.zip",
+      gameFiles: "https://archive.org/download/ut-2003-retail-2225/UT2003-Retail2225.rar",
       installer: null,
       patch: null,
+      extraFiles: [],
+    },
+  },
+  "ut-2004": {
+    dev: {
+      gameFiles: "http://localhost:4312/UT2004.zip",
+      installer: null,
+      patch: "https://api.github.com/repos/OldUnreal/UT2004Patches/releases",
+      extraFiles: [],
+    },
+    prod: {
+      gameFiles: "https://archive.org/download/ut2004-3369/UT2004.zip",
+      installer: null,
+      patch: "https://api.github.com/repos/OldUnreal/UT2004Patches/releases",
       extraFiles: [],
     },
   },

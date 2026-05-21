@@ -1,7 +1,7 @@
 import readline from "node:readline";
 import fs from "node:fs";
 
-type DataValue = { [key: string]: unknown[] };
+type DataValue = { [key: string]: string[] | undefined };
 type DataFormat = {
   [x: string]: DataValue;
 };
@@ -65,7 +65,7 @@ export class IniHelper {
   /**
    * @param paramIndex If there are duplicate keys, select which one to be replaced/where to place the value
    */
-  setValue(section: string, key: string, value: unknown, paramIndex: number = 0) {
+  setValue(section: string, key: string, value: string, paramIndex: number = 0) {
     let sectionData = this.data[section];
 
     if (this.strict && !sectionData) {
@@ -79,7 +79,7 @@ export class IniHelper {
       throw new Error(`Key "${key}" doesn't exist in section "${section}"`);
     } else if (!foundItem) {
       sectionData[key] = [value];
-    } else {
+    } else if (sectionData[key] !== undefined) {
       sectionData[key][paramIndex] = value;
     }
   }
@@ -99,14 +99,21 @@ export class IniHelper {
       neededItems[key] = selectedSection[key];
     });
 
-    return { [section.replace(/\./g, "_")]: neededItems };
+    return neededItems;
   }
 
-  saveFile(filePath: string) {
+  /**
+   * @param filePath If no file path is being provided it'll use the read file's path
+   */
+  saveFile(filePath?: string) {
     const file = fs.createWriteStream(filePath || this.filePath);
     for (const section of Object.keys(this.data)) {
-      file.write(`[${section.replace(/_/g, ".")}]\n`);
+      file.write(`[${section}]\n`);
       for (const item of Object.keys(this.data[section])) {
+        if (this.data[section][item] === undefined) {
+          continue;
+        }
+
         this.data[section][item].forEach((value) => {
           file.write(`${item}=${value}\n`);
         });

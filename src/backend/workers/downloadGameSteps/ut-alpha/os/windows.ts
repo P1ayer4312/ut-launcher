@@ -100,9 +100,6 @@ export async function downloadUT4AlphaWindows(dl: DownloadManager, sevenZipLogsC
   // Clean up unused files
   FilesHelper.remove(patchFolderPath);
 
-  // Create screenshots folder
-  FilesHelper.createScreenshotsFolder(dl.destination);
-
   // Copy the config folder inside the "Documents" folder
   const savedConfigPath = path.resolve(ut4ConfigDestination, "Saved");
   await fs.promises.mkdir(savedConfigPath, { recursive: true });

@@ -65,6 +65,7 @@
     "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^11.0.2",
     "innoextract-wasm": "file:modules/innoextract-wasm",
+    "jimp": "^1.6.1",
     "js7z-tools": "^2.5.0"
   }
 }

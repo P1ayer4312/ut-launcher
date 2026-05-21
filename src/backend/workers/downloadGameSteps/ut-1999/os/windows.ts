@@ -98,9 +98,6 @@ export async function downloadUT1999Windows(dl: DownloadManager, sevenZipLogsCal
     ),
   ]);
 
-  // Create screenshots folder
-  FilesHelper.createScreenshotsFolder(dl.destination);
-
   // Update the local store for the installed game and tag it as installed
   WorkerHelper.postMessage("updateLocalGameStore", {
     gameId: "ut-1999",

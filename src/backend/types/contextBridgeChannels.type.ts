@@ -28,29 +28,37 @@ export type GameDataChannels =
   | "readServerIni"
   | "saveServerIni"
   | "fetchPatchesForGame"
-  | "downloadAndInstallPatch";
+  | "downloadAndInstallPatch"
+  | "getProductKey";
 
 export type GameDataMappedChannels = `${GameDataApi}:${GameDataChannels}`;
 
 // TODO: Get good
 type UnmapChannel<T extends string> = T extends `${string}:${infer U}` ? U : T;
+type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 
 export type GameDataIpcHandler = <K extends GameDataMappedChannels>(
   channel: K,
-  listener: (event: IpcMainInvokeEvent, ...args: Parameters<TContextBridgeGameData[UnmapChannel<K>]>) => void,
+  listener: (
+    event: IpcMainInvokeEvent,
+    ...args: Parameters<TContextBridgeGameData[UnmapChannel<K>]>
+  ) => UnwrapPromise<ReturnType<TContextBridgeGameData[UnmapChannel<K>]>>,
 ) => void;
 
 // Actions handler
 export type ActionsHandlerApi = "actionsHandler";
 export type ActionsHandlerChannels =
   | "onMessageEvent"
-  | "fetchScreenshotsFromPath"
   | "open"
   | "copyImgToClipboard"
   | "isDev"
   | "platform"
   | "flashFrame"
-  | "runScript";
+  | "runScript"
+  | "appVersion"
+  | "launcherSettingsAction"
+  | "fetchScreenshotsForGame"
+  | "showItemInFolder";
 
 export type ActionsHandlerMappedChannel = `${ActionsHandlerApi}:${ActionsHandlerChannels}`;
 
@@ -59,5 +67,5 @@ export type ActionsHandlerIpcHandler = <K extends ActionsHandlerMappedChannel>(
   listener: (
     event: IpcMainInvokeEvent,
     ...args: Parameters<TContextBridgeActionsHandler[UnmapChannel<K>]>
-  ) => void,
+  ) => UnwrapPromise<ReturnType<TContextBridgeActionsHandler[UnmapChannel<K>]>>,
 ) => void;

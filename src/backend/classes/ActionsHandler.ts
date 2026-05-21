@@ -110,9 +110,9 @@ export class ActionsHandler {
         break;
       }
 
-      case "runPowershellFromWorker": {
-        const val = value as TEventKeyValueMapping["runPowershellFromWorker"];
-        Helper.runElevatedPowershell(val[0], val.splice(1));
+      case "runScriptFromWorker": {
+        const val = value as TEventKeyValueMapping["runScriptFromWorker"];
+        Helper.runScript(val);
         break;
       }
 

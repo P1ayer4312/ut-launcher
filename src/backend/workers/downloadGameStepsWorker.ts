@@ -1,10 +1,12 @@
 import { DownloadManager } from "@src/backend/classes/DownloadManger";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { downloadUnreal } from "./downloadGameSteps/unreal";
-import { downloadUT1999 } from "./downloadGameSteps/ut-1999";
-import { downloadUT4Alpha } from "./downloadGameSteps/ut-alpha";
 import { downloadUnreal2 } from "./downloadGameSteps/unreal-2";
+import { downloadUT1999 } from "./downloadGameSteps/ut-1999";
 import { downloadUT3 } from "./downloadGameSteps/ut-3";
+import { downloadUT2003 } from "./downloadGameSteps/ut-2003";
+import { downloadUT2004 } from "@src/backend/workers/downloadGameSteps/ut-2004";
+import { downloadUT4Alpha } from "./downloadGameSteps/ut-alpha";
 
 (async () => {
   const dl = new DownloadManager();
@@ -60,9 +62,13 @@ import { downloadUT3 } from "./downloadGameSteps/ut-3";
       downloadUnreal2(dl, innoextractLogsCallback);
       break;
 
-    // case "ut-2004":
-    //   downloadUT2004(dl, sevenZipLogsCallback);
-    //   break;
+    case "ut-2003":
+      downloadUT2003(dl, sevenZipLogsCallback);
+      break;
+
+    case "ut-2004":
+      downloadUT2004(dl, sevenZipLogsCallback);
+      break;
 
     case "ut-3":
       downloadUT3(dl, sevenZipLogsCallback);

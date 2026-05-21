@@ -2,15 +2,18 @@ import "./ProjectLinks.scss";
 import { FaDiscord, FaGithub } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import MenuItemGame from "@src/frontend/components/menu-item/menu-item-game/MenuItemGame";
+import { useGlobalState } from "@src/frontend/state/useGlobalState";
 
 export default function ProjectLinks() {
+  const setModalData = useGlobalState((e) => e.setModalData);
+
   return (
     <div className="project-links_wrapper">
       <MenuItemGame
         icon={FaDiscord}
         title="DISCORD"
         onClick={() => {
-          throw new Error("TODO: ADD LINK");
+          alert("Maybe, if there's interest");
         }}
       />
       <MenuItemGame
@@ -18,7 +21,16 @@ export default function ProjectLinks() {
         title="GITHUB"
         onClick={() => window.open("https://github.com/P1ayer4312/ut-launcher", "_blank")}
       />
-      <MenuItemGame icon={IoIosSettings} title="SETTINGS" onClick={() => alert("clicked")} />
+      <MenuItemGame
+        icon={IoIosSettings}
+        title="SETTINGS"
+        onClick={() => {
+          setModalData({
+            isOpened: true,
+            modalType: "launcher-settings",
+          });
+        }}
+      />
     </div>
   );
 }

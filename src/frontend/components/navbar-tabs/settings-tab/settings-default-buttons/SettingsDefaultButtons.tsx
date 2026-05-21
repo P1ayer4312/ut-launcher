@@ -27,6 +27,7 @@ export default function SettingsDefaultButtons() {
 
   return (
     <div className="settings-tab_local-buttons">
+      <div className="settings-tab_header">Settings</div>
       <div className="settings-tab_button settings-tab_local-files" onClick={localFilesClicked}>
         <FaFolderOpen />
         <span>Local files</span>
