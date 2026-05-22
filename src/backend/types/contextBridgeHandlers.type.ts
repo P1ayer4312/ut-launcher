@@ -31,7 +31,6 @@ export type TContextBridgeTitleBar = {
 export type TEventKeyValueMapping = {
   progressFormatted: string;
   progress: Partial<AxiosProgressEvent>;
-  screenshot: null;
   updateLocalGameStore: { gameId: TGameId; installed: boolean };
   setRunningGame: TGameId;
   resetRunningGame: null;

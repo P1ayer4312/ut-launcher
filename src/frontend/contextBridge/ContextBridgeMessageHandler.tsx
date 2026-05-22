@@ -5,7 +5,7 @@ import { logger } from "@src/frontend/utils/logger";
 
 /**
  * Wrapper component for handling the messages between the contextBridge.
- * This is an empty component used to declutter `App.jsx`
+ * This is an empty component used to declutter `App.tsx`
  */
 export default function ContextBridgeMessageHandler() {
   // prettier-ignore
@@ -28,9 +28,6 @@ export default function ContextBridgeMessageHandler() {
         };
         window.addEventListener("error", displayErrorFunc);
 
-        const screenshotAudio = new Audio("./sounds/steam-screenshot.mp3");
-        screenshotAudio.volume = 0.5;
-
         // Pass the last selected game from memory to the global state
         contextBridge.gameData.getLastSelectedGame().then(setSelectedGame);
 
@@ -45,11 +42,6 @@ export default function ContextBridgeMessageHandler() {
             case "progress": {
               const progress: number = dataReceived.value?.progress || 0;
               setProgressBar({ percentage: Math.floor(progress * 100) });
-              break;
-            }
-
-            case "screenshot": {
-              screenshotAudio.play();
               break;
             }
 
