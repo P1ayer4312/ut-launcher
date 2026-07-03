@@ -24,7 +24,7 @@ This project is not affiliated with Epic Games or the Unreal brand in any way.
 
 ## Development
 
-Required tools: `Node.js` v26 or above, `npm`
+Required tools: `Node.js` v24 or above, `npm`
 
 |                                   |                   |
 | --------------------------------- | ----------------- |
