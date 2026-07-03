@@ -17,7 +17,11 @@ type Props = {
 /**  Menu item cards for each game */
 export default function MenuItemGame(props: Props) {
   const setSelectedGame = useGlobalState((s) => s.setSelectedGame);
+  const runningGame = useGlobalState((s) => s.runningGame);
   const downloadingGame = useGlobalState((s) => s.downloadingGame);
+
+  const isGameRunning = runningGame === props.gameId;
+  const isGameDownloading = downloadingGame === props.gameId;
 
   const handleOnClick = useCallback(() => {
     if (props.onClick) {
@@ -33,12 +37,17 @@ export default function MenuItemGame(props: Props) {
       <div className="menu-item-game_drag-blocker"></div>
       {props.imgLocation && (
         <div className="menu-item-game_badge-wrapper">
-          {downloadingGame === props.gameId && <SpinnerProgressBar />}
+          {isGameDownloading && <SpinnerProgressBar />}
           <img className="menu-item-game_badge" src={props.imgLocation} />
         </div>
       )}
       {props.icon && <props.icon className="menu-item-game_icon" />}
-      <h1 className="menu-item-game_title">{props.title}</h1>
+      <h1
+        className="menu-item-game_title"
+        style={{ color: isGameRunning ? "lightgreen" : isGameDownloading ? "#71ddf5" : undefined }}
+      >
+        {props.title}
+      </h1>
     </div>
   );
 }

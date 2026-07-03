@@ -68,8 +68,9 @@ export class DownloadManager extends EventEmitter<CustomEvents> {
     this.installFilesFolder = path.resolve(this.destination, "install_files");
   }
 
-  /** Start the download process */
-
+  /**
+   * Start the download process
+   */
   start() {
     const url = this.urls[this.urlCounter];
     this.fileName = decodeURI(path.basename(url));

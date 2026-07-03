@@ -1,4 +1,5 @@
 import { TGameKey, TUnreal2Type } from "@src/backend/types/customTypes.type";
+import type { OpenDialogReturnValue } from "electron";
 
 export type TGameId =
   | "unreal"
@@ -28,7 +29,7 @@ export type TContextBridgeGameData = {
   set: (key: TGameId, value: Partial<TGameData>) => Promise<void>;
   getLastSelectedGame: () => Promise<TGameId>;
   setLastSelectedGame: (value: TGameId) => Promise<void>;
-  selectInstallDir: () => Promise<{ canceled: boolean; filePaths: string[] }>;
+  selectInstallDir: () => Promise<OpenDialogReturnValue>;
   startGameDownload: (gameId: TGameId, installDirectory: string) => Promise<void>;
   stopGameDownload: (gameId: TGameId) => Promise<void>;
   startInstalledGame: (gameId: TGameId, option?: TUnreal2Type) => Promise<void>;

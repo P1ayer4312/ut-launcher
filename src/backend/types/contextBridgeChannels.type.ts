@@ -36,13 +36,15 @@ export type GameDataMappedChannels = `${GameDataApi}:${GameDataChannels}`;
 // TODO: Get good
 type UnmapChannel<T extends string> = T extends `${string}:${infer U}` ? U : T;
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
+/** To stop typescript from yelling */
+type MaybePromise<T> = T | Promise<T>;
 
 export type GameDataIpcHandler = <K extends GameDataMappedChannels>(
   channel: K,
   listener: (
     event: IpcMainInvokeEvent,
     ...args: Parameters<TContextBridgeGameData[UnmapChannel<K>]>
-  ) => UnwrapPromise<ReturnType<TContextBridgeGameData[UnmapChannel<K>]>>,
+  ) => MaybePromise<UnwrapPromise<ReturnType<TContextBridgeGameData[UnmapChannel<K>]>>>,
 ) => void;
 
 // Actions handler
@@ -67,5 +69,5 @@ export type ActionsHandlerIpcHandler = <K extends ActionsHandlerMappedChannel>(
   listener: (
     event: IpcMainInvokeEvent,
     ...args: Parameters<TContextBridgeActionsHandler[UnmapChannel<K>]>
-  ) => UnwrapPromise<ReturnType<TContextBridgeActionsHandler[UnmapChannel<K>]>>,
+  ) => MaybePromise<UnwrapPromise<ReturnType<TContextBridgeActionsHandler[UnmapChannel<K>]>>>,
 ) => void;
