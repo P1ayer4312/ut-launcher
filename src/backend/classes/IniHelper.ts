@@ -2,8 +2,19 @@ import readline from "node:readline";
 import fs from "node:fs";
 
 type DataValue = { [key: string]: string[] | undefined };
+
 type DataFormat = {
   [x: string]: DataValue;
+};
+
+export type SectionData = {
+  section: string;
+  keys: string[];
+};
+
+export type MultipleSectionsData = {
+  section: string;
+  data: DataValue;
 };
 
 export class IniHelper {
@@ -26,7 +37,9 @@ export class IniHelper {
     let section = "";
     const rl = readline.createInterface({ input: fs.createReadStream(filePath, "utf-8") });
 
-    for await (const line of rl) {
+    for await (const lineRaw of rl) {
+      const line = lineRaw.trim();
+
       if (line.startsWith("[") && line.endsWith("]")) {
         section = line.substring(1, line.length - 1);
         this.data[section] = {};
@@ -88,7 +101,7 @@ export class IniHelper {
     return this.data;
   }
 
-  getValuesFromSection(section: string, keys: string[]) {
+  getValuesFromSection(section: string, keys: string[]): DataValue {
     if (!keys || keys?.length === 0) {
       throw new Error("No parameter names provided");
     }
@@ -100,6 +113,16 @@ export class IniHelper {
     });
 
     return neededItems;
+  }
+
+  getValuesFromMultipleSections(sections: SectionData[]): MultipleSectionsData[] {
+    const dataHolder: MultipleSectionsData[] = [];
+    for (const item of sections) {
+      const sectionData = this.getValuesFromSection(item.section, item.keys);
+      dataHolder.push({ section: item.section, data: sectionData });
+    }
+
+    return dataHolder;
   }
 
   /**

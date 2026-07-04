@@ -12,7 +12,7 @@
   }
 
   &_save-button {
-    margin-top: 4px;
+    margin-top: 10px;
     background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   }
 
@@ -73,6 +73,48 @@
       border-radius: 6px;
       border: 1px solid rgb(45, 45, 45);
       background-color: rgb(12, 12, 12);
+    }
+  }
+
+  &_checkbox {
+    &-wrapper {
+      color: gray;
+      margin-top: 5px;
+      font-size: 14px;
+
+      display: flex;
+      flex-direction: column;
+
+      // === Checkbox hide/display based on input state
+      & input:checked + label > div > svg {
+        display: block;
+      }
+      & input + label > div > svg {
+        display: none;
+      }
+      // === Checkbox hide/display based on input state
+    }
+
+    &_box {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      width: 20px;
+      height: 20px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &_display {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      align-items: center;
     }
   }
 }

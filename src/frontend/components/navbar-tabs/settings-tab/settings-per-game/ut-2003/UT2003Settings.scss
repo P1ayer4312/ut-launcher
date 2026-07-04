@@ -1,4 +1,10 @@
 .ut-2003-settings {
+  &_container {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+  }
+
   &_button-key {
     margin-top: 15px;
     background-image: linear-gradient(90deg, #9ebd13 0%, #008552 100%);

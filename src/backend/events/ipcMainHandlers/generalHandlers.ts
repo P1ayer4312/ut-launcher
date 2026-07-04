@@ -12,8 +12,8 @@ import { Jimp } from "jimp";
 export function generalHandlers() {
   const handle = ipcMain.handle as ActionsHandlerIpcHandler;
 
-  handle("actionsHandler:open", (_event, value) => {
-    shell.openPath(path.resolve(value));
+  handle("actionsHandler:open", (_event, value, extraPath = "") => {
+    shell.openPath(path.resolve(value, extraPath));
     ipcLogger.info("actionsHandler:open");
   });
 

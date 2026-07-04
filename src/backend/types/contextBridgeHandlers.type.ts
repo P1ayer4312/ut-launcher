@@ -9,7 +9,7 @@ import type { AxiosProgressEvent } from "axios";
 
 export type TContextBridgeActionsHandler = {
   onMessageEvent: (callback: (data: TActionsHandlerMessageEventData) => void) => Promise<void>;
-  open: (value: string) => Promise<void>;
+  open: (value: string, extraPath?: string) => Promise<void>;
   copyImgToClipboard: (value: string) => Promise<void>;
   isDev: () => Promise<string>;
   platform: () => Promise<NodeJS.Platform>;

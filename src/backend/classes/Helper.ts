@@ -7,7 +7,7 @@ import { actionsHandler } from "./ActionsHandler";
 import { logger } from "@src/backend/utils/logger";
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
 import { gameKeyProvider } from "@src/backend/providers/gameKeyProvider";
-import { IniHelper } from "@src/backend/classes/IniHelper";
+import { IniHelper, MultipleSectionsData } from "@src/backend/classes/IniHelper";
 import type { TGameId } from "@src/backend/types/gameConfigData.type";
 import type { TExeOptions, TScriptName, TUnreal2Type } from "@src/backend/types/customTypes.type";
 
@@ -217,23 +217,105 @@ export class Helper {
     return process.env.DEV === "true";
   }
 
-  static saveScreenshot() {}
+  static async getGameConfig(gameId: TGameId): Promise<MultipleSectionsData[]> {
+    const definedConfigs: TGameId[] = ["ut-2003", "ut-2004"];
+    if (!definedConfigs.includes(gameId)) {
+      throw new Error(`No config steps defined for game id: ${gameId}`);
+    }
 
-  /**
-   * TODO: REMOVE
-   * Returns a list of maps for a selected game
-   */
-  static getGameMapsNames(gameId: TGameId) {
+    const ini = new IniHelper(true);
     const gameData = getGameUserData(gameId);
-    const gameFolder = gameData.directory;
 
-    if (gameId === "unreal") {
-      const mapsPath = path.resolve(gameFolder, "unreal/MAPS");
-      const mapNames = fs.readdirSync(mapsPath, { recursive: true }).map((item) => {
-        return path.basename(String(item), ".unr");
-      });
+    switch (gameId) {
+      case "ut-2003": {
+        const gameIniPath = path.resolve(gameData.directory, gameId, "System/UT2003.ini");
+        await ini.readFile(gameIniPath);
 
-      return mapNames;
+        const sections = ini.getValuesFromMultipleSections([
+          {
+            section: "WinDrv.WindowsClient",
+            keys: [
+              "WindowedViewportX",
+              "WindowedViewportY",
+              "FullscreenViewportX",
+              "FullscreenViewportY",
+              "MenuViewportX",
+              "MenuViewportY",
+              "StartupFullscreen",
+            ],
+          },
+        ]);
+
+        return sections;
+      }
+
+      case "ut-2004": {
+        const gameIniPath = path.resolve(gameData.directory, gameId, "System/UT2004.ini");
+        await ini.readFile(gameIniPath);
+
+        const sections = ini.getValuesFromMultipleSections([
+          {
+            section: "WinDrv.WindowsClient",
+            keys: [
+              "WindowedViewportX",
+              "WindowedViewportY",
+              "FullscreenViewportX",
+              "FullscreenViewportY",
+              "MenuViewportX",
+              "MenuViewportY",
+              "StartupFullscreen",
+            ],
+          },
+        ]);
+
+        return sections;
+      }
+
+      default: {
+        throw new Error("Error occurred while trying to read the game config data");
+      }
+    }
+  }
+
+  static async saveGameConfig(gameId: TGameId, data: MultipleSectionsData[]) {
+    const definedConfigs: TGameId[] = ["ut-2003", "ut-2004"];
+    if (!definedConfigs.includes(gameId)) {
+      throw new Error(`No config steps defined for game id: ${gameId}`);
+    }
+
+    const ini = new IniHelper(true);
+    const gameData = getGameUserData(gameId);
+
+    function saveDataToSections(ini: IniHelper, data: MultipleSectionsData[]) {
+      for (const item of data) {
+        for (const key of Object.keys(item.data)) {
+          ini.setValue(item.section, key, item.data[key]![0]);
+        }
+      }
+
+      ini.saveFile();
+    }
+
+    switch (gameId) {
+      case "ut-2003": {
+        const gameIniPath = path.resolve(gameData.directory, gameId, "System/UT2003.ini");
+        await ini.readFile(gameIniPath);
+
+        saveDataToSections(ini, data);
+        break;
+      }
+
+      case "ut-2004": {
+        const gameIniPath = path.resolve(gameData.directory, gameId, "System/UT2004.ini");
+        await ini.readFile(gameIniPath);
+
+        saveDataToSections(ini, data);
+        break;
+      }
+
+      default: {
+        throw new Error("Error occurred while trying to save the game config data");
+      }
     }
   }
 }

@@ -110,6 +110,17 @@ export function gameDataHandlers() {
     return gameKeyProvider(gameId);
   });
 
+  handle("gameData:getGameConfig", async (_event, gameId) => {
+    const returnValue = await Helper.getGameConfig(gameId);
+    ipcLogger.info("gameData:getGameConfig", JSON.stringify(returnValue));
+    return returnValue;
+  });
+
+  handle("gameData:saveGameConfig", (_event, gameId, data) => {
+    ipcLogger.info("gameData:saveGameConfig", "Saving config", gameId, JSON.stringify(data));
+    Helper.saveGameConfig(gameId, data);
+  });
+
   handle("gameData:readServerIni", (_event, gameId) => {
     throw new Error("Feature not implemented");
     // return CreateServerDataHelper.readServerIni(gameId);

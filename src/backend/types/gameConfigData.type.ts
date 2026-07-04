@@ -1,4 +1,5 @@
-import { TGameKey, TUnreal2Type } from "@src/backend/types/customTypes.type";
+import type { TGameKey, TUnreal2Type } from "@src/backend/types/customTypes.type";
+import type { MultipleSectionsData } from "@src/backend/classes/IniHelper";
 import type { OpenDialogReturnValue } from "electron";
 
 export type TGameId =
@@ -40,4 +41,6 @@ export type TContextBridgeGameData = {
   fetchPatchesForGame: (gameId: TGameId) => Promise<TReleaseFile[]>;
   downloadAndInstallPatch: (gameId: TGameId, patchLink: string) => Promise<void>;
   getProductKey: (gameId: TGameKey) => Promise<string>;
+  getGameConfig: (gameId: TGameId) => Promise<MultipleSectionsData[]>;
+  saveGameConfig: (gameId: TGameId, data: MultipleSectionsData[]) => Promise<void>;
 };

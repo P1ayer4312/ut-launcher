@@ -29,7 +29,9 @@ export type GameDataChannels =
   | "saveServerIni"
   | "fetchPatchesForGame"
   | "downloadAndInstallPatch"
-  | "getProductKey";
+  | "getProductKey"
+  | "getGameConfig"
+  | "saveGameConfig";
 
 export type GameDataMappedChannels = `${GameDataApi}:${GameDataChannels}`;
 

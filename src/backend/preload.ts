@@ -56,6 +56,8 @@ exposeInMainWorldFactory<GameDataApi, GameDataChannels>("gameData", [
   "fetchPatchesForGame",
   "downloadAndInstallPatch",
   "getProductKey",
+  "getGameConfig",
+  "saveGameConfig",
 ]);
 
 exposeInMainWorldFactory<ActionsHandlerApi, ActionsHandlerChannels>(

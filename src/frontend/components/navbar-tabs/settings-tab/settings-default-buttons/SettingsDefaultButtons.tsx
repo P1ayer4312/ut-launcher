@@ -15,7 +15,7 @@ export default function SettingsDefaultButtons() {
 
   function localFilesClicked() {
     if (localData?.directory) {
-      contextBridge.actionsHandler.open(localData!.directory);
+      contextBridge.actionsHandler.open(localData!.directory, selectedGame);
     } else {
       throw new Error("Unable to open the local directory");
     }
