@@ -53,15 +53,7 @@ export async function downloadUnrealWindows(dl: DownloadManager, sevenZipLogsCal
   WorkerHelper.postMessage("progress", { progress: 1 });
 
   // Clean up previous files if they exist
-  // prettier-ignore
-  const gameFiles = [
-    "Compress", "HELP", "MANUALS", "MAPS", "MUSIC", "Meshes", "SOUNDS",
-    "SYSTEM", "SYSTEMLOCALIZED", "System64", "TEXTURES", "WebServer"
-  ];
-
-  for (const item of gameFiles) {
-    await FilesHelper.remove(path.resolve(dl.destination, item));
-  }
+  await FilesHelper.removeOldFiles(dl.destination);
 
   // Copy the skip files list next to the game archive
   await FilesHelper.copyFile(

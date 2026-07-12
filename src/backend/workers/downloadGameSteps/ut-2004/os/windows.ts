@@ -2,7 +2,9 @@ import type { DownloadManager, LogsCallback } from "@src/backend/classes/Downloa
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
+import { IniHelper } from "@src/backend/classes/IniHelper";
 import path from "node:path";
+import { randomUUID } from "node:crypto";
 
 /**
  * Download UT 2004, patch, extract and configure
@@ -26,17 +28,7 @@ export async function downloadUT2004Windows(dl: DownloadManager, sevenZipLogsCal
   WorkerHelper.postMessage("progress", { progress: 1 });
 
   // Clean up previous files if they exist
-  // prettier-ignore
-  const gameFiles = [
-    "Animations", "Cache", "ForceFeedback", "Help", "KarmaData", "Maps", "Music",
-    "Readme.txt", "Sounds", "Speech", "StaticMeshes", "System", "SystemARM64",
-    "SystemLocalized", "Textures", "UT2004.reg", "UT2KxRegCheck10-README.TXT",
-    "ScreenShots", "UT2KxRegCheck10.exe", "UserLogs", "Web"
-  ];
-
-  for (const item of gameFiles) {
-    await FilesHelper.remove(path.resolve(dl.destination, item));
-  }
+  await FilesHelper.removeOldFiles(dl.destination);
 
   // Extract game files in the install folder
   await ArchiveManager.extractFiles(
@@ -51,6 +43,33 @@ export async function downloadUT2004Windows(dl: DownloadManager, sevenZipLogsCal
   // Move game files to the game folder
   const extractedGamePath = path.resolve(dl.installFilesFolder, "UT2004");
   await FilesHelper.moveAll(extractedGamePath, dl.destination, true);
+  await FilesHelper.remove(extractedGamePath);
+
+  // Copy config files in the game folder
+  WorkerHelper.postMessage("progressFormatted", "Alter game configuration...");
+
+  const gameSystemFolder = path.resolve(dl.destination, "System");
+  await Promise.all([
+    FilesHelper.copyFile(
+      FilesHelper.configFilePath(WorkerHelper.isDev(), "ut-2004/User.ini"),
+      gameSystemFolder,
+    ),
+    FilesHelper.copyFile(
+      FilesHelper.configFilePath(WorkerHelper.isDev(), "ut-2004/UT2004.ini"),
+      gameSystemFolder,
+    ),
+  ]);
+
+  // Patch User.ini and set a random user
+  const uuid = randomUUID();
+  const ini = new IniHelper();
+  const userIniPath = path.resolve(gameSystemFolder, "User.ini");
+  await ini.readFile(userIniPath);
+
+  ini.setValue("Engine.PlayerController", "StatsUsername", uuid.slice(uuid.lastIndexOf("-") + 1));
+  ini.setValue("Engine.PlayerController", "StatsPassword", uuid.slice(0, uuid.indexOf("-")));
+  ini.setValue("Engine.PlayerController", "bEnableStatsTracking", "True");
+  await ini.saveFile();
 
   // Notify the user for additional options
   WorkerHelper.postMessage("openContinueModal", {

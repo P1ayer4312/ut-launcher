@@ -25,16 +25,7 @@ export async function downloadUnreal2Windows(dl: DownloadManager, innoextractLog
   WorkerHelper.postMessage("progress", { progress: 1 });
 
   // Clean up previous files if they exist
-  // prettier-ignore
-  const gameFiles = [
-    "__redist", "__support", "app", "commonappdata", "goggame-1207658677.hashdb",
-    "goggame-1207658677.ico", "goggame-1207658677.info", "goggame-1207658677.script",
-    "goggame.sdb", "multiplayer", "singleplayer", "tmp"
-  ];
-
-  for (const item of gameFiles) {
-    await FilesHelper.remove(path.resolve(dl.destination, item));
-  }
+  await FilesHelper.removeOldFiles(dl.destination);
 
   // Extract the installer
   await ArchiveManager.extractInnoInstaller(

@@ -2,7 +2,9 @@ import type { DownloadManager, LogsCallback } from "@src/backend/classes/Downloa
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
-import * as path from "node:path";
+import { IniHelper } from "@src/backend/classes/IniHelper";
+import path from "node:path";
+import { randomUUID } from "node:crypto";
 
 /**
  * Download UT 2003, patch, extract and configure
@@ -26,16 +28,7 @@ export async function downloadUT2003Windows(dl: DownloadManager, sevenZipLogsCal
   WorkerHelper.postMessage("progress", { progress: 1 });
 
   // Clean up previous files if they exist
-  // prettier-ignore
-  const gameFiles = [
-    "Animations", "AutoRun.inf", "Benchmark", "DirectX8", "Extras", "ForceFeedback",
-    "Help", "KarmaData", "Maps", "Music", "Setup.exe", "Sounds", "StaticMeshes",
-    "System", "Textures", "Web", "linux_installer.sh"
-  ];
-
-  for (const item of gameFiles) {
-    await FilesHelper.remove(path.resolve(dl.destination, item));
-  }
+  await FilesHelper.removeOldFiles(dl.destination);
 
   // Extract game files
   await ArchiveManager.extractFiles(
@@ -58,6 +51,16 @@ export async function downloadUT2003Windows(dl: DownloadManager, sevenZipLogsCal
       gameSystemFolder,
     ),
   ]);
+
+  // Patch User.ini and set a random user
+  const uuid = randomUUID();
+  const ini = new IniHelper();
+  const userIniPath = path.resolve(gameSystemFolder, "User.ini");
+  await ini.readFile(userIniPath);
+
+  ini.setValue("Engine.PlayerController", "StatsUsername", uuid.slice(uuid.lastIndexOf("-") + 1));
+  ini.setValue("Engine.PlayerController", "StatsPassword", uuid.slice(0, uuid.indexOf("-")));
+  await ini.saveFile();
 
   // Prompt the user to register a key
   WorkerHelper.postMessage("openContinueModal", {

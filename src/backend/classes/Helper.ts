@@ -286,14 +286,14 @@ export class Helper {
     const ini = new IniHelper(true);
     const gameData = getGameUserData(gameId);
 
-    function saveDataToSections(ini: IniHelper, data: MultipleSectionsData[]) {
+    async function saveDataToSections(ini: IniHelper, data: MultipleSectionsData[]) {
       for (const item of data) {
         for (const key of Object.keys(item.data)) {
           ini.setValue(item.section, key, item.data[key]![0]);
         }
       }
 
-      ini.saveFile();
+      return ini.saveFile();
     }
 
     switch (gameId) {
@@ -301,7 +301,7 @@ export class Helper {
         const gameIniPath = path.resolve(gameData.directory, gameId, "System/UT2003.ini");
         await ini.readFile(gameIniPath);
 
-        saveDataToSections(ini, data);
+        await saveDataToSections(ini, data);
         break;
       }
 
@@ -309,7 +309,7 @@ export class Helper {
         const gameIniPath = path.resolve(gameData.directory, gameId, "System/UT2004.ini");
         await ini.readFile(gameIniPath);
 
-        saveDataToSections(ini, data);
+        await saveDataToSections(ini, data);
         break;
       }
 

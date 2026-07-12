@@ -52,15 +52,7 @@ export async function downloadUT1999Windows(dl: DownloadManager, sevenZipLogsCal
   WorkerHelper.postMessage("progress", { progress: 1 });
 
   // Clean up previous files if they exist
-  // prettier-ignore
-  const gameFiles = [
-    "LICENSE.md", "NetGamesUSA.com", "ReleaseNotes.md", "Web", "Help", "Logs",
-    "Maps", "Music", "Sounds", "System", "Textures", "SystemLocalized",
-  ];
-
-  for (const item of gameFiles) {
-    await FilesHelper.remove(path.resolve(dl.destination, item));
-  }
+  await FilesHelper.removeOldFiles(dl.destination);
 
   // Copy the skip files list next to the game archive
   await FilesHelper.copyFile(

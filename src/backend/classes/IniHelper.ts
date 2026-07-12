@@ -128,23 +128,33 @@ export class IniHelper {
   /**
    * @param filePath If no file path is being provided it'll use the read file's path
    */
-  saveFile(filePath?: string) {
-    const file = fs.createWriteStream(filePath || this.filePath);
-    for (const section of Object.keys(this.data)) {
-      file.write(`[${section}]\n`);
-      for (const item of Object.keys(this.data[section])) {
-        if (this.data[section][item] === undefined) {
-          continue;
+  async saveFile(filePath?: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      function errorCheck(err: NodeJS.ErrnoException | null | undefined) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
         }
-
-        this.data[section][item].forEach((value) => {
-          file.write(`${item}=${value}\n`);
-        });
       }
 
-      file.write("\n");
-    }
+      const file = fs.createWriteStream(filePath || this.filePath);
+      for (const section of Object.keys(this.data)) {
+        file.write(`[${section}]\n`);
+        for (const item of Object.keys(this.data[section])) {
+          if (this.data[section][item] === undefined) {
+            continue;
+          }
 
-    file.close();
+          this.data[section][item].forEach((value) => {
+            file.write(`${item}=${value}\n`, errorCheck);
+          });
+        }
+
+        file.write("\n", errorCheck);
+      }
+
+      file.close(errorCheck);
+    });
   }
 }

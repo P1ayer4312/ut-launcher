@@ -45,6 +45,11 @@ function ModalViews() {
   const [showKey, setShowKey] = useState<boolean>(false);
   const [key, setKey] = useState<string>("----");
 
+  function closeModal() {
+    setModalData({ isOpened: false });
+    contextBridge.actionsHandler.flashFrame(false);
+  }
+
   switch (modalData.modalType) {
     case "uninstall":
       return <UninstallModal />;
@@ -69,8 +74,7 @@ function ModalViews() {
           return (
             <ContinueModal
               onButtonClicked={() => {
-                setModalData({ isOpened: false });
-                contextBridge.actionsHandler.flashFrame(false);
+                closeModal();
                 contextBridge.actionsHandler.runScript("registerUT2003key");
               }}
             >
@@ -92,8 +96,7 @@ function ModalViews() {
           return (
             <ContinueModal
               onButtonClicked={() => {
-                setModalData({ isOpened: false });
-                contextBridge.actionsHandler.flashFrame(false);
+                closeModal();
               }}
             >
               <div style={{ marginTop: "10px", marginBottom: "10px" }}>
@@ -109,13 +112,31 @@ function ModalViews() {
           );
         }
         // =====================================================================================================================
+        case "ut-alpha-install-message": {
+          return (
+            <ContinueModal
+              onButtonClicked={() => {
+                closeModal();
+                contextBridge.actionsHandler.runScript("installDriversUT4");
+              }}
+            >
+              <div style={{ marginTop: "10px" }}>
+                {`DirectX and Visual C++ Redist are required for playing the game.`}
+              </div>
+              <div>{`Click on the "Continue" button to give permission to install them.`}</div>
+              <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+                {`Patches are installed automatically but can be changed from the "Settings tab."`}
+              </div>
+            </ContinueModal>
+          );
+        }
+        // =====================================================================================================================
         case "ut3-key": {
           // I'm starting to get a bit sloppy with the code structure :/
           return (
             <ContinueModal
               onButtonClicked={() => {
-                setModalData({ isOpened: false });
-                contextBridge.actionsHandler.flashFrame(false);
+                closeModal();
               }}
               buttonText="Close"
             >
@@ -162,7 +183,11 @@ function ModalViews() {
         // =====================================================================================================================
         default:
           return (
-            <ContinueModal onButtonClicked={() => setModalData({ isOpened: false })}>
+            <ContinueModal
+              onButtonClicked={() => {
+                closeModal();
+              }}
+            >
               <div>{`MISCONFIGURED_CONTINUE_MODAL: ${selectedGame}`}</div>
             </ContinueModal>
           );

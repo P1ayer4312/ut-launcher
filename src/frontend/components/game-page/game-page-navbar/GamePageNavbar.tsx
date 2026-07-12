@@ -44,6 +44,19 @@ const GameButton = memo(function GameButton() {
   const isPlatformSupported =
     platform !== "" && localDataStore[selectedGame]?.availableOS?.includes(platform);
 
+  /**
+   * Disable other games' buttons for play and install if one game
+   * is in the process of being played or installed
+   */
+  const otherGameActive: boolean =
+    (runningGame !== null && selectedGame !== runningGame) ||
+    (downloadingGame !== null && selectedGame !== downloadingGame);
+
+  function disableBtn(className: string) {
+    // Small helper function for handling disabled buttons appearance
+    return otherGameActive ? "" : className;
+  }
+
   function stopButtonClicked() {
     if (selectedGame === runningGame) {
       // Stop running game
@@ -57,12 +70,20 @@ const GameButton = memo(function GameButton() {
   }
 
   function playButtonClicked(option?: TUnreal2Type) {
+    if (otherGameActive) {
+      return;
+    }
+
     if (selectedGame !== "blank") {
       contextBridge.gameData.startInstalledGame(selectedGame, option);
     }
   }
 
   function installButtonClicked() {
+    if (otherGameActive) {
+      return;
+    }
+
     contextBridge.gameData.selectInstallDir().then((data) => {
       if (data.canceled || selectedGame === "blank") {
         return;
@@ -80,7 +101,7 @@ const GameButton = memo(function GameButton() {
     });
   }
 
-  // Show the stop button if the game is downloading
+  // Show the stop button if the game is downloading or being played
   if (selectedGame === downloadingGame || selectedGame === runningGame) {
     return (
       <div className="game-page-navbar_action-button game-page-navbar_stop" onClick={stopButtonClicked}>
@@ -97,14 +118,14 @@ const GameButton = memo(function GameButton() {
       return (
         <div className="game-page-navbar_unreal-2-btns">
           <div
-            className="game-page-navbar_action-button game-page-navbar_play"
+            className={`game-page-navbar_action-button ${disableBtn("game-page-navbar_play")}`}
             onClick={() => playButtonClicked("u2-sp")}
           >
             <FaPlay />
             <span>PLAY</span>
           </div>
           <div
-            className="game-page-navbar_action-button  game-page-navbar_u2-xmp"
+            className={`game-page-navbar_action-button ${disableBtn("game-page-navbar_u2-xmp")}`}
             onClick={() => playButtonClicked("u2-xmp")}
           >
             <FaPeopleGroup />
@@ -116,7 +137,7 @@ const GameButton = memo(function GameButton() {
 
     return (
       <div
-        className="game-page-navbar_action-button game-page-navbar_play"
+        className={`game-page-navbar_action-button ${disableBtn("game-page-navbar_play")}`}
         onClick={() => playButtonClicked()}
       >
         <FaPlay />
@@ -136,7 +157,10 @@ const GameButton = memo(function GameButton() {
 
   // Show the install button if none of the check above pass
   return (
-    <div className="game-page-navbar_action-button game-page-navbar_install" onClick={installButtonClicked}>
+    <div
+      className={`game-page-navbar_action-button ${disableBtn("game-page-navbar_install")}`}
+      onClick={installButtonClicked}
+    >
       <FaDownload />
       <span>INSTALL</span>
     </div>

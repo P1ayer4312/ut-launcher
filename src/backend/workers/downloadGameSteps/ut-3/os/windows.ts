@@ -3,9 +3,9 @@ import { FilesHelper } from "@src/backend/classes/FilesHelper";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
 import { filesMapping, directoriesList } from "@src/backend/config/ut-3/installer-mapping";
-import * as path from "node:path";
-import * as fs from "node:fs";
-import * as os from "node:os";
+import path from "node:path";
+import fs from "node:fs";
+import os from "node:os";
 
 /**
  * Download UT3, patch, extract and configure
@@ -38,9 +38,7 @@ export async function downloadUT3Windows(dl: DownloadManager, sevenZipLogsCallba
   // Remove if there were prior extraction attempts
   await FilesHelper.remove(tempExtractionFolder);
   await FilesHelper.remove(path.resolve(os.homedir(), "Documents/My Games/Unreal Tournament 3"));
-  await FilesHelper.remove(path.resolve(dl.destination, "Binaries"));
-  await FilesHelper.remove(path.resolve(dl.destination, "Engine"));
-  await FilesHelper.remove(path.resolve(dl.destination, "UTGame"));
+  await FilesHelper.removeOldFiles(dl.destination);
 
   fs.mkdirSync(tempExtractionFolder);
 

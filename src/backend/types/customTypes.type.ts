@@ -13,7 +13,8 @@ export type TContinueModalVariants =
   | "message-block"
   | "ut-2003-register-key"
   | "ut-2004-register-key"
-  | "ut-2004-install-message";
+  | "ut-2004-install-message"
+  | "ut-alpha-install-message";
 
 export type TWorkerData = {
   installDirectory: string;
@@ -29,10 +30,7 @@ export type TExeOptions = {
 };
 
 export type TScriptName =
-  | "installDriversUT4"
-  | "registerUT2003key"
-  | "registerUT2004key"
-  | "replaceUT3EncryptedKey";
+  "installDriversUT4" | "registerUT2003key" | "registerUT2004key" | "replaceUT3EncryptedKey";
 
 export type GithubReleases = Endpoints["GET /repos/{owner}/{repo}/releases"]["response"]["data"];
 

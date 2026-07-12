@@ -21,16 +21,8 @@ export async function downloadUT4AlphaWindows(dl: DownloadManager, sevenZipLogsC
   const ut4ConfigDestination = path.resolve(os.homedir(), "Documents/UnrealTournament");
 
   // Clean up previous files if they exist
-  // prettier-ignore
-  const gameFiles = [
-    "Manifest_DebugFiles_Win64.txt", "Manifest_NonUFSFiles_Win64.txt",
-    "Engine", "UnrealTournament", "WindowsServer"
-  ];
-
+  await FilesHelper.removeOldFiles(dl.destination);
   await FilesHelper.remove(ut4ConfigDestination);
-  for (const item of gameFiles) {
-    await FilesHelper.remove(path.resolve(dl.destination, item));
-  }
 
   if (WorkerHelper.isDev()) {
     // Use local download for testing
@@ -67,10 +59,17 @@ export async function downloadUT4AlphaWindows(dl: DownloadManager, sevenZipLogsC
   WorkerHelper.postMessage("progressFormatted", "Extracting files...");
   WorkerHelper.postMessage("progress", { progress: 1 });
 
+  // Copy the skip files list next to the game archive
+  await FilesHelper.copyFile(
+    FilesHelper.configFilePath(WorkerHelper.isDev(), "ut-alpha/skip.txt"),
+    dl.installFilesFolder,
+  );
+
   // Extract game files in the install folder
-  await ArchiveManager.extractFiles(
+  await ArchiveManager.extractFilesWithIgnore(
     dl.getFileLocationFromUrl(links.gameFiles),
     dl.installFilesFolder,
+    "skip.txt",
     sevenZipLogsCallback,
   );
 
@@ -107,6 +106,13 @@ export async function downloadUT4AlphaWindows(dl: DownloadManager, sevenZipLogsC
     FilesHelper.configFilePath(WorkerHelper.isDev(), "ut-alpha/Saved"),
     savedConfigPath,
   );
+
+  // Prompt the user to install drivers
+  WorkerHelper.postMessage("openContinueModal", {
+    isOpened: true,
+    message: null,
+    variant: "ut-alpha-install-message",
+  });
 
   // Update the local store for the installed game and tag it as installed
   WorkerHelper.postMessage("updateLocalGameStore", { gameId: "ut-alpha", installed: true });

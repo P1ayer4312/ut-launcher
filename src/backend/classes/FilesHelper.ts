@@ -95,6 +95,23 @@ export class FilesHelper {
   }
 
   /**
+   * List all files inside the game directory and leave only the `install_files` folder
+   */
+  static async removeOldFiles(gamePath: string) {
+    if (!fs.existsSync(gamePath)) {
+      logger.info(`Folder doesn't exist, skip cleanup: ${gamePath}`);
+      return Promise.resolve();
+    }
+
+    const files = await fs.promises
+      .readdir(gamePath)
+      .then((items) => items.filter((item) => item !== "install_files"))
+      .then((items) => items.map((item) => path.resolve(gamePath, item)));
+
+    return Promise.all(files.map(FilesHelper.remove));
+  }
+
+  /**
    * Returns a list of screenshot paths, each game stores them in different places
    */
   static getAllScreenshotsForGame(gameId: TGameId, directory: string): string[] {
