@@ -3,7 +3,7 @@ import { useGlobalState } from "@src/frontend/state/useGlobalState";
 import GamePageNavbar from "@src/frontend/components/game-page/game-page-navbar/GamePageNavbar";
 import GamePageLoadingBar from "@src/frontend/components/game-page/game-page-loading-bar/GamePageLoadingBar";
 import SettingsTab from "@src/frontend/components/navbar-tabs/settings-tab/SettingsTab";
-import Community from "./tab-views/community/Community";
+import Community from "@src/frontend/components/game-page/community/Community";
 import Guides from "./tab-views/guides/Guides";
 import Home from "./tab-views/home/Home";
 import Screenshots from "@src/frontend/components/navbar-tabs/screenshots-tab/ScreenshotsTab";

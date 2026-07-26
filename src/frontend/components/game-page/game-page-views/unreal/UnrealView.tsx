@@ -5,8 +5,9 @@ import GamePageLoadingBar from "@src/frontend/components/game-page/game-page-loa
 import SettingsTab from "@src/frontend/components/navbar-tabs/settings-tab/SettingsTab";
 import Screenshots from "@src/frontend/components/navbar-tabs/screenshots-tab/ScreenshotsTab";
 import Home from "./tab-views/home/Home";
+import Community from "@src/frontend/components/game-page/community/Community";
 
-type Tabs = "home" | "settings" | "screenshots";
+type Tabs = "home" | "settings" | "screenshots" | "community";
 
 export default function UnrealView() {
   const downloadingGame = useGlobalState((e) => e.downloadingGame);
@@ -35,6 +36,9 @@ export default function UnrealView() {
         </div>
         {installed && (
           <>
+            <div className="game-page-navbar_button" onClick={() => setActiveTab("community")}>
+              Community
+            </div>
             <div className="game-page-navbar_button" onClick={() => setActiveTab("screenshots")}>
               Screenshots
             </div>
@@ -58,6 +62,8 @@ function GetTabView(props: { activeTab: Tabs }) {
       return <SettingsTab />;
     case "screenshots":
       return <Screenshots />;
+    case "community":
+      return <Community />;
     default:
       return null;
   }

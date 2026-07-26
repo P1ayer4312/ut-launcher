@@ -141,9 +141,9 @@ function ModalViews() {
               buttonText="Close"
             >
               <div className="modal_ut3-key_text">
-                <div>{`Registering a product key might be required, once you launch the game you'll`}</div>
-                <div>{`be asked to enter a product key. Click on the "Reveal Key" button to get`}</div>
-                <div>{`a product key. This option is available in the "Settings" tab too.`}</div>
+                <div>{`Registering a product key might be required if the`}</div>
+                <div>{`automated script failed to create one after install.`}</div>
+                <div>{`Click on the "Reveal Key" button to get a product key.`}</div>
               </div>
 
               <div className="modal_ut3-key_reveal-section">

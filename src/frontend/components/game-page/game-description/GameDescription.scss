@@ -3,12 +3,13 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-left: 40px;
+    margin-left: 20px;
     margin-right: 60px;
     margin-top: 30px;
     min-height: 265px;
     max-height: 100%;
     user-select: none;
+    gap: 20px;
   }
 
   &_left-side {

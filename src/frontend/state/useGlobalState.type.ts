@@ -11,6 +11,7 @@ export type TGameId =
   | "ut-2003"
   | "ut-3"
   | "ut-champs"
+  | "open-tournament"
   | "blank";
 
 export type TProgressBar = {

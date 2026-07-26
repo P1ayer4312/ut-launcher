@@ -1,5 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import "./DiscordWidget.scss";
+import { useQuery } from "@tanstack/react-query";
+import { getLink } from "@src/frontend/utils/linksHandlers";
 
 type Props = {
   inviteLink: string;
@@ -11,7 +12,7 @@ const numFormat = Intl.NumberFormat("en-US", {
 });
 
 export default function DiscordWidget({ inviteLink }: Props) {
-  const inviteCode = inviteLink?.substring(inviteLink.lastIndexOf("/") + 1);
+  const inviteCode = inviteLink?.replaceAll(atob("QF9fX18j"), "");
   // Prevent api spam on view change
   const query = useQuery({
     queryKey: ["discordData", inviteCode],
@@ -29,13 +30,22 @@ export default function DiscordWidget({ inviteLink }: Props) {
 
   return (
     <a
-      href={inviteLink}
+      title={query.isSuccess ? guild.description : undefined}
+      href={getLink(inviteLink)}
       target="_blank"
-      style={{
-        backgroundImage: guild?.banner
-          ? `url("https://cdn.discordapp.com/banners/${guild.id}/${guild.banner}.png?size=256")`
-          : undefined,
-      }}
+      style={
+        guild?.banner
+          ? {
+              backgroundImage:
+                `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), ` +
+                `url("https://cdn.discordapp.com/banners/${guild.id}/${guild.banner}.png?size=256")`,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "100%",
+              backgroundPositionY: "center",
+              backgroundSize: "unset",
+            }
+          : undefined
+      }
       className="discord-widget_wrapper"
       rel="noreferrer"
     >
@@ -75,7 +85,13 @@ export default function DiscordWidget({ inviteLink }: Props) {
         ) : query.isSuccess ? (
           <>
             <div className="discord-widget_right-side_name">{guild.name}</div>
-            {guild.description && <div className="discord-widget_right-side_desc">{guild.description}</div>}
+            {guild.description && (
+              <div className="discord-widget_right-side_desc">
+                {guild.description?.length > 123
+                  ? `${guild.description?.substring(0, 123)}...`
+                  : guild.description}
+              </div>
+            )}
           </>
         ) : null}
       </div>

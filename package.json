@@ -43,7 +43,7 @@
     "@typescript-eslint/parser": "^8.63.0",
     "@vitejs/plugin-react": "^5.2.0",
     "cloc": "^2.6.0-cloc",
-    "electron": "^43.1.0",
+    "electron": "^43.2.0",
     "eslint": "^9.39.5",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react": "^7.37.5",
@@ -61,7 +61,8 @@
   },
   "overrides": {
     "tar": "^7.4.3",
-    "tmp": "^0.2.6"
+    "tmp": "^0.2.6",
+    "brace-expansion": "^5.0.8"
   },
   "dependencies": {
     "axios": "^1.18.1",

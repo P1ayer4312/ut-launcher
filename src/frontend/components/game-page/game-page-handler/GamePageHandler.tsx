@@ -7,6 +7,7 @@ import UT3View from "@src/frontend/components/game-page/game-page-views/ut-3/UT3
 import UT4AlphaView from "@src/frontend/components/game-page/game-page-views/ut-alpha/UT4AlphaView";
 import UTChampsView from "@src/frontend/components/game-page/game-page-views/ut-champs/UTChampsView";
 import UTChamps2View from "@src/frontend/components/game-page/game-page-views/ut-champs-2/UTChamps2View";
+import OpenTournamentView from "@src/frontend/components/game-page/game-page-views/open-tournament/OpenTournamentView";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
 
 export default function GamePageHandler() {
@@ -31,6 +32,8 @@ export default function GamePageHandler() {
       return <UTChampsView />;
     case "ut-champs-2":
       return <UTChamps2View />;
+    case "open-tournament":
+      return <OpenTournamentView />;
     default:
       return null;
   }

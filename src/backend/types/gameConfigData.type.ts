@@ -11,7 +11,8 @@ export type TGameId =
   | "ut-champs-2"
   | "unreal-2"
   | "ut-2003"
-  | "ut-3";
+  | "ut-3"
+  | "open-tournament";
 
 export type TGameData = {
   directory: string;

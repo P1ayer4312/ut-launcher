@@ -3,6 +3,7 @@ import { FaDiscord, FaGithub } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import MenuItemGame from "@src/frontend/components/menu-item/menu-item-game/MenuItemGame";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
+import { openLinkInBrowser } from "@src/frontend/utils/linksHandlers";
 
 export default function ProjectLinks() {
   const setModalData = useGlobalState((e) => e.setModalData);
@@ -19,7 +20,7 @@ export default function ProjectLinks() {
       <MenuItemGame
         icon={FaGithub}
         title="GITHUB"
-        onClick={() => window.open("https://github.com/P1ayer4312/ut-launcher", "_blank")}
+        onClick={() => openLinkInBrowser("https://github.com/P1ayer4312/ut-launcher")}
       />
       <MenuItemGame
         icon={IoIosSettings}

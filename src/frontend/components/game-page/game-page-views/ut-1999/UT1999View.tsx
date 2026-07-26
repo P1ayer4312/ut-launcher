@@ -4,7 +4,7 @@ import GamePageNavbar from "@src/frontend/components/game-page/game-page-navbar/
 import GamePageLoadingBar from "@src/frontend/components/game-page/game-page-loading-bar/GamePageLoadingBar";
 import ScreenshotsTab from "@src/frontend/components/navbar-tabs/screenshots-tab/ScreenshotsTab";
 import SettingsTab from "@src/frontend/components/navbar-tabs/settings-tab/SettingsTab";
-import Community from "./tab-views/community/Community";
+import Community from "@src/frontend/components/game-page/community/Community";
 import Home from "./tab-views/home/Home";
 
 type Tabs = "home" | "settings" | "screenshots" | "community";

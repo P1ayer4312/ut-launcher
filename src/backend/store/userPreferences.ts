@@ -67,4 +67,5 @@ const defaultConfigs: Record<TGameId, TGameData> = {
   "ut-alpha": { directory: "", installed: false, availableOS: ["win32"] },
   "ut-champs": { directory: "", installed: false, availableOS: [] },
   "ut-champs-2": { directory: "", installed: false, availableOS: [] },
+  "open-tournament": { directory: "", installed: false, availableOS: [] },
 };

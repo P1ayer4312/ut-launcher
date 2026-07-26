@@ -32,6 +32,11 @@ export default function GamePageNavbar(props: PropsWithChildren) {
 
 const GameButton = memo(function GameButton() {
   const selectedGame = useGlobalState((e) => e.selectedGame);
+  if (selectedGame === "open-tournament") {
+    // Leave the navbar clean with only links
+    return null;
+  }
+
   const runningGame = useGlobalState((e) => e.runningGame);
   const downloadingGame = useGlobalState((e) => e.downloadingGame);
   const localDataStore = useGlobalState((e) => e.localDataStore);

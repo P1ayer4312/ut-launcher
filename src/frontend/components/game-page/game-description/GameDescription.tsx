@@ -2,6 +2,8 @@ import "./GameDescription.scss";
 import { memo, useState } from "react";
 import type { TGameId } from "@src/frontend/state/useGlobalState.type";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
+import DiscordWidget from "@src/frontend/components/discord-widget/DiscordWidget";
+import { openTournamentSocial } from "@src/frontend/providers/communityLinksProvider";
 
 const GameDescription = memo(function GameDescription() {
   const selectedGame = useGlobalState((e) => e.selectedGame);
@@ -193,6 +195,20 @@ const GameText = memo(function GameText(props: { gameId: TGameId }) {
           <p>
             <b>Release Date:</b> August 13, 2014
           </p>
+        </>
+      );
+    case "open-tournament":
+      return (
+        <>
+          <div>
+            {`Open Tournament is a fast-paced, free-to-play shooter that brings the essence of classic
+            competitive FPS games into modern multiplayer action! Experience intense multiplayer gameplay
+            with fluid movement, innovative weapons, and a variety of dynamic maps & modes.`}
+          </div>
+          <p>
+            <b>Release Date:</b> To be announced
+          </p>
+          <DiscordWidget inviteLink={openTournamentSocial.discord} />
         </>
       );
     default:

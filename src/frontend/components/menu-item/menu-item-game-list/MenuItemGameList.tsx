@@ -23,6 +23,11 @@ const games: TitlesData[] = [
     imgLocation: "./imgs/badges/ut-champs-2.png",
     gameId: "ut-champs-2",
   },
+  {
+    title: "OPEN TOURNAMENT",
+    imgLocation: "./imgs/badges/open-tournament.png",
+    gameId: "open-tournament",
+  },
 ];
 
 export default function MenuItemGameList() {
