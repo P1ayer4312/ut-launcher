@@ -11,7 +11,7 @@ import OpenTournamentView from "@src/frontend/components/game-page/game-page-vie
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
 
 export default function GamePageHandler() {
-  const { selectedGame } = useGlobalState();
+  const selectedGame = useGlobalState((e) => e.selectedGame);
 
   switch (selectedGame) {
     case "unreal":

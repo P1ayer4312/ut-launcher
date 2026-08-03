@@ -8,117 +8,115 @@ import { logger } from "@src/frontend/utils/logger";
  * This is an empty component used to declutter `App.tsx`
  */
 export default function ContextBridgeMessageHandler() {
-  // prettier-ignore
-  const {
-    setSelectedGame, setProgressBar, setLocalDataStoreForGameId, setDownloadingGame,
-    setRunningGame, setLocalDataStore, setModalData, selectedGame, downloadingGame,
-  } = useGlobalState();
+  const setLocalDataStoreForGameId = useGlobalState((e) => e.setLocalDataStoreForGameId);
+  const setDownloadingGame = useGlobalState((e) => e.setDownloadingGame);
+  const setLocalDataStore = useGlobalState((e) => e.setLocalDataStore);
+  const setSelectedGame = useGlobalState((e) => e.setSelectedGame);
+  const setProgressBar = useGlobalState((e) => e.setProgressBar);
+  const setRunningGame = useGlobalState((e) => e.setRunningGame);
+  const setModalData = useGlobalState((e) => e.setModalData);
+  const selectedGame = useGlobalState((e) => e.selectedGame);
 
   const isFirstRunRef = useRef<boolean>(true);
 
-  useEffect(
-    () => {
-      if (isFirstRunRef.current) {
-        // Make useEffect run only once, even if it's rerendered
-        isFirstRunRef.current = false;
+  useEffect(() => {
+    if (!isFirstRunRef.current) {
+      // Make useEffect run only once, even if it's rerendered
+      return;
+    }
 
-        // Catch any errors and display them inside a modal
-        const displayErrorFunc = (err: ErrorEvent) => {
-          setModalData({ isOpened: true, modalType: "error", errorModalText: String(err.message) });
-        };
-        window.addEventListener("error", displayErrorFunc);
+    isFirstRunRef.current = false;
 
-        // Pass the last selected game from memory to the global state
-        contextBridge.gameData.getLastSelectedGame().then(setSelectedGame);
+    // Catch any errors and display them inside a modal
+    const displayErrorFunc = (err: ErrorEvent) => {
+      setModalData({ isOpened: true, modalType: "error", errorModalText: String(err.message) });
+    };
+    window.addEventListener("error", displayErrorFunc);
 
-        // Assign a callback function for handling messages received from Electron
-        contextBridge.actionsHandler.onMessageEvent((dataReceived) => {
-          switch (dataReceived.key) {
-            case "progressFormatted": {
-              setProgressBar({ text: dataReceived.value });
-              break;
-            }
+    // Pass the last selected game from memory to the global state
+    contextBridge.gameData.getLastSelectedGame().then(setSelectedGame);
 
-            case "progress": {
-              const progress: number = dataReceived.value?.progress || 0;
-              setProgressBar({ percentage: Math.floor(progress * 100) });
-              break;
-            }
+    // Assign a callback function for handling messages received from Electron
+    contextBridge.actionsHandler.onMessageEvent((dataReceived) => {
+      switch (dataReceived.key) {
+        case "progressFormatted": {
+          setProgressBar({ text: dataReceived.value });
+          break;
+        }
 
-            case "updateLocalGameStore": {
-              setLocalDataStoreForGameId(dataReceived.value.gameId, {
-                installed: dataReceived.value.installed,
-              });
-              setDownloadingGame(null);
-              break;
-            }
+        case "progress": {
+          const progress: number = dataReceived.value?.progress || 0;
+          setProgressBar({ percentage: Math.floor(progress * 100) });
+          break;
+        }
 
-            case "setRunningGame": {
-              setRunningGame(dataReceived.value);
-              break;
-            }
+        case "updateLocalGameStore": {
+          setLocalDataStoreForGameId(dataReceived.value.gameId, {
+            installed: dataReceived.value.installed,
+          });
+          setDownloadingGame(null);
+          break;
+        }
 
-            case "resetRunningGame": {
-              setRunningGame(null);
-              break;
-            }
+        case "setRunningGame": {
+          setRunningGame(dataReceived.value);
+          break;
+        }
 
-            case "uninstallingGameMessage": {
-              setProgressBar({ percentage: 0, text: "Removing game files..." });
-              // Progress bar is shown only if the game is being downloaded,
-              // so we just set it to "downloading" for it to be displayed
-              setDownloadingGame(selectedGame);
-              setModalData({ isOpened: false, modalType: "blank" });
-              break;
-            }
+        case "resetRunningGame": {
+          setRunningGame(null);
+          break;
+        }
 
-            case "uninstallFinished": {
-              const selectedGame = dataReceived.value;
-              contextBridge.gameData.get(selectedGame).then((data) => {
-                setLocalDataStore({ [selectedGame]: data });
-                setDownloadingGame(null);
-              });
-              break;
-            }
+        case "uninstallingGameMessage": {
+          setProgressBar({ percentage: 0, text: "Removing game files..." });
+          // Progress bar is shown only if the game is being downloaded,
+          // so we just set it to "downloading" for it to be displayed
+          setDownloadingGame(selectedGame);
+          setModalData({ isOpened: false, modalType: "blank" });
+          break;
+        }
 
-            case "error": {
-              setModalData({
-                isOpened: true,
-                modalType: "error",
-                errorModalText: String(dataReceived.value),
-              });
-              break;
-            }
+        case "uninstallFinished": {
+          const selectedGame = dataReceived.value;
+          contextBridge.gameData.get(selectedGame).then((data) => {
+            setLocalDataStore({ [selectedGame]: data });
+            setDownloadingGame(null);
+          });
+          break;
+        }
 
-            case "hideProgressBar": {
-              setDownloadingGame(null);
-              break;
-            }
+        case "error": {
+          setModalData({
+            isOpened: true,
+            modalType: "error",
+            errorModalText: String(dataReceived.value),
+          });
+          break;
+        }
 
-            case "openContinueModal": {
-              setModalData({
-                modalType: "continue",
-                isOpened: dataReceived.value.isOpened,
-                continueModalText: dataReceived.value.message,
-                continueModalVariant: dataReceived.value.variant,
-              });
-              break;
-            }
+        case "hideProgressBar": {
+          setDownloadingGame(null);
+          break;
+        }
 
-            default: {
-              logger.error("Unhandled message:", dataReceived);
-              break;
-            }
-          }
-        });
+        case "openContinueModal": {
+          setModalData({
+            modalType: "continue",
+            isOpened: dataReceived.value.isOpened,
+            continueModalText: dataReceived.value.message,
+            continueModalVariant: dataReceived.value.variant,
+          });
+          break;
+        }
+
+        default: {
+          logger.error("Unhandled message:", dataReceived);
+          break;
+        }
       }
-    },
-    // prettier-ignore
-    [
-			downloadingGame, selectedGame, setDownloadingGame, setLocalDataStore,	setModalData,
-			setProgressBar,	setRunningGame,	setSelectedGame, setLocalDataStoreForGameId
-		],
-  );
+    });
+  }, []);
 
   return null;
 }

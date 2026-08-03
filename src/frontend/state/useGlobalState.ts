@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { TGlobalState } from "./useGlobalState.type";
 
-export const useGlobalState = create<TGlobalState>()((set) => ({
+export const useGlobalState = create<TGlobalState>()((set, get) => ({
   selectedGame: "blank",
   setSelectedGame: (value) => set({ selectedGame: value }),
   runningGame: null,
@@ -35,5 +35,14 @@ export const useGlobalState = create<TGlobalState>()((set) => ({
     set((current) => ({
       modalData: { ...current.modalData, ...value, errorModalText: value.errorModalText ?? null },
     }));
+  },
+
+  isOtherGameActive: () => {
+    const { runningGame, selectedGame, downloadingGame } = get();
+    return (
+      (runningGame !== null && selectedGame !== runningGame) ||
+      (downloadingGame !== null && selectedGame !== downloadingGame) ||
+      selectedGame === runningGame // This one is for disabling Reinstall if the same game is being played
+    );
   },
 }));

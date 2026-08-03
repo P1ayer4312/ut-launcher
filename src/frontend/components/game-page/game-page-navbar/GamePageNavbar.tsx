@@ -5,22 +5,22 @@ import { FaPeopleGroup } from "react-icons/fa6";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
 import contextBridge from "@src/frontend/contextBridge/contextBridge";
 import { TUnreal2Type } from "@src/backend/types/customTypes.type";
+import { availableOS } from "@src/frontend/utils/availableOS";
+import { logger } from "@src/frontend/utils/logger";
 
 export default function GamePageNavbar(props: PropsWithChildren) {
   const selectedGame = useGlobalState((e) => e.selectedGame);
-  const localDataStore = useGlobalState((e) => e.localDataStore);
   const setLocalDataStore = useGlobalState((e) => e.setLocalDataStore);
-  const gameData = localDataStore[selectedGame];
+  const gameDataPresent = useGlobalState((state) => Boolean(state.localDataStore[state.selectedGame]));
 
   useEffect(() => {
-    if (!gameData && selectedGame !== "blank") {
-      // Pass the local game data storage to the global state, this is to avoid the
-      // button flashing each time on game view change
+    if (!gameDataPresent && selectedGame !== "blank") {
+      // Ensures that the game data is available on launcher first start
       contextBridge.gameData.get(selectedGame).then((data) => {
         setLocalDataStore({ [selectedGame]: data });
       });
     }
-  }, [gameData, localDataStore, selectedGame, setLocalDataStore]);
+  }, [gameDataPresent, selectedGame, setLocalDataStore]);
 
   return (
     <div className="game-page-navbar">
@@ -39,23 +39,21 @@ const GameButton = memo(function GameButton() {
 
   const runningGame = useGlobalState((e) => e.runningGame);
   const downloadingGame = useGlobalState((e) => e.downloadingGame);
-  const localDataStore = useGlobalState((e) => e.localDataStore);
   const setDownloadingGame = useGlobalState((e) => e.setDownloadingGame);
   const setLocalDataStore = useGlobalState((e) => e.setLocalDataStore);
   const platform = useGlobalState((e) => e.platform);
+  const isOtherGameActive = useGlobalState((e) => e.isOtherGameActive);
 
-  const gameData = localDataStore[selectedGame];
+  const gameData = useGlobalState((state) => state.localDataStore[state.selectedGame]);
   const isInstalled = gameData?.installed && downloadingGame === null;
   const isPlatformSupported =
-    platform !== "" && localDataStore[selectedGame]?.availableOS?.includes(platform);
+    selectedGame !== "blank" && platform !== "" && availableOS[selectedGame].includes(platform);
 
   /**
    * Disable other games' buttons for play and install if one game
    * is in the process of being played or installed
    */
-  const otherGameActive: boolean =
-    (runningGame !== null && selectedGame !== runningGame) ||
-    (downloadingGame !== null && selectedGame !== downloadingGame);
+  const otherGameActive: boolean = isOtherGameActive();
 
   function disableBtn(className: string) {
     // Small helper function for handling disabled buttons appearance
@@ -76,6 +74,7 @@ const GameButton = memo(function GameButton() {
 
   function playButtonClicked(option?: TUnreal2Type) {
     if (otherGameActive) {
+      logger.info("PLAY button disabled, game activity present");
       return;
     }
 
@@ -86,6 +85,7 @@ const GameButton = memo(function GameButton() {
 
   function installButtonClicked() {
     if (otherGameActive) {
+      logger.info("INSTALL button disabled, game activity present");
       return;
     }
 

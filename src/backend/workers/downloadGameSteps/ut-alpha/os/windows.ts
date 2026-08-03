@@ -65,6 +65,12 @@ export async function downloadUT4AlphaWindows(dl: DownloadManager, sevenZipLogsC
     dl.installFilesFolder,
   );
 
+  // Copy the MonkeyPatch in the install folder
+  await FilesHelper.copyFile(
+    FilesHelper.configFilePath(WorkerHelper.isDev(), "ut-alpha/UT4-MonkeyPatch-v1.0.zip"),
+    dl.installFilesFolder,
+  );
+
   // Extract game files in the install folder
   await ArchiveManager.extractFilesWithIgnore(
     dl.getFileLocationFromUrl(links.gameFiles),
@@ -94,7 +100,14 @@ export async function downloadUT4AlphaWindows(dl: DownloadManager, sevenZipLogsC
   const extractedPatchPath = path.resolve(patchFolderPath, "Installer", "Files");
 
   // Apply the patch to the game folder
-  await FilesHelper.moveAll(extractedPatchPath, dl.destination);
+  await FilesHelper.moveAll(extractedPatchPath, dl.destination, true);
+
+  // Extract MonkeyPatch
+  await ArchiveManager.extractFiles(
+    path.resolve(dl.installFilesFolder, "UT4-MonkeyPatch-v1.0.zip"),
+    dl.destination,
+    (value) => sevenZipLogsCallback(value, "Applying MonkeyPatch..."),
+  );
 
   // Clean up unused files
   FilesHelper.remove(patchFolderPath);

@@ -23,7 +23,7 @@ export type TLocalDataStore = Partial<Record<TGameId, Partial<TGameData>>>;
 
 export type TModalData = {
   isOpened: boolean;
-  modalType: "blank" | "uninstall" | "continue" | "error" | "launcher-settings";
+  modalType: "blank" | "uninstall" | "continue" | "error" | "launcher-settings" | "guide";
   errorModalText: string | null;
   continueModalText: string | null;
   continueModalVariant: TContinueModalVariants;
@@ -52,4 +52,10 @@ export interface TGlobalState {
 
   platform: NodeJS.Platform | "";
   setPlatform: (value: NodeJS.Platform) => void;
+
+  /**
+   * Returns true if another game is being played,
+   * being downloaded or getting reinstalled
+   */
+  isOtherGameActive: () => boolean;
 }

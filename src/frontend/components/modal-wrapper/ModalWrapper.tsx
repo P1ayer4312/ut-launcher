@@ -9,6 +9,7 @@ import { logger } from "@src/frontend/utils/logger";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
 import contextBridge from "@src/frontend/contextBridge/contextBridge";
 import LauncherSettingsModal from "@src/frontend/components/modal-wrapper/modal-views/launcher-settings-modal/LauncherSettingsModal";
+import GuideModal from "@src/frontend/components/modal-wrapper/modal-views/guide-modal/GuideModal";
 
 export default function ModalWrapper() {
   const modalData = useGlobalState((e) => e.modalData);
@@ -197,6 +198,8 @@ function ModalViews() {
       return <ErrorModal />;
     case "launcher-settings":
       return <LauncherSettingsModal />;
+    case "guide":
+      return <GuideModal />;
     case "blank":
       return null;
 

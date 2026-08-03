@@ -8,10 +8,10 @@ import { logger } from "@src/frontend/utils/logger";
 export default function SettingsDefaultButtons() {
   const selectedGame = useGlobalState((e) => e.selectedGame);
   const setModalData = useGlobalState((e) => e.setModalData);
-  const localDataStore = useGlobalState((e) => e.localDataStore);
   const setLocalDataStore = useGlobalState((e) => e.setLocalDataStore);
   const setDownloadingGame = useGlobalState((e) => e.setDownloadingGame);
-  const localData = localDataStore[selectedGame];
+  const localData = useGlobalState((state) => state.localDataStore[state.selectedGame]);
+  const isOtherGameActive = useGlobalState((e) => e.isOtherGameActive);
 
   function localFilesClicked() {
     if (localData?.directory) {
@@ -35,6 +35,13 @@ export default function SettingsDefaultButtons() {
       <div
         className="settings-tab_button settings-tab_reinstall"
         onClick={() => {
+          if (isOtherGameActive()) {
+            // Disable the Reinstall button if another game is being worked on,
+            // or the same selected game is being played
+            logger.info("REINSTALL button disabled, game activity present");
+            return;
+          }
+
           // The downloading steps should check if the files are already downloaded
           // and start the extraction process without redownload
           if (selectedGame === "blank" || !localData?.directory) {

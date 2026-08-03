@@ -17,7 +17,6 @@ export type TGameId =
 export type TGameData = {
   directory: string;
   installed: boolean;
-  availableOS: (NodeJS.Platform | "")[];
 };
 
 export type TReleaseFile = {

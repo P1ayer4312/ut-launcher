@@ -9,19 +9,18 @@ import UT3Settings from "@src/frontend/components/navbar-tabs/settings-tab/setti
 import UT4AlphaSettings from "@src/frontend/components/navbar-tabs/settings-tab/settings-per-game/ut-alpha/UT4AlphaSettings";
 
 export default function SettingsTab() {
-  const { selectedGame, localDataStore } = useGlobalState();
-  const localData = localDataStore[selectedGame];
-
   return (
     <div className="settings-tab">
-      <div className="settings-tab_general">{localData?.installed && <SettingsPerGame />}</div>
+      <div className="settings-tab_general">
+        <SettingsPerGame />
+      </div>
     </div>
   );
 }
 
 /** Helper component that returns settings controls based on selected game */
 function SettingsPerGame() {
-  const { selectedGame } = useGlobalState();
+  const selectedGame = useGlobalState((e) => e.selectedGame);
 
   switch (selectedGame) {
     case "unreal":

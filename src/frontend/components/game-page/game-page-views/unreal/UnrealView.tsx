@@ -12,21 +12,15 @@ type Tabs = "home" | "settings" | "screenshots" | "community";
 export default function UnrealView() {
   const downloadingGame = useGlobalState((e) => e.downloadingGame);
   const selectedGame = useGlobalState((e) => e.selectedGame);
-  const localDataStore = useGlobalState((e) => e.localDataStore);
+  const installed = useGlobalState((state) => Boolean(state.localDataStore[state.selectedGame]?.installed));
   const [activeTab, setActiveTab] = useState<Tabs>("home");
-  const [installed, setInstalled] = useState<boolean>(Boolean(localDataStore[selectedGame]?.installed));
 
   useEffect(() => {
     // Redirect the user to the home page after uninstalling the game
-    if (selectedGame !== "blank") {
-      const installCheck = Boolean(localDataStore[selectedGame]?.installed);
-      setInstalled(installCheck);
-
-      if (!installCheck) {
-        setActiveTab("home");
-      }
+    if (!installed) {
+      setActiveTab("home");
     }
-  }, [localDataStore]);
+  }, [installed]);
 
   return (
     <>

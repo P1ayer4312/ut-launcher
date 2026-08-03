@@ -58,14 +58,14 @@ export function resetStoreForGame(key: TGameId) {
 }
 
 const defaultConfigs: Record<TGameId, TGameData> = {
-  unreal: { directory: "", installed: false, availableOS: ["win32"] },
-  "unreal-2": { directory: "", installed: false, availableOS: ["win32"] },
-  "ut-1999": { directory: "", installed: false, availableOS: ["win32"] },
-  "ut-2003": { directory: "", installed: false, availableOS: ["win32"] },
-  "ut-2004": { directory: "", installed: false, availableOS: ["win32"] },
-  "ut-3": { directory: "", installed: false, availableOS: ["win32"] },
-  "ut-alpha": { directory: "", installed: false, availableOS: ["win32"] },
-  "ut-champs": { directory: "", installed: false, availableOS: [] },
-  "ut-champs-2": { directory: "", installed: false, availableOS: [] },
-  "open-tournament": { directory: "", installed: false, availableOS: [] },
+  unreal: { directory: "", installed: false },
+  "unreal-2": { directory: "", installed: false },
+  "ut-1999": { directory: "", installed: false },
+  "ut-2003": { directory: "", installed: false },
+  "ut-2004": { directory: "", installed: false },
+  "ut-3": { directory: "", installed: false },
+  "ut-alpha": { directory: "", installed: false },
+  "ut-champs": { directory: "", installed: false },
+  "ut-champs-2": { directory: "", installed: false },
+  "open-tournament": { directory: "", installed: false },
 };

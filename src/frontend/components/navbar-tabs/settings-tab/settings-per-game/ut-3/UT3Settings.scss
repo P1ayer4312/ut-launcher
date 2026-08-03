@@ -1,4 +1,13 @@
 .ut3-settings {
+  &_wrapper {
+    display: flex;
+    gap: 30px;
+  }
+
+  &_buttons-wrapper {
+    margin-top: 32px;
+  }
+
   &_button-key {
     margin-top: 15px;
     background-image: linear-gradient(90deg, #9ebd13 0%, #008552 100%);
