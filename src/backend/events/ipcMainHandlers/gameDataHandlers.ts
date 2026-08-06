@@ -10,6 +10,8 @@ import { Helper } from "@src/backend/classes/Helper";
 import { ipcLogger } from "@src/backend/utils/logger";
 import { fetchPatchesForGame } from "@src/backend/providers/patchesProvider";
 import { gameKeyProvider } from "@src/backend/providers/gameKeyProvider";
+import { FilesHelper } from "@src/backend/classes/FilesHelper";
+import path from "node:path";
 
 export function gameDataHandlers() {
   const handle = ipcMain.handle as GameDataIpcHandler;
@@ -46,14 +48,19 @@ export function gameDataHandlers() {
 
   handle("gameData:startGameDownload", (_event, gameId, installDirectory) => {
     ipcLogger.info("gameData:startGameDownload");
-    actionsHandler.runWorker("downloadGameStepsWorker", {
-      workerData: { gameId, installDirectory },
-    });
+    actionsHandler.runWorker("downloadGameStepsWorker", { workerData: { gameId, installDirectory } }, true);
   });
 
-  handle("gameData:stopGameDownload", (_event, gameId) => {
+  handle("gameData:stopGameDownload", async (_event, gameId) => {
     actionsHandler.terminateWorker();
-    resetStoreForGame(gameId);
+
+    if (actionsHandler.removeOnStop) {
+      // Remove leftover files
+      const gameData = getGameUserData(gameId);
+      await FilesHelper.remove(path.resolve(gameData.directory, gameId));
+      resetStoreForGame(gameId);
+    }
+
     ipcLogger.info("gameData:stopGameDownload");
   });
 

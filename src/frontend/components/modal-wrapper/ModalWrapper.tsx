@@ -53,7 +53,9 @@ function ModalViews() {
 
   switch (modalData.modalType) {
     case "uninstall":
-      return <UninstallModal />;
+      return <UninstallModal reinstall={false} />;
+    case "reinstall":
+      return <UninstallModal reinstall={true} />;
     case "continue": {
       // There are not many modals that required the user's interaction, so for now we'll configure
       // them here, if needed in the future they can be abstracted in different files

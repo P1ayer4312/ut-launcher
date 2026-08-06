@@ -31,7 +31,7 @@ import path from "node:path";
   WorkerHelper.parentPort.on("message", async (data) => {
     if (data.key === "terminate") {
       await dl.stop();
-      WorkerHelper.exit(0);
+      // WorkerHelper.exit(0);
     }
   });
 

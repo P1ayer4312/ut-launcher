@@ -19,6 +19,7 @@ export class ActionsHandler {
   runningProcess: ChildProcessWithoutNullStreams | null;
   mainWindowId: number | null;
   appDataFolder: string | null;
+  removeOnStop: boolean;
 
   constructor() {
     this.worker = null;
@@ -28,17 +29,20 @@ export class ActionsHandler {
     this.runningProcess = null;
     this.mainWindowId = null;
     this.appDataFolder = null;
+    this.removeOnStop = false;
   }
 
   /**
    * Run worker script from the `src\backend\workers` folder
    * @param workerFileName Only provide the file name without its extension
+   * @param removeOnStop Whether or not to remove the directory of the download files
    */
-  runWorker(workerFileName: string, workerOptions: WorkerOptions) {
+  runWorker(workerFileName: string, workerOptions: WorkerOptions, removeOnStop: boolean = false) {
     if (this.worker !== null) {
       throw new Error(`More than one worker cannot be present at the same time`);
     }
 
+    this.removeOnStop = removeOnStop;
     this.worker = new Worker(path.resolve(this.workerFolderPath, `${workerFileName}.js`), {
       ...workerOptions,
       env: {
@@ -63,10 +67,13 @@ export class ActionsHandler {
   }
 
   terminateWorker() {
-    logger.info("Terminating worker");
-
     if (this.worker && this.worker?.threadId !== -1) {
+      logger.info("Terminating worker");
       this.worker.postMessage({ key: "terminate", value: true });
+
+      // We go with the force terminate because I didn't find any good way
+      // to stop the WASM part during running
+      this.worker.terminate();
     }
 
     setTimeout(() => {

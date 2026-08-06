@@ -122,11 +122,11 @@ export class DownloadManager extends EventEmitter<CustomEvents> {
   /** Stop the download process */
   async stop() {
     this.abortController?.abort();
-    logger.info("Download cancelled, removing: " + this.destination);
+    // logger.info("Download cancelled, removing: " + this.destination);
 
-    if (this.singleFile) {
-      await fs.promises.rm(this.urls[0], { force: true, maxRetries: 5, retryDelay: 200 });
-    }
+    // if (this.singleFile) {
+    //   await fs.promises.rm(this.urls[0], { force: true, maxRetries: 5, retryDelay: 200 });
+    // }
     // else {}
     // TODO: Return this after testing
     // await fs.promises.rm(this.destination, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });

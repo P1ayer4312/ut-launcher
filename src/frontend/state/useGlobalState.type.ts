@@ -23,7 +23,7 @@ export type TLocalDataStore = Partial<Record<TGameId, Partial<TGameData>>>;
 
 export type TModalData = {
   isOpened: boolean;
-  modalType: "blank" | "uninstall" | "continue" | "error" | "launcher-settings" | "guide";
+  modalType: "blank" | "uninstall" | "continue" | "error" | "launcher-settings" | "guide" | "reinstall";
   errorModalText: string | null;
   continueModalText: string | null;
   continueModalVariant: TContinueModalVariants;

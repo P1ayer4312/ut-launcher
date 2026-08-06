@@ -23,7 +23,7 @@ import { downloadUT4Alpha } from "./downloadGameSteps/ut-alpha";
   WorkerHelper.parentPort.on("message", async (data) => {
     if (data.key === "terminate") {
       await dl.stop();
-      WorkerHelper.exit(0);
+      // WorkerHelper.exit(0);
     }
   });
 

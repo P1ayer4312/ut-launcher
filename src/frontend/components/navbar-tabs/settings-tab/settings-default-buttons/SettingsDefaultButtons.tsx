@@ -8,8 +8,6 @@ import { logger } from "@src/frontend/utils/logger";
 export default function SettingsDefaultButtons() {
   const selectedGame = useGlobalState((e) => e.selectedGame);
   const setModalData = useGlobalState((e) => e.setModalData);
-  const setLocalDataStore = useGlobalState((e) => e.setLocalDataStore);
-  const setDownloadingGame = useGlobalState((e) => e.setDownloadingGame);
   const localData = useGlobalState((state) => state.localDataStore[state.selectedGame]);
   const isOtherGameActive = useGlobalState((e) => e.isOtherGameActive);
 
@@ -19,10 +17,6 @@ export default function SettingsDefaultButtons() {
     } else {
       throw new Error("Unable to open the local directory");
     }
-  }
-
-  function uninstallClicked() {
-    setModalData({ isOpened: true, modalType: "uninstall" });
   }
 
   return (
@@ -42,27 +36,18 @@ export default function SettingsDefaultButtons() {
             return;
           }
 
-          // The downloading steps should check if the files are already downloaded
-          // and start the extraction process without redownload
-          if (selectedGame === "blank" || !localData?.directory) {
-            throw new Error(`Can't find the game install directory`);
-          }
-
-          logger.info(`Reinstalling game: ${selectedGame}`);
-          setLocalDataStore({ [selectedGame]: { ...localData, installed: false } });
-
-          Promise.all([
-            contextBridge.gameData.set(selectedGame, { installed: false }),
-            contextBridge.gameData.startGameDownload(selectedGame, localData.directory),
-          ]).then(() => {
-            setDownloadingGame(selectedGame);
-          });
+          setModalData({ isOpened: true, modalType: "reinstall" });
         }}
       >
         <TfiReload />
         <span>Reinstall</span>
       </div>
-      <div className="settings-tab_button settings-tab_uninstall" onClick={uninstallClicked}>
+      <div
+        className="settings-tab_button settings-tab_uninstall"
+        onClick={() => {
+          setModalData({ isOpened: true, modalType: "uninstall" });
+        }}
+      >
         <FaRegTrashAlt />
         <span>Uninstall</span>
       </div>

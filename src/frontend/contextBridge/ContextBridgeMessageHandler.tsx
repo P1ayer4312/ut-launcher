@@ -110,6 +110,9 @@ export default function ContextBridgeMessageHandler() {
           break;
         }
 
+        case "runScriptFromWorker":
+          break; // It's handled on other place
+
         default: {
           logger.error("Unhandled message:", dataReceived);
           break;

@@ -22,7 +22,7 @@ export class FilesHelper {
    * Copy file from one place to another
    */
   static async copyFile(source: string, dest: string) {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const fileName = path.basename(source);
       const readStream = fs.createReadStream(source);
       const writeStream = fs.createWriteStream(path.resolve(dest, fileName));
