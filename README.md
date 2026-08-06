@@ -21,9 +21,9 @@ The main goal of the project is to simplify the process of getting into the Unre
 
 ## Support
 
-You can help support the project by [donating to the Internet Archive](https://archive.org/donate), without them this wouldn't be possible. I can't list them all, but if possible make sure to support each community that helps with patches and keeping the games alive.
+You can help support the project by [donating to the Internet Archive](https://archive.org/donate), without them this wouldn't be possible. I can't list them all, but if possible make sure to support the guys over at [OldUnreal](https://www.oldunreal.com/) and each community that helps with patches and keeping the games alive.
 
-As for the actual launcher, you can help by pointing out any bugs and giving suggestions what can be improved.
+As for the actual launcher, you can help by pointing out any bugs and giving suggestions what can be improved. You can read more about it in [CONTRIBUTING.md](CONTRIBUTING.md)
 
 This project is not affiliated with Epic Games or the Unreal brand in any way.
 
