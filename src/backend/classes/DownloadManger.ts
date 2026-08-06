@@ -33,7 +33,6 @@ export class DownloadManager extends EventEmitter<CustomEvents> {
   singleFile: boolean;
 
   /**
-   *
    * @param singleFile  When the download is terminated it removes the whole parent folder,
    *                    set it to `true` if you download a single file to remove only that one
    */

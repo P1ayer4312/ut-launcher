@@ -10,13 +10,13 @@ export default function ProjectLinks() {
 
   return (
     <div className="project-links_wrapper">
-      <MenuItemGame
+      {/* <MenuItemGame
         icon={FaDiscord}
         title="DISCORD"
         onClick={() => {
           alert("Maybe, if there's interest");
         }}
-      />
+      /> */}
       <MenuItemGame
         icon={FaGithub}
         title="GITHUB"

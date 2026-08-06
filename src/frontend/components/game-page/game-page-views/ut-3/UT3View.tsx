@@ -12,6 +12,7 @@ type Tabs = "home" | "settings" | "screenshots" | "community";
 export default function UT4AlphaView() {
   const downloadingGame = useGlobalState((e) => e.downloadingGame);
   const selectedGame = useGlobalState((e) => e.selectedGame);
+  const setModalData = useGlobalState((e) => e.setModalData);
   const installed = useGlobalState((state) => Boolean(state.localDataStore[state.selectedGame]?.installed));
   const [activeTab, setActiveTab] = useState<Tabs>("home");
 
@@ -30,6 +31,12 @@ export default function UT4AlphaView() {
         </div>
         <div className="game-page-navbar_button" onClick={() => setActiveTab("community")}>
           Community
+        </div>
+        <div
+          className="game-page-navbar_button"
+          onClick={() => setModalData({ modalType: "guide", isOpened: true })}
+        >
+          How To Play
         </div>
         {installed && (
           <>
