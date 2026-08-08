@@ -12,7 +12,7 @@ if (started) {
 
 log.initialize();
 
-function createWindow() {
+function createWindow(shouldRegisterEvents: boolean = true) {
   // Setup protocol for local file access
   const partition = "persist:ut-launcher";
 
@@ -47,8 +47,10 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
 
-  // Register all needed events
-  registerEvents(mainWindow, partition);
+  if (shouldRegisterEvents) {
+    // Register all needed events
+    registerEvents(mainWindow, partition);
+  }
 
   return mainWindow;
 }
@@ -73,6 +75,6 @@ app.on("activate", () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    createWindow(false);
   }
 });

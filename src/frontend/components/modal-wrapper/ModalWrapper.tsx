@@ -128,7 +128,7 @@ function ModalViews() {
               </div>
               <div>{`Click on the "Continue" button to give permission to install them.`}</div>
               <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-                {`Patches are installed automatically but can be changed from the "Settings tab."`}
+                {`Patches are installed automatically but can be changed from the "Settings" tab.`}
               </div>
             </ContinueModal>
           );
@@ -184,7 +184,7 @@ function ModalViews() {
           );
         }
         // =====================================================================================================================
-        default:
+        default: {
           return (
             <ContinueModal
               onButtonClicked={() => {
@@ -194,6 +194,8 @@ function ModalViews() {
               <div>{`MISCONFIGURED_CONTINUE_MODAL: ${selectedGame}`}</div>
             </ContinueModal>
           );
+        }
+        // =====================================================================================================================
       }
     }
     case "error":

@@ -16,7 +16,6 @@ export default function Unreal2View() {
 
   useEffect(() => {
     // Redirect the user to the home page after uninstalling the game
-
     if (!installed) {
       setActiveTab("home");
     }

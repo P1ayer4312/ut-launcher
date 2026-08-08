@@ -3,7 +3,7 @@ import js7z from "js7z-tools";
 import path from "node:path";
 import { logger } from "@src/backend/utils/logger";
 
-type LogsCallback = ((value: string) => void) | undefined;
+type TLogsCallback = ((value: string) => void) | undefined;
 
 export class ArchiveManager {
   /**
@@ -12,7 +12,7 @@ export class ArchiveManager {
   static async extractFiles(
     filePath: string,
     destinationDirectory: string,
-    printCallback: LogsCallback = undefined,
+    printCallback: TLogsCallback = undefined,
   ) {
     return new Promise((resolve, reject) => {
       const errorLogsCollector: string[] = [];
@@ -54,7 +54,7 @@ export class ArchiveManager {
     filePath: string,
     destinationDirectory: string,
     ignoreFileName: string,
-    printCallback: LogsCallback = undefined,
+    printCallback: TLogsCallback = undefined,
   ) {
     return new Promise((resolve, reject) => {
       const errorLogsCollector: string[] = [];
@@ -98,7 +98,7 @@ export class ArchiveManager {
   static async extractInnoInstaller(
     filePath: string,
     destinationDirectory: string,
-    printCallback: LogsCallback = undefined,
+    printCallback: TLogsCallback = undefined,
   ) {
     return new Promise((resolve, reject) => {
       const errorLogsCollector: string[] = [];

@@ -24,9 +24,9 @@ export function generalHandlers() {
   handle("actionsHandler:copyImgToClipboard", async (_event, value) => {
     // bmp images are not supported, we need to convert them to either jpeg or png -_-
     const tempImg = await Jimp.read(value);
-    const tempImgBase64 = await tempImg.getBuffer("image/jpeg");
+    const tempImgBuffer = await tempImg.getBuffer("image/jpeg");
 
-    const img = nativeImage.createFromBuffer(tempImgBase64);
+    const img = nativeImage.createFromBuffer(tempImgBuffer);
     clipboard.writeImage(img);
     ipcLogger.info("actionsHandler:copyImgToClipboard", `Copied to clipboard: ${value}`);
   });

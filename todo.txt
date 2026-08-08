@@ -1,3 +1,0 @@
-- netcode patch update for ut4 ?
-- github issues template
-- github docs

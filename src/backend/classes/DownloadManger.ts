@@ -15,7 +15,6 @@ type CustomEvents = {
 };
 
 export type LogsCallback = (value: string, customMessage?: string) => void;
-export type GithubReleases = Endpoints["GET /repos/{owner}/{repo}/releases"]["response"]["data"];
 
 /**
  * Create download instance, use the `start()` function to
