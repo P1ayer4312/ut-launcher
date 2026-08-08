@@ -1,3 +1,28 @@
+@font-face {
+  font-family: HeadingNowVariable;
+  font-style: normal;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(/fonts/HeadingNowVariable.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: HeadingNowVariableItalic;
+  font-style: italic;
+  font-stretch: normal;
+  font-display: swap;
+  src: url(/fonts/HeadingNowVariableItalic.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrainsMono-Light";
+  src: url(/fonts/JetBrainsMono-Light.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+$view-height: calc(100vh - 2px);
+
 html {
   background-image: url("/imgs/smoke-bg.webp");
   background-position: top;
@@ -5,23 +30,38 @@ html {
   background-repeat: repeat;
   background-color: #191919;
   font-family: HeadingNowVariable, Arial, Helvetica, sans-serif;
-  font-variation-settings: "wdth" 650, "wght" 450;
-  height: calc(100vh - 2px);
+  font-variation-settings:
+    "wdth" 650,
+    "wght" 450;
+  height: $view-height;
 }
 
 body {
   padding: 0 0;
   margin: 0 0;
   position: relative;
-  height: calc(100vh - 2px);
   border-image: linear-gradient(to left, #1d2031 0%, #1b0b02 100%) 1;
   border-width: 1px;
   border-style: solid;
-  height: calc(100vh - 2px);
+  height: $view-height;
+  overflow: hidden;
 }
 
 .game-page-view {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 2px);
+  height: 100%;
+}
+
+.main-grid {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  gap: 20px;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+  position: relative;
 }

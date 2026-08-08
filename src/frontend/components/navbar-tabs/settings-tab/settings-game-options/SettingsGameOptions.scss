@@ -1,0 +1,120 @@
+.settings-game-option {
+  &_title {
+    color: white;
+  }
+
+  &_input-wrapper {
+    & > div {
+      color: gray;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+  }
+
+  &_save-button {
+    margin-top: 10px;
+    background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  &_input {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+    min-width: 0;
+    width: 160px;
+    height: 30px;
+    outline: none;
+    color: gray;
+    text-shadow: 1px 1px 2px black;
+    font-size: 15px;
+    padding: 5px 10px 5px 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    &_text {
+      padding: 0 0 0 6px;
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+      }
+    }
+  }
+
+  &_select {
+    & option {
+      background-color: rgb(36, 36, 36);
+    }
+
+    & option:hover,
+    & option:focus,
+    & option:active,
+    & option:checked {
+      color: white;
+      transition: 200ms;
+      background-color: rgb(58, 58, 58);
+      border-radius: 3px;
+    }
+
+    // Scrollbar
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: rgb(36, 36, 36);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 6px;
+      border: 1px solid rgb(45, 45, 45);
+      background-color: rgb(12, 12, 12);
+    }
+  }
+
+  &_checkbox {
+    &-wrapper {
+      color: gray;
+      margin-top: 5px;
+      font-size: 14px;
+
+      display: flex;
+      flex-direction: column;
+
+      // === Checkbox hide/display based on input state
+      & input:checked + label > div > svg {
+        display: block;
+      }
+      & input + label > div > svg {
+        display: none;
+      }
+      // === Checkbox hide/display based on input state
+    }
+
+    &_box {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      width: 20px;
+      height: 20px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &_display {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      align-items: center;
+    }
+  }
+}

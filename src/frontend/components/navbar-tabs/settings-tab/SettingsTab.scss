@@ -1,44 +1,37 @@
 .settings-tab {
-	display: flex;
-	flex-direction: row;
-	gap: 300px;
+  display: flex;
+  flex-direction: row;
+  gap: 300px;
+  padding-top: 25px;
+  user-select: none;
 
-	&_header {
-		color: white;
-	}
+  &_header {
+    color: white;
+    font-size: 20px;
+  }
 
-	&_local-buttons {
-		display: flex;
-		flex-direction: column;
-		gap: 15px;
-	}
+  &_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
 
-	&_button {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 6px;
+    font-weight: bolder;
+    padding: 5px 10px;
+    width: fit-content;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 2px;
+    user-select: none;
 
-		font-weight: bolder;
-		padding: 5px 10px;
-		width: fit-content;
-		text-align: center;
-		cursor: pointer;
-		border-radius: 2px;
+    color: white;
+    font-size: 14px;
 
-		color: white;
-		font-size: 14px;
-	}
+    // Default button color
+    background-image: linear-gradient(90deg, rgba(51, 51, 51, 1) 1%, rgba(189, 189, 189, 1) 100%);
+  }
 
-	&_local-files {
-		background-image: linear-gradient(111.1deg, rgba(69, 150, 164, 1) 2.5%, rgba(17, 20, 34, 1) 100.3%);
-	}
-
-	&_uninstall {
-		background-image: linear-gradient(109.6deg, rgba(204, 0, 0, 1) 11.2%, rgba(68, 0, 0, 1) 100.6%);
-	}
-
-	&_server-component {
-		padding-top: 10px;
-	}
+  &_server-component {
+    padding-top: 10px;
+  }
 }

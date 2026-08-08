@@ -1,0 +1,173 @@
+import "./GamePageNavbar.scss";
+import { memo, useEffect, type PropsWithChildren } from "react";
+import { FaPlay, FaDownload, FaTimes } from "react-icons/fa";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { useGlobalState } from "@src/frontend/state/useGlobalState";
+import contextBridge from "@src/frontend/contextBridge/contextBridge";
+import { TUnreal2Type } from "@src/backend/types/customTypes.type";
+import { availableOS } from "@src/frontend/utils/availableOS";
+import { logger } from "@src/frontend/utils/logger";
+
+export default function GamePageNavbar(props: PropsWithChildren) {
+  const selectedGame = useGlobalState((e) => e.selectedGame);
+  const setLocalDataStore = useGlobalState((e) => e.setLocalDataStore);
+  const gameDataPresent = useGlobalState((state) => Boolean(state.localDataStore[state.selectedGame]));
+
+  useEffect(() => {
+    if (!gameDataPresent && selectedGame !== "blank") {
+      // Ensures that the game data is available on launcher first start
+      contextBridge.gameData.get(selectedGame).then((data) => {
+        setLocalDataStore({ [selectedGame]: data });
+      });
+    }
+  }, [gameDataPresent, selectedGame, setLocalDataStore]);
+
+  return (
+    <div className="game-page-navbar">
+      <GameButton />
+      {props.children}
+    </div>
+  );
+}
+
+const GameButton = memo(function GameButton() {
+  const selectedGame = useGlobalState((e) => e.selectedGame);
+  if (selectedGame === "open-tournament") {
+    // Leave the navbar clean with only links
+    return null;
+  }
+
+  const runningGame = useGlobalState((e) => e.runningGame);
+  const downloadingGame = useGlobalState((e) => e.downloadingGame);
+  const setDownloadingGame = useGlobalState((e) => e.setDownloadingGame);
+  const setLocalDataStore = useGlobalState((e) => e.setLocalDataStore);
+  const platform = useGlobalState((e) => e.platform);
+  const isOtherGameActive = useGlobalState((e) => e.isOtherGameActive);
+
+  const gameData = useGlobalState((state) => state.localDataStore[state.selectedGame]);
+  const isInstalled = gameData?.installed && downloadingGame === null;
+  const isPlatformSupported =
+    selectedGame !== "blank" && platform !== "" && availableOS[selectedGame].includes(platform);
+
+  /**
+   * Disable other games' buttons for play and install if one game
+   * is in the process of being played or installed
+   */
+  const otherGameActive: boolean = isOtherGameActive();
+
+  function disableBtn(className: string) {
+    // Small helper function for handling disabled buttons appearance
+    return otherGameActive ? "" : className;
+  }
+
+  function stopButtonClicked() {
+    if (selectedGame === runningGame) {
+      // Stop running game
+      contextBridge.gameData.stopInstalledGame();
+    } else if (downloadingGame !== "blank" && downloadingGame !== null) {
+      // Stop the game download/install process
+      contextBridge.gameData.stopGameDownload(downloadingGame).then(() => setDownloadingGame(null));
+    } else {
+      throw new Error("Unable to stop current game");
+    }
+  }
+
+  function playButtonClicked(option?: TUnreal2Type) {
+    if (otherGameActive) {
+      logger.info("PLAY button disabled, game activity present");
+      return;
+    }
+
+    if (selectedGame !== "blank") {
+      contextBridge.gameData.startInstalledGame(selectedGame, option);
+    }
+  }
+
+  function installButtonClicked() {
+    if (otherGameActive) {
+      logger.info("INSTALL button disabled, game activity present");
+      return;
+    }
+
+    contextBridge.gameData.selectInstallDir().then((data) => {
+      if (data.canceled || selectedGame === "blank") {
+        return;
+      }
+
+      const directoryPath = data.filePaths[0];
+      setLocalDataStore({ [selectedGame]: { ...gameData, directory: directoryPath } });
+
+      Promise.all([
+        contextBridge.gameData.set(selectedGame, { directory: directoryPath }),
+        contextBridge.gameData.startGameDownload(selectedGame, directoryPath),
+      ]).then(() => {
+        setDownloadingGame(selectedGame);
+      });
+    });
+  }
+
+  // Show the stop button if the game is downloading or being played
+  if (selectedGame === downloadingGame || selectedGame === runningGame) {
+    return (
+      <div className="game-page-navbar_action-button game-page-navbar_stop" onClick={stopButtonClicked}>
+        <FaTimes />
+        <span>STOP</span>
+      </div>
+    );
+  }
+
+  // Show the play button if the game is installed
+  if (isInstalled) {
+    if (selectedGame === "unreal-2") {
+      // Unreal 2 has two instances for SP and MP, so we add two buttons
+      return (
+        <div className="game-page-navbar_unreal-2-btns">
+          <div
+            className={`game-page-navbar_action-button ${disableBtn("game-page-navbar_play")}`}
+            onClick={() => playButtonClicked("u2-sp")}
+          >
+            <FaPlay />
+            <span>PLAY</span>
+          </div>
+          <div
+            className={`game-page-navbar_action-button ${disableBtn("game-page-navbar_u2-xmp")}`}
+            onClick={() => playButtonClicked("u2-xmp")}
+          >
+            <FaPeopleGroup />
+            <span>XMP</span>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className={`game-page-navbar_action-button ${disableBtn("game-page-navbar_play")}`}
+        onClick={() => playButtonClicked()}
+      >
+        <FaPlay />
+        <span>PLAY</span>
+      </div>
+    );
+  }
+
+  // Show unavailable button
+  if (!isPlatformSupported) {
+    return (
+      <div className="game-page-navbar_action-button game-page-navbar_unavailable">
+        <span>UNAVAILABLE</span>
+      </div>
+    );
+  }
+
+  // Show the install button if none of the check above pass
+  return (
+    <div
+      className={`game-page-navbar_action-button ${disableBtn("game-page-navbar_install")}`}
+      onClick={installButtonClicked}
+    >
+      <FaDownload />
+      <span>INSTALL</span>
+    </div>
+  );
+});

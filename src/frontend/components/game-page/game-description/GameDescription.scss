@@ -1,0 +1,94 @@
+.game-description {
+  &_wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 20px;
+    margin-right: 60px;
+    margin-top: 30px;
+    min-height: 265px;
+    max-height: 100%;
+    user-select: none;
+    gap: 20px;
+  }
+
+  &_left-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+
+    &_text {
+      color: white;
+      transition: font-size 0.1s ease-in-out;
+      font-size: 13px;
+
+      @media screen and (min-width: 1400px) {
+        font-size: 15px;
+      }
+
+      @media screen and (min-width: 1650px) {
+        font-size: 17px;
+      }
+    }
+  }
+
+  &_right-side {
+    transition: flex-basis 0.1s ease-in-out;
+    flex-basis: 480px;
+
+    @media screen and (min-height: 800px) {
+      flex-basis: 600px;
+    }
+
+    @media screen and (min-width: 1650px) and (min-height: 900px) {
+      flex-basis: 700px;
+    }
+  }
+
+  // Styles for the images showcase
+  &_image-container {
+    position: relative;
+
+    &_large-image {
+      clip-path: polygon(0 0, 90% 0%, 100% 100%, 10% 100%);
+      transition: opacity 0.2s ease;
+      width: 100%;
+
+      &_hide {
+        opacity: 0;
+      }
+
+      &_show {
+        opacity: 1;
+      }
+    }
+
+    &_panel {
+      width: 100%;
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      bottom: 10%;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    &_panel-image {
+      width: 18%;
+      aspect-ratio: 16 / 9;
+      border-radius: 0.75rem;
+      transition: outline 0.07s ease;
+      outline-color: white;
+      cursor: pointer;
+
+      &:hover {
+        outline: 2px solid rgba(255, 255, 255, 0.8);
+        outline-offset: 1px;
+      }
+    }
+  }
+}

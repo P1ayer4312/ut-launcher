@@ -1,0 +1,40 @@
+.launcher-settings-modal {
+  &_container {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    user-select: none;
+  }
+
+  &_header {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  &_text {
+    color: #b6b6b6;
+  }
+
+  &_link {
+    color: orange;
+    text-decoration: underline;
+    cursor: pointer;
+    width: fit-content;
+  }
+
+  &_close {
+    color: darkorange;
+    font-size: 20px;
+    text-decoration: underline;
+    cursor: pointer;
+    width: fit-content;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  &_disclaimer {
+    margin-top: 10px;
+    color: yellow;
+    font-size: 12px;
+  }
+}
