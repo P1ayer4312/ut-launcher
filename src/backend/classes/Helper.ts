@@ -173,6 +173,14 @@ export class Helper {
           break;
         }
 
+        case "registerUT2004key": {
+          const scriptPath = FilesHelper.configFilePath(this.isDev(), "ut-2004/scripts/registerKey.ps1");
+          const productKey = gameKeyProvider("ut-2004");
+
+          await this.runElevatedPowershell(scriptPath, [productKey]);
+          break;
+        }
+
         case "replaceUT3EncryptedKey": {
           const scriptPath = FilesHelper.configFilePath(this.isDev(), "ut-3/scripts/replaceEncryptedKey.ps1");
           const productKey = gameKeyProvider("ut-3");

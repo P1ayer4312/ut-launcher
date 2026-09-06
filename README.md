@@ -4,6 +4,8 @@ Standalone launcher for downloading and patching games from the Unreal series, b
 
 The main goal of the project is to simplify the process of getting into the Unreal series for new players and hopefully draw new blood into the franchise.
 
+You can download the launcher from the [Releases tab](https://github.com/P1ayer4312/ut-launcher/releases).
+
 > [!WARNING]
 > This project is in its early days and is still experimental. Hopefully you won't run into any major issues.
 

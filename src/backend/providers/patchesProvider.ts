@@ -17,13 +17,18 @@ export async function fetchPatchesForGame(gameID: TGameId): Promise<TReleaseFile
             asset
               .filter((item) => {
                 const name = item.fileName.toLowerCase();
-                return name.includes("windows") && name.endsWith("zip") && !name.includes("windowsxp");
+                return (
+                  name.includes("windows") &&
+                  name.endsWith("zip") &&
+                  !name.includes("sdk") &&
+                  !name.includes("windowsxp")
+                );
               })
               .map((filtered) => {
                 return {
                   // Reduce the release name length
                   ...filtered,
-                  releaseName: filtered.releaseName.replace("Unreal ", ""),
+                  releaseName: filtered.releaseName.toLowerCase().replace("unreal ", ""),
                 };
               }),
           )
@@ -38,13 +43,21 @@ export async function fetchPatchesForGame(gameID: TGameId): Promise<TReleaseFile
             asset
               .filter((item) => {
                 const name = item.fileName.toLowerCase();
-                return name.includes("windows") && name.endsWith("zip") && !name.includes("windowsxp");
+                return (
+                  name.includes("windows") &&
+                  name.endsWith("zip") &&
+                  !name.includes("sdk") &&
+                  !name.includes("windowsxp")
+                );
               })
               .map((filtered) => {
                 return {
                   // Reduce the release name length
                   ...filtered,
-                  releaseName: filtered.releaseName.replace("Unreal Tournament ", ""),
+                  releaseName: filtered.releaseName
+                    .toLowerCase()
+                    .replace("unreal tournament ", "")
+                    .replace("release candidate", "rc"),
                 };
               }),
           )
@@ -59,13 +72,13 @@ export async function fetchPatchesForGame(gameID: TGameId): Promise<TReleaseFile
             asset
               .filter((item) => {
                 const name = item.fileName.toLowerCase();
-                return name.includes("windows") && name.endsWith("zip");
+                return name.includes("windows") && name.endsWith("zip") && !name.includes("sdk");
               })
               .map((filtered) => {
                 return {
                   // Reduce the release name length
                   ...filtered,
-                  releaseName: filtered.releaseName.replace("UT2004 Patch ", ""),
+                  releaseName: filtered.releaseName.toLowerCase().replace("ut2004 patch ", ""),
                 };
               }),
           )

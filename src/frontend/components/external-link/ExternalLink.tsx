@@ -10,7 +10,13 @@ type Props = {
 
 export default function ExternalLink(props: Props) {
   return (
-    <a className="external-link-component" href={props.link} target="_blank" style={props.style}>
+    <a
+      className="external-link-component"
+      href={props.link}
+      target="_blank"
+      rel="noreferrer"
+      style={props.style}
+    >
       <span>{props.title ? props.title : props.link}</span>
       <LuExternalLink />
     </a>

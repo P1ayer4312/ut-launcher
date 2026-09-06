@@ -4,6 +4,7 @@ import contextBridge from "@src/frontend/contextBridge/contextBridge";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "@firefox-devtools/react-contextmenu";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
 import type { TScreenshotData } from "@src/backend/types/customTypes.type";
+import { toastPopup } from "@src/frontend/utils/toastPopup";
 
 type ContextMenuCollect = {
   pathBase64: string;
@@ -59,7 +60,9 @@ export default function Screenshots() {
         </MenuItem>
         <MenuItem
           onClick={(_, collect: ContextMenuCollect) => {
-            contextBridge.actionsHandler.copyImgToClipboard(collect.filePath);
+            contextBridge.actionsHandler.copyImgToClipboard(collect.filePath).then(() => {
+              toastPopup("Copied to clipboard", "success");
+            });
           }}
           className="screenshots_context-menu_item"
         >

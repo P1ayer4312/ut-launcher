@@ -1,4 +1,3 @@
-import type { Endpoints } from "@octokit/types";
 import axios, { type AxiosProgressEvent } from "axios";
 import fs from "node:fs";
 import path from "node:path";

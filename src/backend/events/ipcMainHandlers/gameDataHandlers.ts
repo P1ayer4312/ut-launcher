@@ -1,4 +1,4 @@
-import { ipcMain, dialog } from "electron";
+import { ipcMain, dialog, type OpenDialogOptions } from "electron";
 import type { GameDataIpcHandler } from "@src/backend/types/contextBridgeChannels.type";
 import { actionsHandler } from "@src/backend/classes/ActionsHandler";
 // prettier-ignore
@@ -40,10 +40,20 @@ export function gameDataHandlers() {
 
   handle("gameData:selectInstallDir", () => {
     ipcLogger.info("gameData:selectInstallDir");
-    return dialog.showOpenDialog({
+
+    const dialogOptions: OpenDialogOptions = {
       title: "Select install folder destination",
       properties: ["openDirectory"],
-    });
+    };
+
+    const mainWindow = actionsHandler.getMainWindow();
+    if (mainWindow) {
+      // Try to put the launcher's icon on the dialog window, if not
+      // open a regular dialog window with only title as fallback
+      return dialog.showOpenDialog(mainWindow, dialogOptions);
+    }
+
+    return dialog.showOpenDialog(dialogOptions);
   });
 
   handle("gameData:startGameDownload", (_event, gameId, installDirectory) => {

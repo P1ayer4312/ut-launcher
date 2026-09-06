@@ -5,6 +5,7 @@ import { MultipleSectionsData } from "@src/backend/classes/IniHelper";
 import { PropsWithChildren, useEffect, useState, type ChangeEvent } from "react";
 import { BsFillFloppyFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
+import { toastPopup } from "@src/frontend/utils/toastPopup";
 
 export default function SettingsGameOptions() {
   // We'll keep everything for now in a single file,
@@ -95,7 +96,11 @@ export default function SettingsGameOptions() {
         </CustomCheckbox>
         <div
           className="settings-tab_button settings-game-option_save-button"
-          onClick={() => contextBridge.gameData.saveGameConfig(selectedGame, configData!)}
+          onClick={() => {
+            contextBridge.gameData.saveGameConfig(selectedGame, configData!).then(() => {
+              toastPopup("Config saved", "success");
+            });
+          }}
         >
           <BsFillFloppyFill />
           Save Settings
@@ -171,7 +176,11 @@ export default function SettingsGameOptions() {
         </CustomCheckbox>
         <div
           className="settings-tab_button settings-game-option_save-button"
-          onClick={() => contextBridge.gameData.saveGameConfig(selectedGame, configData!)}
+          onClick={() => {
+            contextBridge.gameData.saveGameConfig(selectedGame, configData!).then(() => {
+              toastPopup("Config saved", "success");
+            });
+          }}
         >
           <BsFillFloppyFill />
           Save Settings

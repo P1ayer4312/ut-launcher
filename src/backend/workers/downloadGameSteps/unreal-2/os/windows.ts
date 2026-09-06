@@ -21,8 +21,8 @@ export async function downloadUnreal2Windows(dl: DownloadManager, innoextractLog
     dl.start();
   });
 
+  WorkerHelper.postMessage("progress", { progress: 2 });
   WorkerHelper.postMessage("progressFormatted", "Extracting files...");
-  WorkerHelper.postMessage("progress", { progress: 1 });
 
   // Clean up previous files if they exist
   await FilesHelper.removeOldFiles(dl.destination);

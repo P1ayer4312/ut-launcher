@@ -9,10 +9,10 @@ function Send-Message($text) {
 
 $basePath = "HKLM:\SOFTWARE\Wow6432Node\Unreal Technology\Installed Apps\UT2003"
 
-# Create registry key structure
-New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Unreal Technology" -Force | Out-Null
-New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Unreal Technology\Installed Apps" -Force | Out-Null
-New-Item -Path $basePath -Force | Out-Null
+# Check if the final path already exists
+if (-not (Test-Path -Path $basePath)) {
+    New-Item -Path $basePath -Force | Out-Null
+}
 
 # Set values
 New-ItemProperty -Path $basePath -Name "Folder" -Value "PATH" -PropertyType String -Force

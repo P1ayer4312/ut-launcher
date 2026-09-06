@@ -8,6 +8,7 @@
     flex-wrap: wrap;
     row-gap: 1px;
     column-gap: 10px;
+    user-select: none;
 
     &::-webkit-scrollbar {
       width: 15px;

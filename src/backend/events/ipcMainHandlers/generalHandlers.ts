@@ -1,6 +1,6 @@
 import type { ActionsHandlerIpcHandler } from "@src/backend/types/contextBridgeChannels.type";
 import path from "node:path";
-import { ipcMain, shell, clipboard, nativeImage, app } from "electron";
+import { ipcMain, shell, clipboard, ClipboardItem, app } from "electron";
 import { actionsHandler } from "@src/backend/classes/ActionsHandler";
 import { ipcLogger } from "@src/backend/utils/logger";
 import { Helper } from "@src/backend/classes/Helper";
@@ -22,12 +22,15 @@ export function generalHandlers() {
   });
 
   handle("actionsHandler:copyImgToClipboard", async (_event, value) => {
-    // bmp images are not supported, we need to convert them to either jpeg or png -_-
     const tempImg = await Jimp.read(value);
-    const tempImgBuffer = await tempImg.getBuffer("image/jpeg");
+    const tempImgBuffer = (await tempImg.getBuffer("image/jpeg")) as BlobPart; // <- To stop TS from yelling
 
-    const img = nativeImage.createFromBuffer(tempImgBuffer);
-    clipboard.writeImage(img);
+    clipboard.write([
+      new ClipboardItem({
+        "image/jpeg": new Blob([tempImgBuffer], { type: "image/jpeg" }),
+      }),
+    ]);
+
     ipcLogger.info("actionsHandler:copyImgToClipboard", `Copied to clipboard: ${value}`);
   });
 
