@@ -28,11 +28,11 @@ export default function UT2004View() {
         <div className="game-page-navbar_button" onClick={() => setActiveTab("home")}>
           Home
         </div>
+        <div className="game-page-navbar_button" onClick={() => setActiveTab("community")}>
+          Community
+        </div>
         {installed && (
           <>
-            <div className="game-page-navbar_button" onClick={() => setActiveTab("community")}>
-              Community
-            </div>
             <div className="game-page-navbar_button" onClick={() => setActiveTab("screenshots")}>
               Screenshots
             </div>
