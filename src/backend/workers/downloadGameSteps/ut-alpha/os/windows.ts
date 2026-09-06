@@ -4,8 +4,8 @@ import fs from "node:fs";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
+import { fetchPatchesForGame } from "@src/backend/providers/patchesProvider";
 import type { DownloadManager, LogsCallback } from "@src/backend/classes/DownloadManger";
-import { fetchGithubReleases } from "@src/backend/utils/fetchGithubReleases";
 
 /**
  * Download UT4 Alpha, patch, extract and configure
@@ -29,15 +29,8 @@ export async function downloadUT4AlphaWindows(dl: DownloadManager, sevenZipLogsC
     latestPatchUrl = links.extraFiles[0];
     dl.setUrls([links.gameFiles, latestPatchUrl]);
   } else {
-    // Fetch Github releases from OldUnreal's repo
-    const githubReleases = await fetchGithubReleases(links.patch);
-
-    // Find the patch for Windows x86
-    latestPatchUrl =
-      githubReleases[0].find((item) => {
-        const name = item.fileName.toLowerCase();
-        return name.startsWith("ut4uu") && name.endsWith("zip");
-      })?.url || null;
+    // Fetch Github releases from UT4UU's repo
+    latestPatchUrl = await fetchPatchesForGame("ut-alpha").then((res) => res[0]?.url || null);
 
     if (!latestPatchUrl) {
       throw new Error("Unable to find patch");

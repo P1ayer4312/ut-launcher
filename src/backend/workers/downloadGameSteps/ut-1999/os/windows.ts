@@ -2,8 +2,8 @@ import path from "node:path";
 import { ArchiveManager } from "@src/backend/classes/ArchiveManager";
 import { WorkerHelper } from "@src/backend/classes/WorkerHelper";
 import { FilesHelper } from "@src/backend/classes/FilesHelper";
+import { fetchPatchesForGame } from "@src/backend/providers/patchesProvider";
 import type { DownloadManager, LogsCallback } from "@src/backend/classes/DownloadManger";
-import { fetchGithubReleases } from "@src/backend/utils/fetchGithubReleases";
 
 /**
  * Download UT1999, patch, extract and configure
@@ -22,14 +22,7 @@ export async function downloadUT1999Windows(dl: DownloadManager, sevenZipLogsCal
     dl.setUrls([links.gameFiles, latestPatchUrl]);
   } else {
     // Fetch Github releases from OldUnreal's repo
-    const githubReleases = await fetchGithubReleases(links.patch);
-
-    // Find the patch for Windows
-    latestPatchUrl =
-      githubReleases[0].find((item) => {
-        const name = item.fileName.toLowerCase();
-        return name.includes("windows") && name.endsWith("zip") && !name.includes("windowsxp");
-      })?.url || null;
+    latestPatchUrl = await fetchPatchesForGame("ut-1999").then((res) => res[0]?.url || null);
 
     if (!latestPatchUrl) {
       throw new Error("Unable to find patch");
