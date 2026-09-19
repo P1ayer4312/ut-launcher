@@ -1,6 +1,8 @@
 .project-links {
-	&_wrapper {
-		position: absolute;
-		bottom: 10px;
-	}
+  &_wrapper {
+    position: absolute;
+    bottom: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    padding-top: 10px;
+  }
 }

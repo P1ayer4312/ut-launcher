@@ -1,5 +1,5 @@
 import "./GamePageNavbar.scss";
-import { memo, useEffect, type PropsWithChildren } from "react";
+import { useEffect, type PropsWithChildren } from "react";
 import { FaPlay, FaDownload, FaTimes } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
@@ -7,6 +7,7 @@ import contextBridge from "@src/frontend/contextBridge/contextBridge";
 import { TUnreal2Type } from "@src/backend/types/customTypes.type";
 import { availableOS } from "@src/frontend/utils/availableOS";
 import { logger } from "@src/frontend/utils/logger";
+import { toastPopup } from "@src/frontend/utils/toastPopup";
 
 export default function GamePageNavbar(props: PropsWithChildren) {
   const selectedGame = useGlobalState((e) => e.selectedGame);
@@ -30,7 +31,7 @@ export default function GamePageNavbar(props: PropsWithChildren) {
   );
 }
 
-const GameButton = memo(function GameButton() {
+function GameButton() {
   const selectedGame = useGlobalState((e) => e.selectedGame);
   if (selectedGame === "open-tournament") {
     // Leave the navbar clean with only links
@@ -45,7 +46,7 @@ const GameButton = memo(function GameButton() {
   const isOtherGameActive = useGlobalState((e) => e.isOtherGameActive);
 
   const gameData = useGlobalState((state) => state.localDataStore[state.selectedGame]);
-  const isInstalled = gameData?.installed && downloadingGame === null;
+  const isInstalled = gameData?.installed;
   const isPlatformSupported =
     selectedGame !== "blank" && platform !== "" && availableOS[selectedGame].includes(platform);
 
@@ -74,6 +75,7 @@ const GameButton = memo(function GameButton() {
 
   function playButtonClicked(option?: TUnreal2Type) {
     if (otherGameActive) {
+      toastPopup("One game can be active at a time", "warning");
       logger.info("PLAY button disabled, game activity present");
       return;
     }
@@ -85,6 +87,7 @@ const GameButton = memo(function GameButton() {
 
   function installButtonClicked() {
     if (otherGameActive) {
+      toastPopup("One game can be active at a time", "warning");
       logger.info("INSTALL button disabled, game activity present");
       return;
     }
@@ -170,4 +173,4 @@ const GameButton = memo(function GameButton() {
       <span>INSTALL</span>
     </div>
   );
-});
+}

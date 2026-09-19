@@ -1,5 +1,11 @@
 .menu-item-game-list {
-  margin-left: 15px;
-  margin-top: 50px;
   position: relative;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 2px;
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  padding-left: 10px;
+  padding-top: 36px;
+  padding-right: 10px;
 }

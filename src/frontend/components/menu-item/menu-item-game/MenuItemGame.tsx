@@ -1,28 +1,30 @@
 import "./MenuItemGame.scss";
 import type { IconType } from "react-icons";
+import { createPortal } from "react-dom";
+import { Tooltip } from "react-tooltip";
 import type { TGameId } from "@src/backend/types/gameConfigData.type";
 import { useGlobalState } from "@src/frontend/state/useGlobalState";
-import SpinnerProgressBar from "@src/frontend/components/spinner-progress-bar/SpinnerProgressBar";
+import GameStatusIcon from "@src/frontend/components/game-status-icon/GameStatusIcon";
 import contextBridge from "@src/frontend/contextBridge/contextBridge";
 
 type Props = {
   title: string;
-  imgLocation?: string;
   icon?: IconType;
   gameId?: TGameId;
+  tooltipId?: string;
   onClick?: () => void;
 };
 
 /**  Menu item cards for each game */
 export default function MenuItemGame(props: Props) {
   const setSelectedGame = useGlobalState((s) => s.setSelectedGame);
-  const runningGame = useGlobalState((s) => s.runningGame);
   const downloadingGame = useGlobalState((s) => s.downloadingGame);
   const gameDataPresent = useGlobalState((e) => props.gameId && Boolean(e.localDataStore[props.gameId]));
   const setLocalDataStore = useGlobalState((e) => e.setLocalDataStore);
+  const runningGame = useGlobalState((e) => e.runningGame);
 
-  const isGameRunning = runningGame === props.gameId;
   const isGameDownloading = downloadingGame === props.gameId;
+  const tooltipId = props.gameId || props.tooltipId;
 
   function handleOnClick() {
     if (props.onClick) {
@@ -50,21 +52,33 @@ export default function MenuItemGame(props: Props) {
   }
 
   return (
-    <div className="menu-item-game_wrapper" onClick={handleOnClick}>
-      <div className="menu-item-game_drag-blocker"></div>
-      {props.imgLocation && (
-        <div className="menu-item-game_badge-wrapper">
-          {isGameDownloading && <SpinnerProgressBar />}
-          <img className="menu-item-game_badge" src={props.imgLocation} />
-        </div>
+    <>
+      <div className="menu-item-game_wrapper" onClick={handleOnClick} data-tooltip-id={tooltipId}>
+        {props.icon ? (
+          <props.icon className="menu-item-game_icon" />
+        ) : (
+          <div className="menu-item-game_badge-wrapper">
+            {isGameDownloading && <GameStatusIcon status="spinner" />}
+            {runningGame === props.gameId && <GameStatusIcon status="playing" />}
+            <img
+              className="menu-item-game_badge"
+              src={`./imgs/badges/${props.gameId}.png`}
+              draggable={false}
+            />
+          </div>
+        )}
+      </div>
+      {createPortal(
+        <Tooltip
+          id={tooltipId}
+          content={props.title}
+          offset={10}
+          place="right"
+          delayShow={1000}
+          style={{ backgroundColor: "black" }}
+        />,
+        document.body,
       )}
-      {props.icon && <props.icon className="menu-item-game_icon" />}
-      <h1
-        className="menu-item-game_title"
-        style={{ color: isGameRunning ? "lightgreen" : isGameDownloading ? "#71ddf5" : undefined }}
-      >
-        {props.title}
-      </h1>
-    </div>
+    </>
   );
 }

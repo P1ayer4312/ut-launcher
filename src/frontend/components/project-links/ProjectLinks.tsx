@@ -13,6 +13,7 @@ export default function ProjectLinks() {
       {/* <MenuItemGame
         icon={FaDiscord}
         title="DISCORD"
+        tooltipId="discord"
         onClick={() => {
           alert("Maybe, if there's interest");
         }}
@@ -20,11 +21,13 @@ export default function ProjectLinks() {
       <MenuItemGame
         icon={FaGithub}
         title="GITHUB"
+        tooltipId="github"
         onClick={() => openLinkInBrowser("https://github.com/P1ayer4312/ut-launcher")}
       />
       <MenuItemGame
         icon={IoIosSettings}
         title="SETTINGS"
+        tooltipId="settings"
         onClick={() => {
           setModalData({
             isOpened: true,

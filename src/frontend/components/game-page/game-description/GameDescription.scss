@@ -18,6 +18,17 @@
     align-items: center;
     width: 50%;
 
+    &_title {
+      font-family: HeadingNowVariable, Arial, Helvetica, sans-serif;
+      font-variation-settings:
+        "wdth" 750,
+        "wght" 830;
+      font-style: italic;
+      font-size: 2rem;
+      line-height: 2rem;
+      margin-bottom: 20px;
+    }
+
     &_text {
       color: white;
       transition: font-size 0.1s ease-in-out;
@@ -84,6 +95,9 @@
       transition: outline 0.07s ease;
       outline-color: white;
       cursor: pointer;
+      box-shadow:
+        0 4px 8px 0 rgba(0, 0, 0, 0.8),
+        0 6px 20px 0 rgba(0, 0, 0, 0.7);
 
       &:hover {
         outline: 2px solid rgba(255, 255, 255, 0.8);

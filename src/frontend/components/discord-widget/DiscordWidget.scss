@@ -42,13 +42,11 @@
     }
 
     &_img {
-      z-index: 10;
       width: 50px;
       border-radius: 20%;
     }
 
     &_members-count {
-      z-index: 10;
       margin-top: 2px;
       font-size: 10px;
     }
@@ -61,7 +59,6 @@
     overflow: hidden;
 
     &_name {
-      z-index: 20;
       font-size: 15px;
       font-variation-settings:
         "wdth" 650,
