@@ -20,7 +20,7 @@ export class Helper {
     onSpawnCallback: VoidFunction,
     onCloseCallback: VoidFunction,
   ) {
-    const newProcess = spawn(exeOptions.path, exeOptions.args, { detached: true });
+    const newProcess = spawn(exeOptions.path, exeOptions.args, { detached: true, stdio: "ignore" });
     newProcess.once("spawn", onSpawnCallback);
     newProcess.once("close", onCloseCallback);
     newProcess.on("error", (err) => {

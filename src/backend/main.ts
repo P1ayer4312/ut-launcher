@@ -29,7 +29,7 @@ function createWindow(shouldRegisterEvents: boolean = true) {
     autoHideMenuBar: true,
     titleBarStyle: "hidden",
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "preload.cjs"),
       partition: partition,
       devTools: MAIN_WINDOW_VITE_DEV_SERVER_URL ? true : false,
     },

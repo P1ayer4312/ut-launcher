@@ -43,7 +43,7 @@ export class ActionsHandler {
     }
 
     this.removeOnStop = removeOnStop;
-    this.worker = new Worker(path.resolve(this.workerFolderPath, `${workerFileName}.js`), {
+    this.worker = new Worker(path.resolve(this.workerFolderPath, `${workerFileName}.cjs`), {
       ...workerOptions,
       env: {
         ...((workerOptions.env as object) ?? {}),

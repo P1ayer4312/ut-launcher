@@ -1,7 +1,5 @@
 import "./ModalWrapper.scss";
 import Modal from "react-modal";
-import { useState } from "react";
-import { FaKey } from "react-icons/fa";
 import UninstallModal from "./modal-views/uninstall-modal/UninstallModal";
 import ContinueModal from "./modal-views/continue-modal/ContinueModal";
 import ErrorModal from "./modal-views/error-modal/ErrorModal";
@@ -39,12 +37,7 @@ export default function ModalWrapper() {
 function ModalViews() {
   const modalData = useGlobalState((e) => e.modalData);
   const setModalData = useGlobalState((e) => e.setModalData);
-  const selectedGame = useGlobalState((e) => e.selectedGame);
   logger.info(`Modal type: "${modalData.modalType}" | Modal variant: "${modalData.continueModalVariant}"`);
-
-  // Logic for the UT3 key reveal
-  const [showKey, setShowKey] = useState<boolean>(false);
-  const [key, setKey] = useState<string>("----");
 
   function closeModal() {
     setModalData({ isOpened: false });
@@ -59,7 +52,7 @@ function ModalViews() {
     case "continue": {
       // There are not many modals that required the user's interaction, so for now we'll configure
       // them here, if needed in the future they can be abstracted in different files
-      if (modalData.continueModalVariant !== "message-block" && showKey === false) {
+      if (modalData.continueModalVariant !== "message-block") {
         contextBridge.actionsHandler.flashFrame(true);
       }
 
@@ -134,56 +127,6 @@ function ModalViews() {
           );
         }
         // =====================================================================================================================
-        case "ut3-key": {
-          // I'm starting to get a bit sloppy with the code structure :/
-          return (
-            <ContinueModal
-              onButtonClicked={() => {
-                closeModal();
-              }}
-              buttonText="Close"
-            >
-              <div className="modal_ut3-key_text">
-                <div>{`Registering a product key might be required if the`}</div>
-                <div>{`automated script failed to create one after install.`}</div>
-                <div>{`Click on the "Reveal Key" button to get a product key.`}</div>
-              </div>
-
-              <div className="modal_ut3-key_reveal-section">
-                {showKey ? (
-                  <>
-                    <div className="modal_ut3-key_show">
-                      <div>{key}</div>
-                      <div
-                        onClick={() => {
-                          contextBridge.gameData.getProductKey("ut-3").then(setKey);
-                        }}
-                        className="modal_ut3-key_reveal-button"
-                      >
-                        <FaKey />
-                        New Key
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div
-                      className="modal_ut3-key_reveal-button"
-                      onClick={() => {
-                        contextBridge.gameData.getProductKey("ut-3").then(setKey);
-                        setShowKey(true);
-                      }}
-                    >
-                      <FaKey />
-                      Reveal Key
-                    </div>
-                  </>
-                )}
-              </div>
-            </ContinueModal>
-          );
-        }
-        // =====================================================================================================================
         default: {
           return (
             <ContinueModal
@@ -191,7 +134,7 @@ function ModalViews() {
                 closeModal();
               }}
             >
-              <div>{`MISCONFIGURED_CONTINUE_MODAL: ${selectedGame}`}</div>
+              <div>{`MISCONFIGURED_CONTINUE_MODAL: ${modalData.continueModalVariant}`}</div>
             </ContinueModal>
           );
         }
