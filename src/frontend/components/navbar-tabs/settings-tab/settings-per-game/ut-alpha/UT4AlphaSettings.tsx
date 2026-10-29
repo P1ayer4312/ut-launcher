@@ -1,3 +1,4 @@
+import ExternalLink from "@src/frontend/components/external-link/ExternalLink";
 import "./UT4AlphaSettings.scss";
 import SettingsDefaultButtons from "@src/frontend/components/navbar-tabs/settings-tab/settings-default-buttons/SettingsDefaultButtons";
 import SettingsPatch from "@src/frontend/components/navbar-tabs/settings-tab/settings-patch/SettingsPatch";
@@ -19,6 +20,15 @@ export default function UT4AlphaSettings() {
       </div>
       <div>
         <SettingsPatch />
+      </div>
+      <div>
+        <div className="patch_title">Quick Links:</div>
+        <p>
+          <ExternalLink link="https://ut4.timiimit.com/Login" style={{ fontSize: "15px" }} />
+        </p>
+        <p>
+          <ExternalLink link="https://ut4.timiimit.com/Register" style={{ fontSize: "15px" }} />
+        </p>
       </div>
     </div>
   );

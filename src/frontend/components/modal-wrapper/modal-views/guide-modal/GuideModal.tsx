@@ -70,7 +70,7 @@ function CustomGuides() {
               auth code that you generated earlier from your account profile page. After that click on "Add
               Account". If everything went well you'll be redirected to the account management screen.`}
             </span>
-            <img src="./imgs/guides/ut-alpha/first-launch.jpg" style={{ width: "300px" }} alt="" />
+            <img src="./imgs/guides/ut-alpha/first-launch.jpg" style={{ width: "200px" }} alt="" />
           </p>
           <p className="guide-modal_row-text-img">
             <div>
@@ -85,7 +85,7 @@ function CustomGuides() {
                 same steps as before.`}
               </p>
             </div>
-            <img src="./imgs/guides/ut-alpha/accounts-screen.jpg" style={{ width: "300px" }} alt="" />
+            <img src="./imgs/guides/ut-alpha/accounts-screen.jpg" style={{ width: "200px" }} alt="" />
           </p>
           <h3>3. Customizing your profile and character</h3>
           <hr />

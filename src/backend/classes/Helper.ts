@@ -238,18 +238,13 @@ export class Helper {
       case "ut-2003": {
         const gameIniPath = path.resolve(gameData.directory, gameId, "System/UT2003.ini");
         await ini.readFile(gameIniPath);
-
+        // prettier-ignore
         const sections = ini.getValuesFromMultipleSections([
           {
             section: "WinDrv.WindowsClient",
             keys: [
-              "WindowedViewportX",
-              "WindowedViewportY",
-              "FullscreenViewportX",
-              "FullscreenViewportY",
-              "MenuViewportX",
-              "MenuViewportY",
-              "StartupFullscreen",
+              "WindowedViewportX", "WindowedViewportY", "FullscreenViewportX",
+              "FullscreenViewportY", "MenuViewportX", "MenuViewportY", "StartupFullscreen",
             ],
           },
         ]);
@@ -260,18 +255,13 @@ export class Helper {
       case "ut-2004": {
         const gameIniPath = path.resolve(gameData.directory, gameId, "System/UT2004.ini");
         await ini.readFile(gameIniPath);
-
+        // prettier-ignore
         const sections = ini.getValuesFromMultipleSections([
           {
             section: "WinDrv.WindowsClient",
             keys: [
-              "WindowedViewportX",
-              "WindowedViewportY",
-              "FullscreenViewportX",
-              "FullscreenViewportY",
-              "MenuViewportX",
-              "MenuViewportY",
-              "StartupFullscreen",
+              "WindowedViewportX", "WindowedViewportY", "FullscreenViewportX",
+              "FullscreenViewportY", "MenuViewportX", "MenuViewportY", "StartupFullscreen",
             ],
           },
         ]);

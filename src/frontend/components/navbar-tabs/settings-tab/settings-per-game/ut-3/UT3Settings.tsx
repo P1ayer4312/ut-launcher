@@ -7,14 +7,12 @@ export default function UT3Settings() {
   return (
     <div className="ut3-settings_wrapper">
       <SettingsDefaultButtons />
-      <div className="ut3-settings_buttons-wrapper">
-        <div
-          className="settings-tab_button ut3-settings_button-key"
-          onClick={() => contextBridge.actionsHandler.runScript("replaceUT3EncryptedKey")}
-        >
-          <FaKey />
-          Replace key
-        </div>
+      <div
+        className="settings-tab_button ut3-settings_button-key"
+        onClick={() => contextBridge.actionsHandler.runScript("replaceUT3EncryptedKey")}
+      >
+        <FaKey />
+        Replace key
       </div>
     </div>
   );
