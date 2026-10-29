@@ -5,6 +5,10 @@
     flex-direction: column;
   }
 
+  &_preset_width {
+    max-width: 600px;
+  }
+
   &_content {
     display: flex;
     justify-content: center;

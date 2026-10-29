@@ -44,7 +44,6 @@ import { downloadUT4Alpha } from "./downloadGameSteps/ut-alpha";
   }
 
   function innoextractLogsCallback(value: string) {
-    // TODO: Check if there's a better way to represent logs
     WorkerHelper.postMessage("progressFormatted", `Extracting files... ${value}`);
   }
 

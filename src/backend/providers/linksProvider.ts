@@ -14,7 +14,7 @@ type TLinksPerEnv = {
 
 type TLinksProvider = Partial<Record<TGameId, TLinksPerEnv>>;
 
-// npx serve -p 4312
+// python -m http.server 4312
 export const linksProvider: TLinksProvider = {
   unreal: {
     dev: {

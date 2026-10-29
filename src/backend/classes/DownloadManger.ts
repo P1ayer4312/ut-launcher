@@ -120,14 +120,6 @@ export class DownloadManager extends EventEmitter<CustomEvents> {
   /** Stop the download process */
   async stop() {
     this.abortController?.abort();
-    // logger.info("Download cancelled, removing: " + this.destination);
-
-    // if (this.singleFile) {
-    //   await fs.promises.rm(this.urls[0], { force: true, maxRetries: 5, retryDelay: 200 });
-    // }
-    // else {}
-    // TODO: Return this after testing
-    // await fs.promises.rm(this.destination, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
     this.emit("stop", true);
   }
 
@@ -175,5 +167,5 @@ function formatDownloadProgress(info: AxiosProgressEvent, fileName: string) {
   const speed = formatRate(info.rate);
   const eta = formatEstimated(info.estimated);
 
-  return `${downloaded}/${total} ${speed} ${eta} - ${fileName}`;
+  return `${downloaded}/${total} ${speed} ${eta} - ${decodeURIComponent(fileName)}`;
 }

@@ -2,7 +2,7 @@ import path from "node:path";
 import { BrowserWindow } from "electron";
 import { Worker, type WorkerOptions } from "node:worker_threads";
 import { setGameUserData, getGameUserData } from "@src/backend/store/userPreferences";
-import type { ChildProcessWithoutNullStreams } from "node:child_process";
+import type { ChildProcess } from "node:child_process";
 import type { TGameId } from "@src/backend/types/gameConfigData.type";
 import type { TEventKeyValueMapping, TEventKeyNames } from "@src/backend/types/contextBridgeHandlers.type";
 import { logger, workerLog } from "@src/backend/utils/logger";
@@ -16,7 +16,7 @@ export class ActionsHandler {
   workerFolderPath: string;
   runningGame: TGameId | null;
   runningGameDirectory: string | null;
-  runningProcess: ChildProcessWithoutNullStreams | null;
+  runningProcess: ChildProcess | null;
   mainWindowId: number | null;
   appDataFolder: string | null;
   removeOnStop: boolean;
@@ -43,7 +43,7 @@ export class ActionsHandler {
     }
 
     this.removeOnStop = removeOnStop;
-    this.worker = new Worker(path.resolve(this.workerFolderPath, `${workerFileName}.js`), {
+    this.worker = new Worker(path.resolve(this.workerFolderPath, `${workerFileName}.cjs`), {
       ...workerOptions,
       env: {
         ...((workerOptions.env as object) ?? {}),
@@ -156,7 +156,7 @@ export class ActionsHandler {
   }
 
   /** Store a reference to the running game */
-  setRunningProcess(proc: ChildProcessWithoutNullStreams) {
+  setRunningProcess(proc: ChildProcess) {
     this.runningProcess = proc;
   }
 
